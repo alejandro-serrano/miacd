@@ -1,0 +1,114 @@
+tool_name,company,category,modality,open_source,release_year
+ChatGPT,OpenAI,LLMs & Chat Assistants,multimodal,0,2022
+Claude,Anthropic,LLMs & Chat Assistants,multimodal,0,2023
+Gemini,Google,LLMs & Chat Assistants,multimodal,0,2023
+Midjourney,Midjourney,Image Gen & Editing,image,0,2022
+Stable Diffusion,Stability AI,Image Gen & Editing,image,1,2022
+DALL·E 3,OpenAI,Image Gen & Editing,image,0,2023
+Runway Gen-3,Runway,Video Gen & Editing,video,0,2024
+Pika,Pika,Video Gen & Editing,video,0,2023
+Suno,Suno,Video Gen & Editing,audio,0,2023
+Udio,Udio,Video Gen & Editing,audio,0,2024
+ElevenLabs,ElevenLabs,Audio/Music/TTS,audio,0,2022
+GitHub Copilot,GitHub,LLMs & Chat Assistants,code,0,2022
+Cursor,Anysphere,Code Assistants,code,0,2023
+Sourcegraph Cody,Sourcegraph,LLMs & Chat Assistants,code,0,2023
+Amazon Q Developer,Amazon Web Services,LLMs & Chat Assistants,code,0,2023
+JetBrains AI Assistant,JetBrains,LLMs & Chat Assistants,code,0,2023
+Perplexity,Perplexity AI,Other,multimodal,0,2022
+Meta AI,Meta,LLMs & Chat Assistants,multimodal,1,2024
+Mistral Le Chat,Mistral AI,LLMs & Chat Assistants,multimodal,1,2024
+Pinecone,Pinecone,Search & RAG,infra,0,2021
+Weaviate,Weaviate,Search & RAG,infra,1,2019
+Milvus,Zilliz,Search & RAG,infra,1,2019
+Qdrant,Qdrant,Search & RAG,infra,1,2021
+pgvector,Community,Search & RAG,infra,1,2023
+LangChain,LangChain,Other,code,1,2022
+LlamaIndex,LlamaIndex,Other,code,1,2022
+Haystack,deepset,Other,code,1,2024
+Whisper,OpenAI,Other,audio,1,2022
+Deepgram,Deepgram,Audio/Music/TTS,audio,0,2023
+AssemblyAI,AssemblyAI,Other,audio,0,2017
+Google Speech-to-Text,Google Cloud,Other,audio,0,2018
+NVIDIA NeMo Guardrails,NVIDIA,Safety & Guardrails,safety,1,2023
+Lakera Guard,Lakera,Safety & Guardrails,safety,0,2023
+Guardrails AI (framework),Guardrails AI,Safety & Guardrails,safety,1,2023
+LMQL,ETH SRI,LLMs & Chat Assistants,code,1,2023
+OpenRouter,OpenRouter,Other,infra,0,2023
+Replicate,Replicate,Infra & Inference,infra,0,2021
+Modal,Modal Labs,Infra & Inference,infra,0,2022
+Vercel v0,Vercel,Design & UI,productivity,0,2023
+Figma AI,Figma,Design & UI,design,0,2024
+Framer AI,Framer,Design & UI,design,0,2023
+Canva Magic Write,Canva,Other,productivity,0,2022
+Notion AI,Notion,Productivity & Copilots,productivity,0,2023
+Cohere Command R,Cohere,LLMs & Chat Assistants,multimodal,0,2024
+xAI Grok,xAI,LLMs & Chat Assistants,multimodal,0,2023
+DeepSeek R1,DeepSeek,LLMs & Chat Assistants,multimodal,1,2025
+Mistral Large,Mistral AI,LLMs & Chat Assistants,multimodal,1,2023
+Llama 3.1,Meta,LLMs & Chat Assistants,multimodal,1,2023
+Qwen 2.5,Alibaba Cloud,LLMs & Chat Assistants,multimodal,1,2025
+Gemma 2,Google,LLMs & Chat Assistants,multimodal,1,2024
+DBRX,Databricks,LLMs & Chat Assistants,multimodal,1,2024
+Phi-3,Microsoft,LLMs & Chat Assistants,multimodal,1,2024
+MPT-7B,MosaicML,LLMs & Chat Assistants,text,1,2023
+Mixtral 8x7B,Mistral AI,LLMs & Chat Assistants,text,1,2023
+OpenAI o3-mini,OpenAI,LLMs & Chat Assistants,multimodal,0,2025
+GPT-4o,OpenAI,LLMs & Chat Assistants,multimodal,0,2023
+Claude 3.7 Sonnet,Anthropic,LLMs & Chat Assistants,multimodal,0,2023
+Grok-2,xAI,LLMs & Chat Assistants,multimodal,0,2024
+Mistral Codestral,Mistral AI,LLMs & Chat Assistants,code,1,2023
+Code Llama,Meta,LLMs & Chat Assistants,code,1,2023
+OpenAI o4-mini,OpenAI,LLMs & Chat Assistants,multimodal,0,2025
+Llama Guard,Meta,Safety & Guardrails,safety,1,2023
+Vanna,Vanna AI,Other,productivity,0,2024
+Dataherald,Dataherald,Other,productivity,0,2023
+Transformers,Hugging Face,Other,code,1,2018
+Diffusers,Hugging Face,Other,image,1,2022
+Gradio,Hugging Face,Other,productivity,1,2019
+Hugging Face Spaces,Hugging Face,Infra & Inference,infra,1,2021
+ComfyUI,Comfy Org,Image Gen & Editing,image,1,2023
+Automatic1111,Community,Image Gen & Editing,image,1,2022
+Krea AI,Krea,Image Gen & Editing,image,0,2022
+Leonardo AI,Leonardo.Ai,Image Gen & Editing,image,0,2022
+Ideogram,Ideogram,Image Gen & Editing,image,0,2023
+Black Forest Labs FLUX,Black Forest Labs,Image Gen & Editing,image,1,2024
+Playground AI,Playground,Image Gen & Editing,image,0,2022
+Luma Dream Machine,Luma AI,Video Gen & Editing,video,0,2024
+Kling AI,Kuaishou,Video Gen & Editing,video,0,2024
+HeyGen,HeyGen,Video Gen & Editing,video,0,2022
+Synthesia,Synthesia,Video Gen & Editing,video,0,2022
+CapCut AI,ByteDance,Video Gen & Editing,video,0,2019
+Descript,Descript,Video Gen & Editing,audio,0,2019
+PlayHT,PlayHT,Audio/Music/TTS,audio,0,2017
+Coqui TTS,Coqui,Audio/Music/TTS,audio,1,2021
+Voicemod,Voicemod,Audio/Music/TTS,audio,0,2014
+OpenAI TTS,OpenAI,Other,audio,0,2023
+OpenAI Sora,OpenAI,Video Gen & Editing,video,0,2024
+Adobe Firefly,Adobe,Image Gen & Editing,image,0,2023
+Adobe Photoshop Generative Fill,Adobe,Image Gen & Editing,image,0,2023
+Illustrator Text to Vector,Adobe,Video Gen & Editing,image,0,2023
+Canva Magic Design,Canva,Design & UI,design,0,2013
+Tome AI,Tome,Other,productivity,0,2022
+Gamma,Gamma,Other,productivity,0,2023
+Beautiful.ai,Beautiful.ai,Other,productivity,0,2018
+SlidesAI.io,SlidesAI,Other,productivity,0,2022
+Blackbox AI,Blackbox,LLMs & Chat Assistants,code,0,2024
+Tabnine,Tabnine,LLMs & Chat Assistants,code,0,2018
+Codeium,Codeium (Qodo),LLMs & Chat Assistants,code,0,2022
+Replit Ghostwriter,Replit,LLMs & Chat Assistants,code,0,2022
+OpenAI Assistants API,OpenAI,Other,code,0,2020
+Anthropic Tool Use,Anthropic,Other,code,0,2024
+Google Vertex AI,Google Cloud,Other,infra,0,2021
+Azure AI Studio,Microsoft Azure,Other,infra,0,2023
+AWS Bedrock,Amazon Web Services,Other,infra,0,2023
+LangSmith,LangChain,Evaluation & Benchmarks,infra,0,2023
+TruLens,Arize AI,Evaluation & Benchmarks,infra,1,2023
+Ollama,Ollama,Other,infra,1,2023
+LM Studio,LM Studio,Other,infra,0,2023
+WhisperX,Community,Speech-to-Text (ASR),audio,1,2022
+Silero VAD,Silero,Audio/Music/TTS,audio,1,2020
+Papers with Code SOTA,Papers with Code,Search & RAG,infra,1,2018
+Kaggle Models,Kaggle,Other,infra,1,2023
+OpenHands,OpenHands,Video Gen & Editing,code,1,2024
+LlamaGuard 2,Meta,Safety & Guardrails,text,1,2023
