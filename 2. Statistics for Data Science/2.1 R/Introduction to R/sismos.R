@@ -1,11 +1,11 @@
 # Ctrl + l - Clean the console
 x <- 5
-sismos <- read.csv("D:\\Alejandro\\dev\\miacd\\2. Statistics for Data Science\\2.1 R\\Introduction to R\\SSNMX_catalogo_19000101_20251004.csv")
+sismos <- read.csv("SSNMX_catalogo_19000101_20251004.csv")
 dim(sismos)
 colnames(sismos)
 fechas <- as.Date(sismos$Fecha, tryFormats = "%d/%m/%Y")
 months(fechas)
-install.packages("lubridate")
+# install.packages("lubridate")
 library(lubridate)
 anios <- year(fechas)
 
@@ -68,7 +68,7 @@ diff(range(estaturas))
 max(estaturas) - min(estaturas)
 
 # Rango interquartil
-ceiling(0.25*length(estaturas),0)
+ceiling(0.25*length(estaturas))
 round(0.75*length(estaturas),0)
 estaturas_ordenadas <- sort(estaturas)
 estaturas_ordenadas[round(0.75*length(estaturas),0)] - estaturas_ordenadas[ceiling(0.25*length(estaturas))]
@@ -107,3 +107,35 @@ frecuencia_sismos <- table(sismos3$Magnitud)
 frecuencia_sismos
 which(frecuencia_sismos == max(frecuencia_sismos))
 names(frecuencia_sismos)[which(frecuencia_sismos == max(frecuencia_sismos))]
+
+# Aggregate
+# Estadísticas multivariadas
+which(sismos3$Estado2 == " OAx")
+sismos3$Estado2[which(sismos3$Estado2 == " OAx")] <- " OAX"
+table(sismos3$Estado2)
+
+aggregate(Magnitud ~ Estado2, FUN = mean, data = sismos3)
+aggregate(sismos3$Magnitud ~ sismos3$Estado2, FUN = mean, data = sismos3)
+
+aggregate(sismos3$Magnitud ~ sismos3$Estado2, FUN = var)
+aggregate(sismos3$Magnitud ~ sismos3$Estado2, FUN = length)
+
+sqrt((var(sismos3$Magnitud) * 100))/mean(sismos3$Magnitud)
+
+coef_var <- function(x) {
+  (sqrt(var(x))*100) / mean(x)
+}
+
+coef_var2<-function(x){
+  sd(x)*100/mean(x)
+}
+
+coef_var(sismos3$Magnitud)
+coef_var(sismos3$Profundidad)
+
+aggregate(Magnitud ~ Estado2, FUN = coef_var, data = sismos3)
+aggregate(Profundidad ~ Estado2, FUN = coef_var, data = sismos3)
+
+aggregate(cbind(sismos3$Magnitud, sismos3$Profundidad) ~ sismos3$Estado2, FUN = mean)
+aggregate(cbind(sismos3$Magnitud, sismos3$Profundidad, sismos3$Latitud) ~ sismos3$Estado2, FUN = mean)
+
