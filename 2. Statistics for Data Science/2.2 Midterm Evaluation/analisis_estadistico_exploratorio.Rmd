@@ -1,0 +1,87 @@
+---
+title: "Exámen Parcial: Análisis estadístico exploratorio"
+author: "Manuel Alejandro Serrano Macias"
+date: "Fecha de modificación: `r format (Sys.time(), '%d-%m-%Y')`"
+output:
+  pdf_document:
+    toc: true
+    toc_depth: '3'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Reporte de Análisis Estadístico Exploratorio de Dengue
+
+A continuación se presenta un análisis estádistico exploratorio de los casos de dengue en los estados de Michoacán, Colima, Nayarit, Jalisco y Guerrero.
+
+## Prerequisitos
+
+1.  Se instalan y preparan las librerias a utilizar
+
+```{r}
+install.packages("readxl")
+library(readxl)
+```
+
+1.  Captura y limpieza de datos para el análisis mediante las siguientes instrucciones:
+
+```{r}
+dengue_datos_base <- read.csv("dengue_abierto.csv")
+catalogo_sexo <- read_excel("Catálogos_Dengue.xlsx", sheet = "CATÁLOGO SEXO")
+catalogo_entidad <- read_excel("Catálogos_Dengue.xlsx", sheet = "CATÁLOGO ENTIDAD")
+catalogo_municipio <- read_excel("Catálogos_Dengue.xlsx", sheet = "CATÁLOGO MUNICIPIO")
+
+names(catalogo_sexo) <- c("CLAVE_SEXO", "DESCRIPCIÓN_CATALOGO_SEXO")
+catalogo_entidad$CLAVE_ENTIDAD <- as.numeric(catalogo_entidad$CLAVE_ENTIDAD)
+catalogo_municipio$CLAVE_ENTIDAD <- as.numeric(catalogo_municipio$CLAVE_ENTIDAD)
+
+
+estados_estudio <- c(16, 6, 18, 14, 12)
+
+dengue_datos_estudio <- dengue_datos_base[dengue_datos_base$ENTIDAD_RES %in% estados_estudio, ]
+dengue_datos_estudio <- merge(dengue_datos_estudio, catalogo_entidad, by.x ="ENTIDAD_RES", by.y = "CLAVE_ENTIDAD")
+dengue_datos_estudio <- merge(dengue_datos_estudio, catalogo_sexo, by.x = "SEXO", by.y = "CLAVE_SEXO")
+
+dengue_datos_estudio$EDAD_ANOS <- as.numeric(dengue_datos_estudio$EDAD_ANOS)
+
+dengue_datos_estudio <- dengue_datos_estudio[!is.na(dengue_datos_estudio$EDAD_ANOS),]
+
+```
+
+## Resumen edad promedio, desviación estandar por sexo
+
+```{r}
+media_y_desviacion_estandar <- function(datos) {
+  c("EDAD_PROMEDIO" = mean(datos, na.rm = TRUE), "DESVIACIÓN_ESTANDAR" = sd(datos, na.rm = TRUE))
+}
+dengue_datos_estudio
+resumen <- aggregate(dengue_datos_estudio$EDAD_ANOS,
+          by = list("ESTADO" = dengue_datos_estudio$ENTIDAD_FEDERATIVA, "SEXO" = dengue_datos_estudio$DESCRIPCIÓN_CATALOGO_SEXO),
+          FUN = media_y_desviacion_estandar)
+resumen_df <- data.frame(
+  "ESTADO" = resumen$ESTADO,
+  "SEXO" = resumen$SEXO,
+  "EDAD_PROMEDIO" = resumen$x[,1],
+  "DESVIACION_ESTANDAR" = resumen$x[,2]
+)
+
+print(resumen_df)
+```
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
