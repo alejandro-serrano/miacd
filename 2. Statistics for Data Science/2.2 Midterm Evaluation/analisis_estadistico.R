@@ -1,4 +1,5 @@
 
+
 dengue_datos_base <- read.csv("dengue_abierto.csv")
 catalogo_sexo <- read_excel("Catálogos_Dengue.xlsx", sheet = "CATÁLOGO SEXO")
 catalogo_entidad <- read_excel("Catálogos_Dengue.xlsx", sheet = "CATÁLOGO ENTIDAD")
@@ -6,8 +7,6 @@ catalogo_municipio <- read_excel("Catálogos_Dengue.xlsx", sheet = "CATÁLOGO MU
 
 names(catalogo_sexo) <- c("CLAVE_SEXO", "DESCRIPCIÓN_CATALOGO_SEXO")
 catalogo_entidad$CLAVE_ENTIDAD <- as.numeric(catalogo_entidad$CLAVE_ENTIDAD)
-catalogo_municipio$CLAVE_ENTIDAD <- as.numeric(catalogo_municipio$CLAVE_ENTIDAD)
-
 
 estados_estudio <- c(16, 6, 18, 14, 12)
 
@@ -27,8 +26,6 @@ edad_promedio <- aggregate(EDAD_ANOS ~ ENTIDAD_FEDERATIVA + DESCRIPCIÓN_CATALOG
                            data = dengue_datos_estudio,
                            FUN = mean,
                            na.rm = TRUE)
-
-
 
 desviacion_estandar <- aggregate(EDAD_ANOS ~ ENTIDAD_FEDERATIVA + DESCRIPCIÓN_CATALOGO_SEXO, 
                                  data = dengue_datos_estudio, 
@@ -131,7 +128,9 @@ datos_top_municipios <- data.frame(
 )
 
 datos_top_municipios$MUNICIPIO_RES <- as.numeric(datos_top_municipios$MUNICIPIO_RES)
+
 catalogo_municipio$CLAVE_MUNICIPIO <- as.numeric(catalogo_municipio$CLAVE_MUNICIPIO)
+catalogo_municipio$CLAVE_ENTIDAD <- as.numeric(catalogo_municipio$CLAVE_ENTIDAD)
 
 top_municipios_nombres <- merge(datos_top_municipios, catalogo_municipio, 
                                     by.x = c("ENTIDAD_RES", "MUNICIPIO_RES"), 
@@ -162,34 +161,29 @@ densidades_muni <- list()
 colores <- c("cadetblue", "coral", "antiquewhite4", "brown", "goldenrod")
 max_y <- 0
 
-# 1. COLIMA
 colima_mun_edad <- datos_top_mun_final[datos_top_mun_final$ENTIDAD_FEDERATIVA == "COLIMA", ]$EDAD_ANOS
 densidad_colima_mun <- density(colima_mun_edad, na.rm = TRUE)
 max_y <- max(max_y, max(densidad_colima_mun$y))
 
-# 2. GUERRERO
 guerrero_mun_edad <- datos_top_mun_final[datos_top_mun_final$ENTIDAD_FEDERATIVA == "GUERRERO", ]$EDAD_ANOS
 densidad_guerrero_mun <- density(guerrero_mun_edad, na.rm = TRUE)
 max_y <- max(max_y, max(densidad_guerrero_mun$y))
 
-# 3. JALISCO
 jalisco_mun_edad <- datos_top_mun_final[datos_top_mun_final$ENTIDAD_FEDERATIVA == "JALISCO", ]$EDAD_ANOS
 densidad_jalisco_mun <- density(jalisco_mun_edad, na.rm = TRUE)
 max_y <- max(max_y, max(densidad_jalisco_mun$y))
 
-# 4. MICHOACÁN
 michoacan_mun_edad <- datos_top_mun_final[datos_top_mun_final$ENTIDAD_FEDERATIVA == "MICHOACÁN DE OCAMPO", ]$EDAD_ANOS
 densidad_michoacan_mun <- density(michoacan_mun_edad, na.rm = TRUE)
 max_y <- max(max_y, max(densidad_michoacan_mun$y))
 
-# 5. NAYARIT
 nayarit_mun_edad <- datos_top_mun_final[datos_top_mun_final$ENTIDAD_FEDERATIVA == "NAYARIT", ]$EDAD_ANOS
 densidad_nayarit_mun<- density(nayarit_mun_edad, na.rm = TRUE)
 max_y <- max(max_y, max(densidad_nayarit_mun$y))
 
 
 plot(densidad_colima_mun, 
-     main = "Densidad de la Edad de Pacientes en los municipios con más casos",
+     main = "Densidad de la edad de Pacientes en los municipios con más casos",
      xlab = "Edad (años)",
      ylab = "Densidad",
      xlim = c(0, 100),
@@ -197,7 +191,7 @@ plot(densidad_colima_mun,
      col = "cadetblue",
      lwd = 2)
 
-lines(guerrero_mun_edad, col = "coral", lwd = 2)
+#lines(guerrero_mun_edad, col = "coral", lwd = 2)
 lines(densidad_jalisco_mun, col = "antiquewhite4", lwd = 2)
 lines(densidad_michoacan_mun, col = "brown", lwd = 2)
 lines(densidad_nayarit_mun, col = "goldenrod", lwd = 2)
@@ -208,9 +202,7 @@ legend("topright",
        col = colores,
        lty = 1, lwd = 2, cex = 0.7)
 
-
 # 5. Gráfico de Barras de Frecuencia Mensual (Enero a Septiembre)
-pac
 install.packages("lubridate")
 library(lubridate)
 
@@ -222,8 +214,8 @@ dengue_datos_estudio$MES_NOMBRE <- month(dengue_datos_estudio$FECHA, label = TRU
 datos_meses <- dengue_datos_estudio[dengue_datos_estudio$MES_NUMERO >= 1 & dengue_datos_estudio$MES_NUMERO <= 9, ]
 frecuencia_mensual <- table(datos_meses$ENTIDAD_FEDERATIVA, datos_meses$MES_NOMBRE)
 
-par(mfrow = c(2, 3), mar = c(4, 4, 3, 1))
-colores_estado <- c("blue", "red", "green4", "orange", "purple")
+#par(mfrow = c(2, 3), mar = c(4, 4, 3, 1))
+colores_estado <- c("cadetblue", "coral", "antiquewhite4", "brown", "goldenrod")
 orden_meses <- c("enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre")
 
 frecuencia_mensual <- frecuencia_mensual[, orden_meses]

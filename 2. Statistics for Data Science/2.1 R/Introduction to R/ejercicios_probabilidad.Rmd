@@ -1,0 +1,452 @@
+---
+title: "Probabilidad: MIACD"
+author: "Héctor de la Torre Gutiérrez"
+date: "Fecha de modificación: `r format (Sys.time(), '%d-%m-%Y')`"
+output:
+  pdf_document:
+    toc: true
+    toc_depth: '3'
+  html_document:
+    css: styles.css
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 3
+    number_section: true
+---
+
+# DISTRIBUCIONES DE PROBABILIDAD
+
+**Ejemplo de simulación para determinar probabilidades:** Simular el experimento del lanzamiento de uno, dos, tres dados. Se analiza la suma.
+
+```{r}
+set.seed(1234) #Fijando semilla de números aleatorios
+experi<-10000000
+dado1<- round(runif(experi,1,6),0) #Dado uno, lanzado X veces
+dado2<- round(runif(experi,1,6),0) #Dado dos, lanzado X veces
+dado3<- round(runif(experi,1,6),0) #Dado tres, lanzado X veces
+dado_suma<-dado1+dado2+dado3
+dado_suma
+(table(dado_suma)/experi)*100
+```
+
+
+```{r}
+hist(dado_suma)
+```
+
+## 1) DISTRIBUCIONES DE PROBABILIDAD PARA VARIABLES ALEATORIAS DE TIPO DISCRETAS
+
+## 1.1) DISTRIBUCION BINOMIAL
+
+Tomando en cuenta el ejemplo de la población fumadora dentro de una muestra de 50 personas, se pide determinar: \
+$P(10 \leq  x \leq 40)$ = $P(x \leq 40) - P(x \leq 9)$ \
+$P(x = 10)$
+
+```{r}
+proba_binom<-rep(NA,31)
+for(i in 10:40){
+proba_binom[i-9]<-choose(50,i)*(.3^i)*(.7^(50-i)) }
+sum(proba_binom)
+```
+
+```{r}
+proba_binom<-rep(NA,10)
+for(i in 0:9){
+proba_binom[i+1]<-choose(50,i)*(.3^i)*(.7^(50-i)) }
+sum(proba_binom)
+pbinom(10,50,0.3,lower.tail = TRUE)-pbinom(9,50,0.3,lower.tail = TRUE)
+choose(50,10)*(.3^10)*(.7^(50-10))
+
+```
+
+```{r}
+pbinom(40,50,.3,lower.tail = TRUE)-pbinom(9,50,.3,lower.tail = TRUE)
+
+#var_Esp_binom<-50*.3
+#var_Esp_binom
+```
+
+
+1) Probabilidad de hasta 15 fumadores en la muestra de 50 personas. \
+2) Probabilidad de encontrar más de 20 fumadores en la muestra.
+
+```{r}
+pbinom(15,50,.3,lower.tail = TRUE)
+1-pbinom(20,50,.3,lower.tail = TRUE) # igual a lo siguiente
+pbinom(20,50,.3,lower.tail = FALSE) #igual a lo anterior
+
+pbinom(15,50,.3,lower.tail = TRUE)-pbinom(14,50,.3,lower.tail = TRUE)
+
+
+
+```
+
+```{r}
+proba_binom<-rep(NA,51)
+for(i in 0:50){
+proba_binom[i+1]<-choose(50,i)*(.3^i)*(.7^(50-i)) }
+par(mfrow=c(1,2))
+barplot(proba_binom,xlab="P(X=x)")
+plot(cumsum(proba_binom),type="l",xlab="P(X<=x")
+```
+
+## 1.2) DISTRIBUCIÓN POISSON
+
+Se estudia el número de ocurrencias (accidentes) en 20 cruceros de la ciudad de Aguascalientes el día 10 de septiembre (24 horas), los datos son los siguientes:
+
+0, 5, 3, 4, 1, 6, 0, 2, 4, 9, 1, 0, 0, 4, 7, 3, 0, 1, 0, 1
+
+Dada una taza de accidentes,  
+- 1. ¿Cuál es la probabilidad de que haya accidentes en un crucero?
+- 2. ¿Cuál es la probabilidad de no haya accidentes?
+- 3. ¿Haya más de tres accidentes en 24 horas? 
+- 4. ¿Cuál es la probabilidad de que haya 2 o más accidentes cuando se observa el fenómenos de 'accidentes en un crucero' por 48 horas? 
+
+```{r}
+accidentes<-c(0, 5, 3, 4, 1, 6, 0, 2, 4, 9, 1, 0, 0, 4, 7, 3, 0, 1, 0, 1)
+theta_pos<-mean(accidentes)
+theta_pos
+```
+2.55 accidentes por cada 24 horas
+$P(X>0)$
+$P(X=0)$
+$P(X>3) = P(X>=4) = 1-P(X<=3)$
+
+```{r}
+#1-ppois(0,lambda = 2.55)
+#ppois(0,lambda = 2.55) #P(X=0)
+
+1-ppois(3,lambda = 2.55)
+ppois(3,lambda = 2.55,lower.tail = FALSE)
+
+```
+
+
+
+```{r}
+ppois(0,theta_pos,lower.tail = TRUE) #Probabilidad de que no haya accidentes
+1-ppois(0,theta_pos,lower.tail = TRUE) #Probabilidad de que haya accidentes
+ppois(0,theta_pos,lower.tail = FALSE) #Probabilidad de que haya accidentes
+1-ppois(3,theta_pos,lower.tail = TRUE)
+
+1-ppois(1,theta_pos*2,lower.tail = TRUE)
+ppois(1,theta_pos*2,lower.tail = FALSE)
+```
+
+```{r}
+par(mfrow=c(1,2))
+proba_pois<-rep(NA,21)
+for(i in 0:20){
+proba_pois[i+1]<-ppois(i,theta_pos)}
+plot(proba_pois,type="b")
+
+proba_pois2<-rep(NA,21)
+for(i in 0:20){
+proba_pois2[i+1]<-((exp(-theta_pos)*theta_pos^i))/factorial(i) }
+barplot(proba_pois2)
+
+```
+
+## 1.3) EJEMPLO INTEGRADOR DE DISTRIBUCIONES DISCRETAS
+
+Utilizar la distribución Binomal para calcular 1) y 2) del ejercicio anterior.
+Repensar el problema, ahora se estudiará cada semáforo como un evento Bernoulli, y buscaremos saber: \
+ _1) en todos los semáforos no haya accidentes_ $P(X = 0 | p = 0.70)$ y \
+ _2) en solo un semáforo haya accidentes_ $P(X = 1 | p = 0.70)$. 
+$P(X \geq 10 | p=0.7, n=20)$ 
+ También, que haya mínimo cinco semáforos con choques. ¿Es posible pensar que haya más de 10 semáforos con choques dada la proporción de *p = 0.70* y *n= 20* ?
+
+```{r}
+accidentes<-c(0, 5, 3, 4, 1, 6, 0, 2, 4, 9, 1, 0, 0, 4, 7, 3, 0, 1, 0, 1)
+evenbernu<-ifelse(accidentes==0,0,1)
+sum(evenbernu)/20 #n=20
+```
+$P(X=0)$ Considerando la distribución Binomial con n=20,p=0.7
+$P(X=1)$ Un semáforo con accidente
+Valore esperado de semáforos con accidentes = $n*p$ = $20*0.7 = 14$
+
+
+```{r}
+accidentes2<-ifelse(accidentes==0,0,1)
+pe_acci<-sum(accidentes2)/20
+20*pe_acci #Valor esperado
+#Se tiene una flotilla que puede atender hasta cinco accidentes al día
+#P() Probabilidad de que cubran el trabajo demandado P(X<=5|n=20,p=0.7)
+pbinom(0,20,0.7,lower.tail = TRUE)
+pbinom(0,20,0.7,lower.tail = FALSE)
+
+pbinom(10,20,0.7,lower.tail = FALSE)
+```
+
+# 2) DISTRIBUCIONES DE PROBABILIDAD PARA VARIABLES ALEATORIAS CONTINUAS
+
+Una empresa refresquera tiene dos líneas de llenado para las botellas, línea A y B. Ambas, en teoría suministran una cantidad de llenado de 600ml en promedio. Sin embargo, durante la última semana, se ha detectado que en la línea A, dos botellas estaban por encima de los 600 ml. Mientras que en la línea B, todo se encontró en orden. El ingeniero de control de la calidad decide tomar 10 botellas al azar de la línea A y 12 botellas al azar de la línea B. ¿Cuál de las dos máquinas puede cumplir de mejor manera con los requisitos de calidad? (ver tolerancias más adelante). Los resultados se muestran en la tabla siguiente:
+
+```{r}
+datos_ejemplo<-matrix(c(601.333,	595.0222,601.744,	606.0491,606.0802,	604.0949,601.2242,	601.951,
+602.0219,	599.094,599.3259,	598.7811,602.5042,	603.5545,600.9781,	592.3436,
+602.7935,	605.3266,592.9382,	600.6886,NA,		601.1702,NA,		601.3226),ncol=2,byrow=T)
+colnames(datos_ejemplo)<-c("Linea_A",	"Linea_B")
+datos_ejemplo<-as.data.frame(datos_ejemplo)
+var(datos_ejemplo$Linea_A,na.rm=T)
+datos_ejemplo
+```
+
+Si se tiene una tolerancia de llenado extra o faltante de 2ml, ¿cuál es la probabilidad de que la Línea A y B cumplan con lo estipulado?
+
+- Proceso A: $P(598 < X < 602| \mu = 601.09, \sigma^2=11.19)$ \
+- Proceso B: $P(598 < X < 602| \mu = 600.78, \sigma^2=16.37)$
+
+```{r}
+mediaA<-mean(datos_ejemplo$Linea_A,na.rm=TRUE)
+varA<-var(datos_ejemplo$Linea_A,na.rm=TRUE)
+mediaB<-mean(datos_ejemplo$Linea_B,na.rm=TRUE)
+varB<-var(datos_ejemplo$Linea_B,na.rm=TRUE)
+```
+
+```{r}
+pnorm(602,mediaA,sqrt(varA))-pnorm(598,mediaA,sqrt(varA)) #En este proceso es más probable cumplir con las especificaciones
+pnorm(602,mediaB,sqrt(varB))-pnorm(598,mediaB,sqrt(varB))
+```
+
+2) Considere los siguientes datos sobre carga de ruptura (kg/25mm de ancho) para varios tejidos tanto sin cardar como cardados.
+
+```{r}
+Sin_cardar<-c(36.4,55.0,51.5,38.7,43.2,48.8,25.6,49.8)
+Cardado<-c(28.5,20,	46,	34.5,	36.5,	52.5,	26.5,	46.5)
+```
+
+
+
+## DISTRIBUCION DE PROBABILIDAD DE LA MAGNITUD DE LOS SISMOS
+
+1) Jalar datos junto al histograma de las magnitudes, así como de la densidad \
+2) ¿Parece ser una distribución normal? \
+3) ¿Cuál es la probabilidad de que haya un sismo destructor? \
+4) ¿Y la probabilidad de un sismo cuya magnitud sea mayor a 5? \
+5)  TLC. Pendiente
+
+```{r}
+sismos<-read.csv("P:\\UP\\2025\\2025-2\\SSNMX_catalogo_19000101_20251004 (1).csv")
+sismos$Magnitud<-as.numeric(sismos$Magnitud)
+sismos2<-sismos[which(sismos$Estado2%in%c(" CHIS"," OAX"," JAL")),]
+#which(sismos$Estado2%in%c(" CHIS"," OAX"," JAL"))
+
+```
+
+
+
+
+```{r}
+hist(sismos2$Magnitud,breaks = seq(1,8.25,0.05))
+plot(density(sismos2$Magnitud,na.rm=TRUE))
+```
+
+```{r}
+#Asumamos que un sismo destructor es aquel cuya magnitud es mayor a 5.0 grados.
+#Obtener la probabilidad de dicho tipo de sismo para cada estado y a nivel nacional.
+media_estados<-aggregate(Magnitud~Estado2,data=sismos2,FUN=mean,na.rm=TRUE)
+sd_estados<-aggregate(Magnitud~Estado2,data=sismos2,FUN=sd,na.rm=TRUE)
+media_nac<-mean(sismos$Magnitud,na.rm=TRUE)
+sd_nac<-sd(sismos$Magnitud,na.rm=TRUE)
+```
+
+$P(X>5.0|Estado =Chiapas)$
+$P(X>5.0|Estado =Jalisco)$
+$P(X>5.0|Estado =Oaxaca)$
+$P(X>5.0|Nacionales)$
+
+```{r}
+pnorm(5,media_nac,sd_nac) #Probabilidad de un sismo no-destructor
+pnorm(5,media_nac,sd_nac,lower.tail = FALSE) #Probabilidad de un sismo destructor
+1-pnorm(5,media_nac,sd_nac,lower.tail = TRUE) #Similar al anterior
+media_nac
+```
+
+```{r}
+fun_sismo<-function(x){
+  media<-mean(x,na.rm=TRUE)
+  desvest<-sd(x,na.rm=TRUE)
+  probabilidad<-pnorm(5,media,desvest,lower.tail = FALSE)
+  #return(data.frame(Media=media,Des_Esta=desvest,Prrobabilidad=probabilidad))}
+  return(probabilidad) }
+```
+
+```{r}
+1-pnorm(5,media_nac,sd_nac,lower.tail = TRUE) #Similar al anterior
+1-pnorm(5,media_estados[1,2],sd_estados[1,2]) #Chiapas
+1-pnorm(5,media_estados[2,2],sd_estados[2,2]) #Jalisco
+1-pnorm(5,media_estados[3,2],sd_estados[3,2]) #Oaxaca
+```
+
+```{r}
+cbind(media_estados,sd_estados[,2])
+## Calcularlo para los 32 estados y observa aquel donde la probabilidad se la mayor,
+# y la menor. Aggregate
+```
+
+```{r}
+magnitud<-aggregate(Magnitud~Estado2,data=sismos,FUN=fun_sismo,simplify = TRUE)
+mean_magni<-aggregate(Magnitud~Estado2,data=sismos,FUN=mean,simplify = TRUE)
+sd_magni<-aggregate(Magnitud~Estado2,data=sismos,FUN=sd,simplify = TRUE)
+magnitud[order(magnitud$Magnitud*100,decreasing = TRUE),]
+```
+
+```{r}
+magni1<-merge(magnitud,mean_magni,by.x="Estado2",by.y = "Estado2")
+magni2<-merge(magni1,sd_magni,by.x="Estado2",by.y = "Estado2")
+colnames(magni2)<-c("Estado","Probabilidad","Media","Sd")
+magni2
+```
+
+### EJERCICIO INTEGRADOR
+Una compañía fabrica focos con vida media de 500 horas y desviación estándar de 100. Suponga que los tiempos de vida útil de los focos se distribuyen de forma Normal, esto es que los tiempos de vida forman una distribución normal.
+
+- a) Encuentre la probabilidad de que cierta cantidad de focos dure menos de 650 horas. $P(X<650)$ Sea X, la duración de vida de los focos.
+
+```{r}
+pnorm(650,500,100)
+```
+
+- b) Calcule la probabilidad de que cierta cantidad de focos dure más de 780 horas.
+$P(X>780)$
+```{r}
+pnorm(780,500,100,lower.tail = FALSE)
+```
+
+$ P(650 \leq  X \leq 780) = P(650 < X < 780) $
+
+- c) Determine la probabilidad de que cierta cantidad de focos dure entre 650 y 780 horas (ambos inclusive).
+
+```{r}
+pnorm(780,500,100)-pnorm(650,500,100)
+```
+
+- d) Halle el valor de k tal que el 5% de los focos tenga un tiempo de vida mayor que  k horas?
+
+$P(X > ?|\mu = 500, \sigma = 100) = 0.05$
+
+```{r}
+pnorm(663,500,100,lower.tail = FALSE)
+```
+
+```{r}
+qnorm(0.05,500,100,lower.tail = FALSE)
+```
+```{r}
+pnorm(664.4854,500,100)
+```
+
+- e) Si se eligen 10,000 focos, ¿cuántos tuvieron un tiempo de vida entre 650 y 780 horas (ambos inclusive)?
+
+```{r}
+(pnorm(780,500,100)-pnorm(650,500,100))*10000 (n*p)
+```
+```{r}
+pnorm(780,500,100)-pnorm(650,500,100)
+```
+
+- f) Si se eligen 1200 focos, ¿cuál es la probabilidad de que al menos 3 duren más de 780 horas?
+
+$P( X_{1} > 780 | \mu = 500, \sigma = 100  )$ $X_{1}$ Es la duración de los focos 
+```{r}
+peee<-pnorm(780,500,100,lower.tail = FALSE)
+```
+
+$ P( X_{2} \geq 3 | p = 0.00255513, n= 1200) $ Con $X_{2}$ el número de focos que fallan en 1200 inspecciones
+
+$P(X_{2}  \geq 3) = 1- P(X_{2} < 3) =1- P(X_{2} \leq 2)$
+
+```{r}
+1-pbinom(q=2,prob=peee,size=1200)
+```
+- g) Si se eligen 20 focos, ¿cuál es la probabilidad de que entre 16 y 19 (ambos inclusive) duren menos de 650 horas?
+
+$P(X_{1} < 650)$ $X_{1}$ es la duración de los focos $X_{1} $ sigue una distribución normal 
+$ P(16 \leq X_{2} \leq 19) $ $X_{2}$ sigue una distriución Binomial
+
+$P(15 < X \leq 19) = P(X \leq 19) - P(X \leq 15)  = P(X=16)+P(X=17)+P(X=18)+P(X=19)$ 
+
+```{r}
+pee2<-pnorm(650,500,100)
+```
+```{r}
+pbinom(19,prob=pee2,size=20)-pbinom(15,prob=pee2,size=20)
+```
+
+```{r}
+choose(20,16)*(pee2^16)*((1-pee2)^(20-16))+
+choose(20,17)*(pee2^17)*((1-pee2)^(20-17))+
+choose(20,18)*(pee2^18)*((1-pee2)^(20-18))+
+choose(20,19)*(pee2^19)*((1-pee2)^(20-19))
+```
+$P(X_{2} = 16) = P(X \leq 16) - P(X \leq 15) $
+
+```{r}
+pbinom(q=16,size=20,prob=pee2)-pbinom(q=15,size=20,prob=pee2)
+choose(20,16)*(pee2^16)*((1-pee2)^(20-16))
+```
+
+
+- h) Si se eligen 20 focos, ¿cuál es la probabilidad de que entre 16 y 19 (ambos inclusive) no duren menos de 650 horas?
+
+$ P(X_{1} >650) $ Distribucion normal
+$ P(16 \leq X_{2} \leq 19)$
+
+```{r}
+pee3<-pnorm(650,500,100,lower.tail = FALSE)
+pbinom(19,prob=pee3,size=20)-pbinom(15,prob=pee3,size=20)
+20*pee3
+```
+
+
+```{r}
+pnorm(650,500,100) # a)
+1-pnorm(650,500,100) # pre-h
+pnorm(780,500,100,lower.tail = FALSE) #b)
+pnorm(780,500,100,lower.tail = TRUE)-pnorm(650,500,100,lower.tail = TRUE) #c
+qnorm(0.95,500,100) #d)
+qnorm(0.05,500,100,lower.tail = FALSE) #d)
+pnorm(664.485362695147,500,100) #d)
+(pnorm(780,500,100,lower.tail = TRUE)-pnorm(650,500,100,lower.tail = TRUE))*10000 #e
+1-pbinom(2,size=1200,prob=pnorm(780,500,100,lower.tail = FALSE)) #f)
+pbinom(19,size=20,prob=pnorm(650,500,100))-pbinom(15,size=20,prob=pnorm(650,500,100)) #g)
+pbinom(19,size=20,prob=pnorm(650,500,100,lower.tail = FALSE))-pbinom(15,size=20,prob=pnorm(650,500,100,lower.tail = FALSE)) #h)
+```
+
+```{r}
+#Gráficamente, ¿cómo se ve la distribución?
+plot(pnorm(seq(0,1000),500,100),type="l",lwd=2,col="blue",main="F(x)",xlab="Horas",
+ylab="Probabilidad")
+abline(v=664.485362695147,col="red")
+abline(h=0.95,col="red")
+```
+
+# EJEMPLO DE LA APLICACIÓN DE TEOREMA DEL LÍMITE CENTRAL
+
+```{r}
+
+# 1) Tomar 200,000 muestras
+# 2) Calcular la media de esta muestra de tamaño 200,000
+# 3) Guardar el valor
+# 4) Repertir lo anterior 200 veces
+
+#1000 medias... ¿cómo se observa gráficamente estas 200 medias? Realizar un histograma
+# o un gráfico de densidad.
+sismos$Magnitud<-as.numeric(sismos$Magnitud)
+media_muestra<-rep(NA,10000)
+for(i in 1:10000) {
+  media_muestra[i]<-mean(sample(sismos$Magnitud,size=20000+i,replace=FALSE),na.rm=TRUE)}
+```
+
+```{r}
+par(mfrow=c(1,2))
+hist(media_muestra,breaks=seq(min(media_muestra)*.9999,max(media_muestra)*1.0001,0.00005))
+plot(density(media_muestra))
+
+media_media<-mean(media_muestra)
+sd_media<-sd(media_muestra)/sqrt(1000)
+```
+
