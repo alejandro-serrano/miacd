@@ -1,0 +1,305 @@
+---
+title: 'Estadística para la Ciencia de Datos'
+subtitle: 'Exámen final: Estadística y probabilidad aplicada'
+author: "Manuel Alejandro Serrano Macias"
+date: 'Fecha de modificación: `r Sys.time()`'
+output:
+  pdf_document:
+    toc: true
+    toc_depth: '3'
+    df_print: kable
+  html_document:
+    toc: true
+    toc_depth: '3'
+    df_print: kable
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Reporte de Análisis Estadístico Exploratorio de Marginación Municipal 2020 
+
+  A continuación se presenta un análisis estádistico exploratorio del Indice de 
+Rezago Municipal 2020. Los datos son extraidos del Consejo Nacional de Población
+(CONAPO)
+
+## Prerequisitos
+1. Se instalan y preparan las librerias a utilizar durante el análisis.
+```{r message = FALSE, warning = FALSE}
+# install.packages("knitr")
+# install.packages("readxl")
+# install.packages("corrplot")
+library(readxl)
+library(knitr)
+library(corrplot)
+```
+
+2. Carga y procesamiento de datos para el análisis.
+  Se cargan los datos de Marginación Municipal 2020 (CONAPO)
+
+```{r}
+marginacion_base <- read_excel("IMM_2020.xlsx", sheet = "IMM_2020")
+```
+
+## a) Mostrar el rango, rango intercuantílico, media, mediana y desviación estándar
+de las nueve variables porcentuales (ANALF, SBASC, OVSDE, OVSEE, OVSAE, OVPT,
+VHAC, PL.5000, PO2SM) de cada uno de las 32 entidades federativas.
+
+  Se definen las variables que incluiremos en el estudio, iteramos en cada estado
+para calcular las estadísticas de interes de cada variable mediante las siguientes
+instrucciones:
+
+```{r}
+variables_estudio <-
+  c("ANALF","SBASC","OVSDE","OVSEE","OVSAE","OVPT","VHAC","PL.5000","PO2SM")
+
+entidades <- unique(marginacion_base$NOM_ENT)
+
+for (variable in variables_estudio) {
+  marginacion_base[[variable]] <- as.numeric(marginacion_base[[variable]])
+}
+
+resultados <- list()
+
+for (estado in entidades) {
+  datos_estado <- marginacion_base[marginacion_base$NOM_ENT == estado, ]
+  estadisticas_estado <- list()
+  
+  for (variable in variables_estudio) {
+    estado_actual <- marginacion_base[[variable]]
+    rango <- range(estado_actual, na.rm = TRUE)
+    rango_intercuantilico <- IQR(estado_actual, na.rm = TRUE)
+    media <- mean(estado_actual, na.rm = TRUE)
+    mediana <- median(estado_actual, na.rm = TRUE)
+    desviacion_estandar <- sd(estado_actual, na.rm = TRUE)
+
+    calculo_estadisticas <- data.frame(
+      Variable = variable,
+      Rango_Min = rango[1],
+      Rango_Max = rango[2],
+      Rango_Intercuantilico = rango_intercuantilico,
+      Media = media,
+      Mediana = mediana,
+      Desviacion_Estandar = desviacion_estandar
+    )
+    
+    estadisticas_estado[[variable]] <- calculo_estadisticas
+  }
+  
+  df_estado <- do.call(rbind, estadisticas_estado)
+  rownames(df_estado) <- NULL
+  
+  resultados[[estado]] <- df_estado
+}
+
+```
+
+Finalmente, se crea una lista principal de data frames para cada estado.
+
+NOTA: Originalmente hacia el proceso con un ciclo, sin embargo, las tablas no
+se imprimían en el pdf de manera amigable, investigué y se debe a que kable, que
+es el formato que especifico en el encabezado del Markdown para impresión de
+data frames no puede imprimir de manera adecuada dentro de un ciclo, la documentación
+recomienda tener un chunk de R por cada tabla para asi tenerla impresa en el PDF
+de manera amigable. Seguramente hay una mejor manera de hacerlo, lo investigaré
+para futuros reportes.
+```{r}
+# Código original solo para referencia
+
+# for (estado in sort(names(resultados))) {
+#   dataframe_estado <- resultados[[estado]]
+#   
+#   cols_numericas <- c("Rango_Min", "Rango_Max", "Rango_Intercuantilico", 
+#                       "Media", "Mediana", "Desviacion_Estandar")
+#   
+#   dataframe_estado[cols_numericas] <- 
+#     lapply(dataframe_estado[cols_numericas], round, digits = 3)
+#   
+#   print(knitr::kable(dataframe_estado, caption = estado))
+# }
+```
+
+```{r}
+imprimir_resultados <- function(data_frame, estado) {
+  knitr::kable(data_frame,
+              caption = estado,
+              digits = 3,
+              booktabs = TRUE,
+              longtable = FALSE)
+}
+```
+
+```{r}
+imprimir_resultados(resultados[["Aguascalientes"]], "Aguascalientes")
+imprimir_resultados(resultados[["Baja California"]], "Baja California")
+imprimir_resultados(resultados[["Baja California Sur"]], "Baja California Sur")
+imprimir_resultados(resultados[["Campeche"]], "Campeche")
+imprimir_resultados(resultados[["Coahuila de Zaragoza"]], "Coahuila de Zaragoza")
+imprimir_resultados(resultados[["Colima"]], "Colima")
+imprimir_resultados(resultados[["Chiapas"]], "Chiapas")
+imprimir_resultados(resultados[["Chihuahua"]], "Chihuahua")
+imprimir_resultados(resultados[["Ciudad de México"]], "Ciudad de México")
+imprimir_resultados(resultados[["Durango"]], "Durango")
+imprimir_resultados(resultados[["Guanajuato"]], "Guanajuato")
+imprimir_resultados(resultados[["Guerrero"]], "Guerrero")
+imprimir_resultados(resultados[["Hidalgo"]], "Hidalgo")
+imprimir_resultados(resultados[["Jalisco"]], "Jalisco")
+imprimir_resultados(resultados[["México"]], "México")
+imprimir_resultados(resultados[["Michoacán de Ocampo"]], "Michoacán de Ocampo")
+imprimir_resultados(resultados[["Morelos"]], "Morelos")
+imprimir_resultados(resultados[["Nayarit"]], "Nayarit")
+imprimir_resultados(resultados[["Nuevo León"]], "Nuevo León")
+imprimir_resultados(resultados[["Oaxaca"]], "Oaxaca")
+imprimir_resultados(resultados[["Puebla"]], "Puebla")
+imprimir_resultados(resultados[["Querétaro"]], "Querétaro")
+imprimir_resultados(resultados[["Quintana Roo"]], "Quintana Roo")
+imprimir_resultados(resultados[["San Luis Potosí"]], "San Luis Potosí")
+imprimir_resultados(resultados[["Sinaloa"]], "Sinaloa")
+imprimir_resultados(resultados[["Sonora"]], "Sonora")
+imprimir_resultados(resultados[["Tabasco"]], "Tabasco")
+imprimir_resultados(resultados[["Tamaulipas"]], "Tamaulipas")
+imprimir_resultados(resultados[["Tlaxcala"]], "Tlaxcala")
+imprimir_resultados(resultados[["Veracruz de Ignacio de la Llave"]], "Veracruz de Ignacio de la Llave")
+imprimir_resultados(resultados[["Yucatán"]], "Yucatán")
+imprimir_resultados(resultados[["Zacatecas"]], "Zacatecas")
+```
+
+## b) Gráfico de correlación
+
+  Variables de estudio (ANALF, SBASC, OVSDE, OVSEE, OVSAE, OVPT,VHAC, PL.5000, PO2SM)
+
+  Para generar el gráfico de correlación creamos un nuevo data frame con las
+variables de estudio, posteriormente la función *cor* calcula la matriz de
+correlación de Pearson. Se utiliza la libreria de *corrpolt* para crear el gráfico.
+
+```{r}
+datos_correlacion <- marginacion_base[, variables_estudio]
+matriz_correlacion <- cor(datos_correlacion, use = "pairwise.complete.obs")
+knitr::kable(round(matriz_correlacion, 2))
+
+corrplot(matriz_correlacion, 
+         method = "color", # Muestra cuadrados de color
+         title = "Gráfico de Correlación de Indicadores de Marginación",
+         mar = c(0, 0, 4, 0), # Adjust top margin for the title
+         cex.main = 1,
+         tl.col = "black", # Color de las etiquetas
+         tl.srt = 45,      # Rotación de las etiquetas (para que no se encimen)
+         addCoef.col = "black", # Agrega los valores numéricos
+         number.cex = 0.7, # Tamaño de los números
+         tl.cex = 0.7)
+```
+
+
+*Observaciones*
+
+1. Correlaciones Positivas Fuertes (Números altos, ej., r>0.7):
+    - Educación y Pobreza de Ingresos: Se espera una correlación muy fuerte
+      entre ANALF (analfabetismo) y SBASC (población sin educación básica) con
+      PO2SM (población con ingresos <= 2 salarios mínimos). Esto significa que
+      donde hay alta falta de educación básica, hay mayor población con bajos ingresos,
+      reforzando el ciclo de marginación.
+ 
+     - Vivienda de Calidad: Los indicadores de carencias en la vivienda suelen estar
+      muy correlacionados entre sí. Por ejemplo, OVSDE (sin drenaje/excusado),
+      OVSEE (sin electricidad), OVSAE (sin agua entubada) y OVPT (piso de tierra)
+      mostrarán una correlación positiva alta.
+      Si un municipio carece de un servicio básico de vivienda, es muy probable
+      que carezca de los demás.
+
+    - Hacinamiento (VHAC): También se correlaciona positivamente con las otras
+      carencias de vivienda, pues ambas son manifestaciones de pobreza de infraestructura.
+ 
+2. Correlaciones Negativas o Débiles (Números bajos, ej., r<0.3):
+   - Correlación entre Desarrollo de Servicios y Variables Rurales: Es posible
+     encontrar correlaciones más débiles o incluso negativas entre variables
+     como PL.5000 (población en localidades rurales/pequeñas) y algunos indicadores
+     de vivienda, aunque suele ser más compleja. En general, en municipios con
+     alta dispersión rural (PL.5000), las carencias de servicios (OVSDE, OVSAE)
+     pueden ser elevadas, resultando en una correlación positiva.
+
+  La falta de correlación indicaría que la carencia de un servicio o condición
+no está sistemáticamente relacionada con la carencia de otra.
+
+Conclusión: El gráfico de correlación sirve para confirmar la coherencia conceptual
+del Índice de Marginación. Las variables fueron elegidas porque se espera que se muevan juntas.
+Las áreas con cuadrados oscuros (cercanos a 1) confirman que la marginación es un
+fenómeno multidimensional donde las carencias se acumulan
+(mala vivienda → baja educación → bajos ingresos).
+
+
+## b) Gráfico de densidad del Indice de marginación normalizado
+
+  Estados de estudio Nuevo León, Durango, Jalisco, Veracruz y Chiapas.
+  
+  Para generar el gráfico de densidad se filtran los datos de las entidades federativas
+de interes, se calculan las densidades de cada estado, posteriormente se determinan
+los rangos para que las curvas quepan y creamos el gráfico.
+
+```{r}
+entidades_interes <- c("Nuevo León", "Durango", "Jalisco", "Veracruz de Ignacio de la Llave", "Chiapas")
+variable_imn <- "IMN_2020"
+datos_entidades_estudio <- marginacion_base[marginacion_base$NOM_ENT %in% entidades_interes, ]
+datos_entidades_estudio[[variable_imn]] <- as.numeric(datos_entidades_estudio[[variable_imn]])
+
+# --- PASO 1: Filtrado de Datos por Entidad ---
+
+nuevo_leon_imn <- na.omit(subset(marginacion_base, NOM_ENT == "Nuevo León")[[variable_imn]])
+durango_imn <- na.omit(subset(marginacion_base, NOM_ENT == "Durango")[[variable_imn]])
+jalisco_imn <- na.omit(subset(marginacion_base, NOM_ENT == "Jalisco")[[variable_imn]])
+veracruz_imn <- na.omit(subset(marginacion_base, NOM_ENT == "Veracruz de Ignacio de la Llave")[[variable_imn]])
+chiapas_imn <- na.omit(subset(marginacion_base, NOM_ENT == "Chiapas")[[variable_imn]])
+
+
+densidad_nuevo_leon <- density(nuevo_leon_imn)
+densidad_durango <- density(durango_imn)
+densidad_jalisco <- density(jalisco_imn)
+densidad_veracruz <- density(veracruz_imn)
+densidad_chiapas <- density(chiapas_imn)
+
+colores <- c("cadetblue", "coral", "antiquewhite4", "brown", "goldenrod")
+
+min_x_vals <- c(min(densidad_nuevo_leon$x),
+                min(densidad_durango$x),
+                min(densidad_jalisco$x),
+                min(densidad_veracruz$x),
+                min(densidad_chiapas$x))
+
+max_x_vals <- c(max(densidad_nuevo_leon$x),
+                max(densidad_durango$x),
+                max(densidad_jalisco$x),
+                max(densidad_veracruz$x),
+                max(densidad_chiapas$x))
+
+rango_x <- c(min(min_x_vals), max(max_x_vals))
+
+max_y_vals <- c(max(densidad_nuevo_leon$y),
+                max(densidad_durango$y),
+                max(densidad_jalisco$y),
+                max(densidad_veracruz$y),
+                max(densidad_chiapas$y))
+
+rango_y <- c(0, max(max_y_vals))
+
+plot(densidad_nuevo_leon, 
+     xlim = rango_x, 
+     ylim = rango_y,
+     main = "Densidad del Indice de Marginación Normalizado (IMN_2020) por Entidad",
+     xlab = "Índice de Marginación Normalizado (IMN_2020)",
+     ylab = "Densidad",
+     col = colores[1],
+     lwd = 2)
+
+lines(densidad_durango, col = colores[2], lwd = 2)
+lines(densidad_jalisco, col = colores[3], lwd = 2)
+lines(densidad_veracruz, col = colores[4], lwd = 2)
+lines(densidad_chiapas, col = colores[5], lwd = 2)
+
+legend("topleft", 
+       legend = entidades_interes, 
+       col = colores, 
+       lwd = 2, 
+       cex = 0.8)
+```
+
+
