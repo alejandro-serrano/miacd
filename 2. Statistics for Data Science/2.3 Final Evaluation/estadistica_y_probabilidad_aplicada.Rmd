@@ -27,11 +27,11 @@ Rezago Municipal 2020. Los datos son extraidos del Consejo Nacional de Població
 ## Prerequisitos
 1. Se instalan y preparan las librerias a utilizar durante el análisis.
 ```{r message = FALSE, warning = FALSE}
-# install.packages("knitr")
-# install.packages("readxl")
-# install.packages("corrplot")
+#install.packages("knitr")
+#install.packages("readxl")
+#install.packages("corrplot")
 library(readxl)
-library(knitr)
+#library(knitr)
 library(corrplot)
 ```
 
@@ -301,5 +301,189 @@ legend("topleft",
        lwd = 2, 
        cex = 0.8)
 ```
+
+  El análisis comparativo de las curvas de densidad del Índice de Marginación Normalizado (IMN_2020) revela contrastes fundamentales en la distribución de la marginación a nivel municipal entre las entidades seleccionadas.
+  Entidad Posición de la Curva (Tendencia Central) Forma de la Curva (Dispersión/Heterogeneidad)
+  
+Conclusión Clave
+
+- Nuevo León
+  Muy hacia la izquierda (valores bajos, $\approx 0$ o negativos).
+  
+- Alta y Estrecha (Baja dispersión).
+  La mayoría de sus municipios presentan una marginación muy baja y homogénea, 
+  con el núcleo de municipios altamente industrializados dominando la distribución.
+
+- Jalisco
+  Hacia la izquierda (valores bajos).Ancha/Asimétrica (Dispersión Media-Alta).
+  La distribución muestra heterogeneidad.
+  Coexisten municipios de muy baja marginación (Zona Metropolitana de Guadalajara) 
+  y un grupo considerable de municipios rurales con marginación media o alta.
+
+- Durango
+  Cerca del centro (valores cercanos al promedio nacional).
+  Ancha (Dispersión Media).
+  Muestra una distribución más equilibrada alrededor del promedio nacional.
+  Su curva es más plana, indicando una mezcla continua de municipios de baja y alta marginación.
+ 
+- Veracruz
+  Hacia la derecha (valores altos).
+  Ancha y Plana (Alta dispersión).
+  Presenta una alta dispersión de la marginación, reflejando el fuerte contraste
+  entre su franja costera y sus extensas regiones rurales.
+  La mayoría de sus municipios se encuentran en la zona de marginación media-alta.
+
+- Chiapas
+  Significativamente hacia la derecha (valores muy altos).
+  Alta y Estrecha (sesgada a la derecha).
+  Sus municipios tienen la marginación más alta y concentrada.
+  El pico de la curva está lejos a la derecha, indicando que la mayor parte de la 
+  población municipal se ubica en los niveles más severos de marginación.
+
+
+## c) Población Total Indice de Marginación
+
+```{r}
+variable_pob <- "POB_TOT"
+marginacion_base[[variable_pob]] <- as.numeric(marginacion_base[[variable_pob]])
+
+# Creamos un data frame vacío para almacenar los resultados
+resumen_poblacion <- data.frame(
+  Entidad = character(),
+  Poblacion_Total_Municipal = numeric(),
+  stringsAsFactors = FALSE
+)
+
+for (estado in entidades) {
+  # Seleccionamos la POB_TOT para el estado actual
+  poblacion_estado <- subset(marginacion_base, NOM_ENT == estado)[[variable_pob]]
+  
+  # Calculamos la suma
+  suma_poblacion <- sum(poblacion_estado)
+  
+  # Creamos una nueva fila
+  nueva_fila <- data.frame(
+    Entidad = estado,
+    Poblacion_Total_Municipal = suma_poblacion,
+    stringsAsFactors = FALSE
+  )
+  
+  # Añadimos la nueva fila al data frame de resultados usando rbind (base R)
+  resumen_poblacion <- rbind(resumen_poblacion, nueva_fila)
+}
+
+resumen_poblacion <- resumen_poblacion[order(resumen_poblacion$Entidad), ]
+
+#resumen_poblacion$Poblacion_Total_Municipal_Formato <- 
+#  format(resumen_poblacion$Poblacion_Total_Municipal, big.mark = ",", scientific = FALSE)
+
+resumen_poblacion$Poblacion_Total <- as.numeric(resumen_poblacion$Poblacion_Total_Municipal)
+
+knitr::kable(resumen_poblacion[, c("Entidad", "Poblacion_Total")],
+            digits = 3,
+            booktabs = TRUE,
+            longtable = FALSE)
+
+
+#poblacion_nacional_calculada <- sum(resumen_poblacion$Poblacion_Total_Municipal)
+#print(paste0("Total Nacional Calculado (Suma de las 32 Entidades): ", 
+#             format(poblacion_nacional_calculada, big.mark = ",", scientific = FALSE)))
+
+```
+
+
+
+## d) Población Total Indice de Marginación
+
+```{r}
+entidades_boxplot <- c("Chiapas", "Guerrero", "Nuevo León", "Tamaulipas", "Durango")
+
+# --- PASO 1: Preparación de Datos ---
+
+
+# 2. Filtrar los datos para incluir solo las 5 entidades
+datos_boxplot <- subset(marginacion_base, NOM_ENT %in% entidades_boxplot)
+
+# 3. Eliminar filas con NA en el índice de marginación
+datos_boxplot <- na.omit(datos_boxplot[, c("NOM_ENT", variable_imn)])
+
+
+# --- PASO 2: Generación del Boxplot ---
+
+print("Generando Gráfico de Boxplots para el Índice de Marginación (IM_2020)...")
+
+# 1. Generar el boxplot
+# Fórmula: Variable ~ Grupo (IM_2020 por NOM_ENT)
+boxplot(IMN_2020 ~ NOM_ENT, 
+        data = datos_boxplot,
+        main = "Comparación del Índice de Marginación Municipal (IM_2020)",
+        xlab = "Entidad Federativa",
+        ylab = "Índice de Marginación (IM_2020)",
+        col = colores, # Asignación de colores
+        #las = 2, # Rotar etiquetas del eje X verticalmente para mejor lectura
+        outline = TRUE) # Mostrar outliers (puntos fuera de los bigotes)
+
+print("Gráfico de Boxplots generado.")
+
+
+```
+
+
+
+Entidad	Posición de la Caja (Mediana)	Tamaño de la Caja y Bigotes (Dispersión)	Valores Atípicos (Outliers)	Conclusión Principal
+Chiapas y Guerrero
+Más alta. El 50% central está en los valores más altos del índice.
+Compacta/Alta: Esto indica que sus municipios son homogéneamente marginados.
+La gran mayoría se agrupa en índices muy altos.	Pocos o nulos hacia la baja.
+Alta Marginación Concentrada. Son los estados con la peor situación generalizada a nivel municipal.
+Nuevo León
+Más baja. La mediana se encuentra en los valores más bajos.	Muy compacta y baja.
+La dispersión es mínima y se concentra en valores muy positivos (baja marginación).
+Posibles atípicos hacia la alta marginación (municipios rurales aislados).
+Baja Marginación Concentrada. Sus municipios son, en su mayoría, los menos marginados.
+ 
+Tamaulipas y Durango	Posición intermedia (más cerca de la zona media del gráfico).
+Más amplias. La caja y los bigotes se extienden significativamente.
+Probables atípicos en ambas direcciones (baja y alta marginación).
+Heterogeneidad. Estos estados muestran la mayor desigualdad interna.
+Coexisten municipios de baja marginación (ciudades principales) y municipios con
+problemas severos (zonas rurales o fronterizas).
+
+
+# Distribuciones de Probabilidad
+
+## 1. Ejercicio concurso de TV
+  
+  El 30% de un determinado pueblo ve un concurso que hay en televisión. Desde el
+concurso se llama por teléfono a 10 personas del pueblo elegidas al azar. Determinar la
+probabilidad que, de las 10 personas elegidas:
+ 
+**Datos:**
+
+Número de eventos *n* = 10
+
+Probabilidad de éxito *p* = 0.30
+
+a) Más de ocho personas estén viendo el programa
+
+  $P(X=9) + P(X=10)$
+
+```{r}
+prob_mas_de_ocho <- dbinom(x = 9, size = 10, prob = 0.30) +
+                    dbinom(x = 10, size = 10, prob = 0.30)
+prob_mas_de_ocho
+```
+$P(X > 8) = 0.0001436859$
+
+b) Al menos una persona de las diez esté viendo el programa
+  
+  $P(X \ge 1) = 1 - P(X < 1)$
+
+```{r}
+prob_al_menos_1 <- 1 - pbinom(q = 0, size = 10, prob = 0.30)
+prob_al_menos_1
+```
+
+  $P(X \ge 1) = 0.9717525$
 
 
