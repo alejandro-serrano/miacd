@@ -461,6 +461,8 @@ total_cuadriculas <- sum(frecuencia)
 E_X <- sum_celulas_por_frequencia / total_cuadriculas
 E_X
 
+# En promedio hay aproxumadamente 1.80 células por cuadrícula.
+
 # (b) ¿Cuál es la probabilidad de encontrar dos células en las cuadriculas observadas?
 lambda <- E_X # 1.9425
 x_valor <- 2          # Queremos P(X=2)

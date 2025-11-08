@@ -27,11 +27,10 @@ Rezago Municipal 2020. Los datos son extraidos del Consejo Nacional de Població
 ## Prerequisitos
 1. Se instalan y preparan las librerias a utilizar durante el análisis.
 ```{r message = FALSE, warning = FALSE}
-#install.packages("knitr")
 #install.packages("readxl")
 #install.packages("corrplot")
+
 library(readxl)
-#library(knitr)
 library(corrplot)
 ```
 
@@ -42,9 +41,11 @@ library(corrplot)
 marginacion_base <- read_excel("IMM_2020.xlsx", sheet = "IMM_2020")
 ```
 
-## a) Mostrar el rango, rango intercuantílico, media, mediana y desviación estándar
-de las nueve variables porcentuales (ANALF, SBASC, OVSDE, OVSEE, OVSAE, OVPT,
-VHAC, PL.5000, PO2SM) de cada uno de las 32 entidades federativas.
+## a) Rango, rango intercuantílico, media, mediana y desviación estándar
+
+  Rango, rango intercuantílico, media, mediana y desviación estándar de las nueve
+variables porcentuales (ANALF, SBASC, OVSDE, OVSEE, OVSAE, OVPT, VHAC, PL.5000,
+PO2SM) de cada una de las 32 entidades federativas.
 
   Se definen las variables que incluiremos en el estudio, iteramos en cada estado
 para calcular las estadísticas de interes de cada variable mediante las siguientes
@@ -67,7 +68,7 @@ for (estado in entidades) {
   estadisticas_estado <- list()
   
   for (variable in variables_estudio) {
-    estado_actual <- marginacion_base[[variable]]
+    estado_actual <- datos_estado[[variable]]
     rango <- range(estado_actual, na.rm = TRUE)
     rango_intercuantilico <- IQR(estado_actual, na.rm = TRUE)
     media <- mean(estado_actual, na.rm = TRUE)
@@ -92,18 +93,17 @@ for (estado in entidades) {
   
   resultados[[estado]] <- df_estado
 }
-
 ```
 
 Finalmente, se crea una lista principal de data frames para cada estado.
 
-NOTA: Originalmente hacia el proceso con un ciclo, sin embargo, las tablas no
-se imprimían en el pdf de manera amigable, investigué y se debe a que kable, que
-es el formato que especifico en el encabezado del Markdown para impresión de
+**NOTA:** Originalmente hacia el proceso con un ciclo, sin embargo, las tablas no
+se imprimían en el pdf de manera amigable, investigué y se debe a que *kable*, que es
+el formato que especifico en el encabezado del Markdown para impresión de
 data frames no puede imprimir de manera adecuada dentro de un ciclo, la documentación
 recomienda tener un chunk de R por cada tabla para asi tenerla impresa en el PDF
 de manera amigable. Seguramente hay una mejor manera de hacerlo, lo investigaré
-para futuros reportes.
+para futuros reportes. En este ejercicio se imprimió cada estado individualmente.
 ```{r}
 # Código original solo para referencia
 
@@ -123,10 +123,10 @@ para futuros reportes.
 ```{r}
 imprimir_resultados <- function(data_frame, estado) {
   knitr::kable(data_frame,
-              caption = estado,
-              digits = 3,
-              booktabs = TRUE,
-              longtable = FALSE)
+               caption = estado,
+               digits = 3,
+               booktabs = TRUE,
+               longtable = FALSE)
 }
 ```
 
@@ -179,21 +179,24 @@ matriz_correlacion <- cor(datos_correlacion, use = "pairwise.complete.obs")
 knitr::kable(round(matriz_correlacion, 2))
 
 corrplot(matriz_correlacion, 
-         method = "color", # Muestra cuadrados de color
+         method = "color",
          title = "Gráfico de Correlación de Indicadores de Marginación",
-         mar = c(0, 0, 4, 0), # Adjust top margin for the title
+         mar = c(0, 0, 4, 0),
          cex.main = 1,
-         tl.col = "black", # Color de las etiquetas
-         tl.srt = 45,      # Rotación de las etiquetas (para que no se encimen)
-         addCoef.col = "black", # Agrega los valores numéricos
-         number.cex = 0.7, # Tamaño de los números
+         tl.col = "black",
+         tl.srt = 45,
+         addCoef.col = "black",
+         number.cex = 0.7,
          tl.cex = 0.7)
 ```
 
-
 *Observaciones*
 
-1. Correlaciones Positivas Fuertes (Números altos, ej., r>0.7):
+**NOTA:** La matriz de correlación es simétrica, aqui solo tendría la duda de si
+podria entonces graficarse solo la parte superior o inferior. Por el momento, la 
+dejé completa.
+
+1. Correlaciones Positivas Fuertes
     - Educación y Pobreza de Ingresos: Se espera una correlación muy fuerte
       entre ANALF (analfabetismo) y SBASC (población sin educación básica) con
       PO2SM (población con ingresos <= 2 salarios mínimos). Esto significa que
@@ -201,36 +204,29 @@ corrplot(matriz_correlacion,
       reforzando el ciclo de marginación.
  
      - Vivienda de Calidad: Los indicadores de carencias en la vivienda suelen estar
-      muy correlacionados entre sí. Por ejemplo, OVSDE (sin drenaje/excusado),
+      muy correlacionados entre sí. OVSDE (sin drenaje/excusado),
       OVSEE (sin electricidad), OVSAE (sin agua entubada) y OVPT (piso de tierra)
-      mostrarán una correlación positiva alta.
+      muestran una correlación positiva alta.
       Si un municipio carece de un servicio básico de vivienda, es muy probable
       que carezca de los demás.
 
     - Hacinamiento (VHAC): También se correlaciona positivamente con las otras
       carencias de vivienda, pues ambas son manifestaciones de pobreza de infraestructura.
  
-2. Correlaciones Negativas o Débiles (Números bajos, ej., r<0.3):
+2. Correlaciones Débiles
    - Correlación entre Desarrollo de Servicios y Variables Rurales: Es posible
-     encontrar correlaciones más débiles o incluso negativas entre variables
-     como PL.5000 (población en localidades rurales/pequeñas) y algunos indicadores
-     de vivienda, aunque suele ser más compleja. En general, en municipios con
-     alta dispersión rural (PL.5000), las carencias de servicios (OVSDE, OVSAE)
-     pueden ser elevadas, resultando en una correlación positiva.
+     encontrar correlaciones más débiles entre variables como PL.5000
+     (población en localidades rurales/pequeñas) y algunos indicadores
+     de vivienda. En general, en municipios con alta dispersión rural (PL.5000),
+     las carencias de servicios (OVSDE, OVSAE) pueden ser elevadas.
 
-  La falta de correlación indicaría que la carencia de un servicio o condición
-no está sistemáticamente relacionada con la carencia de otra.
-
-Conclusión: El gráfico de correlación sirve para confirmar la coherencia conceptual
-del Índice de Marginación. Las variables fueron elegidas porque se espera que se muevan juntas.
-Las áreas con cuadrados oscuros (cercanos a 1) confirman que la marginación es un
-fenómeno multidimensional donde las carencias se acumulan
-(mala vivienda → baja educación → bajos ingresos).
+Conclusión: La marginación es un fenómeno donde las carencias se acumulan
+mala vivienda, baja educación y bajos ingresos.
 
 
-## b) Gráfico de densidad del Indice de marginación normalizado
-
-  Estados de estudio Nuevo León, Durango, Jalisco, Veracruz y Chiapas.
+## c) Gráfico de densidad del Indice de marginación normalizado
+  
+  Estados de estudio: Nuevo León, Durango, Jalisco, Veracruz y Chiapas.
   
   Para generar el gráfico de densidad se filtran los datos de las entidades federativas
 de interes, se calculan las densidades de cada estado, posteriormente se determinan
@@ -242,14 +238,11 @@ variable_imn <- "IMN_2020"
 datos_entidades_estudio <- marginacion_base[marginacion_base$NOM_ENT %in% entidades_interes, ]
 datos_entidades_estudio[[variable_imn]] <- as.numeric(datos_entidades_estudio[[variable_imn]])
 
-# --- PASO 1: Filtrado de Datos por Entidad ---
-
 nuevo_leon_imn <- na.omit(subset(marginacion_base, NOM_ENT == "Nuevo León")[[variable_imn]])
 durango_imn <- na.omit(subset(marginacion_base, NOM_ENT == "Durango")[[variable_imn]])
 jalisco_imn <- na.omit(subset(marginacion_base, NOM_ENT == "Jalisco")[[variable_imn]])
 veracruz_imn <- na.omit(subset(marginacion_base, NOM_ENT == "Veracruz de Ignacio de la Llave")[[variable_imn]])
 chiapas_imn <- na.omit(subset(marginacion_base, NOM_ENT == "Chiapas")[[variable_imn]])
-
 
 densidad_nuevo_leon <- density(nuevo_leon_imn)
 densidad_durango <- density(durango_imn)
@@ -284,7 +277,7 @@ rango_y <- c(0, max(max_y_vals))
 plot(densidad_nuevo_leon, 
      xlim = rango_x, 
      ylim = rango_y,
-     main = "Densidad del Indice de Marginación Normalizado (IMN_2020) por Entidad",
+     main = "Densidad del Indice de Marginación Normalizado por Entidad",
      xlab = "Índice de Marginación Normalizado (IMN_2020)",
      ylab = "Densidad",
      col = colores[1],
@@ -302,152 +295,92 @@ legend("topleft",
        cex = 0.8)
 ```
 
-  El análisis comparativo de las curvas de densidad del Índice de Marginación Normalizado (IMN_2020) revela contrastes fundamentales en la distribución de la marginación a nivel municipal entre las entidades seleccionadas.
-  Entidad Posición de la Curva (Tendencia Central) Forma de la Curva (Dispersión/Heterogeneidad)
-  
-Conclusión Clave
+*Observaciones*
 
-- Nuevo León
-  Muy hacia la izquierda (valores bajos, $\approx 0$ o negativos).
-  
-- Alta y Estrecha (Baja dispersión).
-  La mayoría de sus municipios presentan una marginación muy baja y homogénea, 
-  con el núcleo de municipios altamente industrializados dominando la distribución.
+- Nuevo León. La mayoría de sus municipios presentan una marginación muy baja.
+- Jalisco. Coexisten municipios de muy baja marginación como la Zona Metropolitana
+  de Guadalajara y un grupo considerable de municipios rurales con marginación media o alta.
+- Durango. Indica una mezcla continua de municipios de baja y alta marginación.
+- Veracruz. Presenta una alta dispersión de la marginación, la mayoría de sus
+  municipios se encuentran en la zona de marginación media alta.
+- Chiapas. Sus municipios tienen la marginación más alta y concentrada indicando que la 
+  mayor parte de la población municipal se ubica en los niveles más severos de marginación.
 
-- Jalisco
-  Hacia la izquierda (valores bajos).Ancha/Asimétrica (Dispersión Media-Alta).
-  La distribución muestra heterogeneidad.
-  Coexisten municipios de muy baja marginación (Zona Metropolitana de Guadalajara) 
-  y un grupo considerable de municipios rurales con marginación media o alta.
+## d) Población Total Indice de Marginación
+A continuación se presenta el total de la población por cada variable del estudio.
 
-- Durango
-  Cerca del centro (valores cercanos al promedio nacional).
-  Ancha (Dispersión Media).
-  Muestra una distribución más equilibrada alrededor del promedio nacional.
-  Su curva es más plana, indicando una mezcla continua de municipios de baja y alta marginación.
- 
-- Veracruz
-  Hacia la derecha (valores altos).
-  Ancha y Plana (Alta dispersión).
-  Presenta una alta dispersión de la marginación, reflejando el fuerte contraste
-  entre su franja costera y sus extensas regiones rurales.
-  La mayoría de sus municipios se encuentran en la zona de marginación media-alta.
-
-- Chiapas
-  Significativamente hacia la derecha (valores muy altos).
-  Alta y Estrecha (sesgada a la derecha).
-  Sus municipios tienen la marginación más alta y concentrada.
-  El pico de la curva está lejos a la derecha, indicando que la mayor parte de la 
-  población municipal se ubica en los niveles más severos de marginación.
-
-
-## c) Población Total Indice de Marginación
+Se calcula en base a la población total de los municipios de cada entidad federativa
+y el porcentaje de cada variable.
 
 ```{r}
-variable_pob <- "POB_TOT"
-marginacion_base[[variable_pob]] <- as.numeric(marginacion_base[[variable_pob]])
+marginacion_base$POB_TOT <- as.numeric(marginacion_base$POB_TOT)
 
-# Creamos un data frame vacío para almacenar los resultados
-resumen_poblacion <- data.frame(
-  Entidad = character(),
-  Poblacion_Total_Municipal = numeric(),
+for (col in variables_estudio) {
+  marginacion_base[[col]] <- as.numeric(marginacion_base[[col]])
+}
+
+datos_filtrados <- marginacion_base[marginacion_base$NOM_ENT != "Nacional", ]
+datos_filtrados <- na.omit(datos_filtrados[, c("NOM_ENT", "POB_TOT", variables_estudio)])
+
+poblacion_afectada_municipal <- datos_filtrados[, c("NOM_ENT")]
+
+for (variable in variables_estudio) {
+  poblacion_afectada_municipal[[variable]] <- 
+    datos_filtrados$POB_TOT * (datos_filtrados[[variable]] / 100)
+}
+
+entidades_unicas <- unique(poblacion_afectada_municipal$NOM_ENT)
+
+resumen_final <- data.frame(
+  Entidad = entidades_unicas,
   stringsAsFactors = FALSE
 )
 
-for (estado in entidades) {
-  # Seleccionamos la POB_TOT para el estado actual
-  poblacion_estado <- subset(marginacion_base, NOM_ENT == estado)[[variable_pob]]
+for (estado in entidades_unicas) {
+  datos_estado <- subset(poblacion_afectada_municipal, NOM_ENT == estado)
   
-  # Calculamos la suma
-  suma_poblacion <- sum(poblacion_estado)
-  
-  # Creamos una nueva fila
-  nueva_fila <- data.frame(
-    Entidad = estado,
-    Poblacion_Total_Municipal = suma_poblacion,
-    stringsAsFactors = FALSE
-  )
-  
-  # Añadimos la nueva fila al data frame de resultados usando rbind (base R)
-  resumen_poblacion <- rbind(resumen_poblacion, nueva_fila)
+  for (variable in variables_estudio) {
+    suma_afectados <- sum(datos_estado[[variable]])
+    resumen_final[resumen_final$Entidad == estado, variable] <- suma_afectados
+  }
 }
 
-resumen_poblacion <- resumen_poblacion[order(resumen_poblacion$Entidad), ]
+resumen_final <- resumen_final[order(resumen_final$Entidad), ]
 
-#resumen_poblacion$Poblacion_Total_Municipal_Formato <- 
-#  format(resumen_poblacion$Poblacion_Total_Municipal, big.mark = ",", scientific = FALSE)
-
-resumen_poblacion$Poblacion_Total <- as.numeric(resumen_poblacion$Poblacion_Total_Municipal)
-
-knitr::kable(resumen_poblacion[, c("Entidad", "Poblacion_Total")],
-            digits = 3,
-            booktabs = TRUE,
-            longtable = FALSE)
-
-
-#poblacion_nacional_calculada <- sum(resumen_poblacion$Poblacion_Total_Municipal)
-#print(paste0("Total Nacional Calculado (Suma de las 32 Entidades): ", 
-#             format(poblacion_nacional_calculada, big.mark = ",", scientific = FALSE)))
-
+knitr::kable(resumen_final, digits=0)
 ```
-
-
-
-## d) Población Total Indice de Marginación
+## e) Comparación Indice de Marginación
 
 ```{r}
 entidades_boxplot <- c("Chiapas", "Guerrero", "Nuevo León", "Tamaulipas", "Durango")
 
-# --- PASO 1: Preparación de Datos ---
-
-
-# 2. Filtrar los datos para incluir solo las 5 entidades
 datos_boxplot <- subset(marginacion_base, NOM_ENT %in% entidades_boxplot)
-
-# 3. Eliminar filas con NA en el índice de marginación
 datos_boxplot <- na.omit(datos_boxplot[, c("NOM_ENT", variable_imn)])
-
-
-# --- PASO 2: Generación del Boxplot ---
-
-print("Generando Gráfico de Boxplots para el Índice de Marginación (IM_2020)...")
-
-# 1. Generar el boxplot
-# Fórmula: Variable ~ Grupo (IM_2020 por NOM_ENT)
 boxplot(IMN_2020 ~ NOM_ENT, 
         data = datos_boxplot,
         main = "Comparación del Índice de Marginación Municipal (IM_2020)",
         xlab = "Entidad Federativa",
         ylab = "Índice de Marginación (IM_2020)",
-        col = colores, # Asignación de colores
-        #las = 2, # Rotar etiquetas del eje X verticalmente para mejor lectura
-        outline = TRUE) # Mostrar outliers (puntos fuera de los bigotes)
-
-print("Gráfico de Boxplots generado.")
-
-
+        col = colores,
+        cex.axis = 0.8,
+        outline = TRUE)
 ```
 
+*Observaciones*
 
+- Chiapas y Guerrero.
+  La gran mayoría de sus municipios se agrupa en índices altos de marginacion.
+  Son los estados con la peor situación generalizada a nivel municipal.
 
-Entidad	Posición de la Caja (Mediana)	Tamaño de la Caja y Bigotes (Dispersión)	Valores Atípicos (Outliers)	Conclusión Principal
-Chiapas y Guerrero
-Más alta. El 50% central está en los valores más altos del índice.
-Compacta/Alta: Esto indica que sus municipios son homogéneamente marginados.
-La gran mayoría se agrupa en índices muy altos.	Pocos o nulos hacia la baja.
-Alta Marginación Concentrada. Son los estados con la peor situación generalizada a nivel municipal.
-Nuevo León
-Más baja. La mediana se encuentra en los valores más bajos.	Muy compacta y baja.
-La dispersión es mínima y se concentra en valores muy positivos (baja marginación).
-Posibles atípicos hacia la alta marginación (municipios rurales aislados).
-Baja Marginación Concentrada. Sus municipios son, en su mayoría, los menos marginados.
+- Nuevo León.
+  La mediana de marginación se encuentra en los valores más bajos. Posibles atípicos
+  hacia la alta marginación, serian municipios rurales aislados.
+  Baja Marginación Concentrada. Sus municipios son, en su mayoría, los menos marginados.
  
-Tamaulipas y Durango	Posición intermedia (más cerca de la zona media del gráfico).
-Más amplias. La caja y los bigotes se extienden significativamente.
-Probables atípicos en ambas direcciones (baja y alta marginación).
-Heterogeneidad. Estos estados muestran la mayor desigualdad interna.
-Coexisten municipios de baja marginación (ciudades principales) y municipios con
-problemas severos (zonas rurales o fronterizas).
+- Tamaulipas y Durango.
+  Posición intermedia, se observan algunos valores atípicos de alta marginación.
+  Coexisten municipios de baja marginación ciudades principales y municipios con
+  problemas severos zonas rurales o fronterizas.
 
 
 # Distribuciones de Probabilidad
@@ -460,30 +393,269 @@ probabilidad que, de las 10 personas elegidas:
  
 **Datos:**
 
-Número de eventos *n* = 10
+* Número de eventos *n* = 10
+* Probabilidad de éxito *p* = 0.30
 
-Probabilidad de éxito *p* = 0.30
+  El ejercicio corresponde a una Distribución Binomial, ya que cumple con las
+siguientes condiciones:
+
+* Hay un número fijo de ensayos $n=10$ personas.
+* Cada ensayo tiene solo dos resultados posibles: ver el programa (éxito) o no verlo (fracaso).
+* La probabilidad de éxito es constante en cada ensayo $p=0.30$
+* Los ensayos son independientes.
 
 a) Más de ocho personas estén viendo el programa
 
-  $P(X=9) + P(X=10)$
+  $$P(X=9) + P(X=10)$$
 
 ```{r}
 prob_mas_de_ocho <- dbinom(x = 9, size = 10, prob = 0.30) +
                     dbinom(x = 10, size = 10, prob = 0.30)
 prob_mas_de_ocho
 ```
-$P(X > 8) = 0.0001436859$
+  $$P(X > 8) = 0.0001436859$$
+  La probabilidad de que, al llamar a 10 personas al azar, más de 8, es decir, 9
+o 10 estén viendo el programa es de aproximadamente 0.015%
 
 b) Al menos una persona de las diez esté viendo el programa
   
-  $P(X \ge 1) = 1 - P(X < 1)$
+$$P(X \ge 1) = 1 - P(X < 1)$$
 
 ```{r}
 prob_al_menos_1 <- 1 - pbinom(q = 0, size = 10, prob = 0.30)
 prob_al_menos_1
 ```
+  
+$$P(X \ge 1) = 0.9717525$$
+  
+  La probabilidad de que al menos una persona de las diez elegidas al azar esté
+viendo el programa es de aproximadamente 97.18%.
 
-  $P(X \ge 1) = 0.9717525$
+## 2. Ejercicio células de levadura
 
+  Se estudia la distribución de células de levadura en 400 cuadrículas de un
+hemacitómetro. Este es un aparato semejante al utilizado para hacer los recuentos
+de las células sanguíneas y de otras estructuras microscópicas suspendidas en
+líquidos. ¿Cuál es la probabilidad de encontrar dos células en las cuadriculas
+observadas? Después de haber muestreado 400 cuadrículas y contado la cantidad
+de células de levadura en cada una de ellas, se obtuvo la siguiente tabla
+de frecuencias:
+
+| Cantidad de celulas por cuadricula | Cantidad de cuadriculas observadas |
+|-:|-:|
+| 0 | 75 |
+| 1 | 103 |
+| 2 | 121 |
+| 3 | 54 |
+| 4 | 30 |
+| 5 | 13 |
+| 6 | 2 |
+| 7 | 1 |
+| 8 | 1 |
+
+a) Calcular el valor esperado de células por cuadrícula $E(X)$
+```{r}
+conteo_celulas <- c(0, 1, 2, 3, 4, 5, 6, 7, 8)
+frecuencia <- c(75, 103, 121, 54, 30, 13, 2, 1, 1)
+sum_celulas_por_frequencia <- sum(conteo_celulas * frecuencia)
+total_cuadriculas <- sum(frecuencia)
+
+E_X <- sum_celulas_por_frequencia / total_cuadriculas
+E_X
+
+```
+En promedio hay 1.79 células por cuadrícula.
+
+b) ¿Cuál es la probabilidad de encontrar dos células en las cuadriculas observadas?
+```{r}
+lambda <- E_X
+x_valor <- 2
+
+prob_dos_celulas <- dpois(x = x_valor, lambda = lambda)
+prob_dos_celulas
+```
+
+  Utilizando el modelo de Poisson la probabilidad de encontrar exactamente dos
+células en una cuadrícula elegida al azar es del 26.77%.
+
+c) Calcular la probabilidad de que los conteos de células se encuentren entre 3 y 7.
+
+  Esto significa que queremos la probabilidad de que $X$ sea mayor o igual a 3 y
+menor o igual a 7
+  
+$$P(3 \le X \le 7)$$
+$$P(X=3) + P(X=4) + P(X=5) + P(X=6) + P(X=7)$$
+
+```{r}
+lambda <- E_X
+
+prob_3 <- dpois(x = 3, lambda = lambda)
+prob_4 <- dpois(x = 4, lambda = lambda)
+prob_5 <- dpois(x = 5, lambda = lambda)
+prob_6 <- dpois(x = 6, lambda = lambda)
+prob_7 <- dpois(x = 7, lambda = lambda)
+
+prob_rango_3_a_7 <- prob_3 + prob_4 + prob_5 + prob_6 + prob_7
+prob_rango_3_a_7
+```
+  La probabilidad de que el conteo esté entre 3 y 7 células es de 26.81%.
+
+## 3. Ejercicio tornillos
+
+  La longitud X de ciertos tornillos es una variable aleatoria con distribución
+normal de media 30mm y desviacion tipica 0.2mm. Se aceptan como validos aquellos
+que cumplen 29.5mm < X < 30.4mm. Calcular las siguientes probabilidades:
+
+**Datos:**
+
+* Media ($\mu$): 30 mm
+* Desviación Típica ($\sigma$): 0.2 mm
+* Rango Aceptable: $29.5 \text{ mm} < X < 30.4 \text{ mm}$
+
+a) Tornillos no aceptables por cortos
+    
+  $$P(X \le 29.5)$$
+
+```{r}
+media <- 30
+desviacion_tipica <- 0.2
+limite_corto <- 29.5
+prob_cortos <- pnorm(q = limite_corto, mean = media, sd = desviacion_tipica)
+prob_cortos
+```
+
+$$P(X \le 29.5): 0.0062$$
+Probabilidad de tornillos no aceptables por cortos: 0.62%
+
+
+b) Tornillos no aceptables por largos
+  Los tornillos no son aceptables por largos si su longitud
+
+$$P(X \ge 30.4) = 1 - P(X < 30.4)$$
+
+```{r}
+limite_largo <- 30.4
+prob_largos <- 1 - pnorm(q = limite_largo, mean = media, sd = desviacion_tipica)
+prob_largos
+```
+La probabilidad de que un tornillo sea rechazado por ser demasiado largo, más de
+30.4 mm, es del 2.275%.
+
+c) Tornillos no validos
+
+Los tornillos no válidos son aquellos que son cortos O largos:
+
+$$P(No Validos) = P(X \le 29.5) + P(X \ge 30.4)$$
+
+```{r}
+prob_no_validos <- prob_cortos + prob_largos
+prob_validos <- pnorm(limite_largo, media, desviacion_tipica) - 
+  pnorm(limite_corto, media, desviacion_tipica)
+
+prob_no_validos_alternativa <- 1 - prob_validos
+prob_no_validos_alternativa
+```
+Probabilidad de tornillos no validos: 0.0289598 o 2.895%
+
+d) ¿Cual es la probabilidad que de una muestra de 15 tornillos entre 13 y 
+15 tornillos resulten validos?
+
+$P(13 \le Y \le 15)$, donde $Y$ es el número de tornillos válidos.
+
+$$P(Y=13) + P(Y=14) + P(Y=15)$$
+
+```{r}
+n_muestra <- 15
+p_valido <- prob_validos
+
+prob_13 <- dbinom(x = 13, size = n_muestra, prob = p_valido)
+prob_14 <- dbinom(x = 14, size = n_muestra, prob = p_valido)
+prob_15 <- dbinom(x = 15, size = n_muestra, prob = p_valido)
+
+prob_rango_13_a_15 <- prob_13 + prob_14 + prob_15
+
+print(paste("Probabilidad (Y=13):", prob_13))
+print(paste("Probabilidad (Y=14):", prob_14))
+print(paste("Probabilidad (Y=15):", prob_15, 4))
+
+prob_rango_13_a_15
+```
+
+Probabilidad ($13 \le Y \le 15$): 0.99149 o 99.149%
+
+## 4. Ejercicio Computadoras
+  Se tiene conocido por estudios previos que el tiempo de vida util de computadoras
+personales de cierta marca sigue una distribucion N(1000,20) dias.
+
+**Datos (Distribución Normal):**
+
+* Tiempo de vida útil ($X$): Sigue una $N(\mu, \sigma^2)$
+* Media ($\mu$): 1000 días
+* Desviación Típica ($\sigma$): 20 días
+
+a) ¿A partir de cuantas horas se espera que fallen minimo el 95% de las computadoras?
+
+Encontrar el valor $x$ tal que $P(X \le x) = 0.95$
+
+```{r}
+media <- 1000
+desviacion_tipica <- 20
+probabilidad <- 0.95
+
+dias_95_percentil <- qnorm(p = probabilidad, mean = media, sd = desviacion_tipica)
+dias_95_percentil
+
+horas_95_percentil <- dias_95_percentil * 24
+horas_95_percentil
+
+```
+Percentil 95 tiempo a partir del cual han fallado al menos el 95%:
+
+- 1032.897 días
+- 24789.53 horas
+
+b) La garantia determina que se reemplazara una computadora si dura sin fallar
+menos de 800 dias. Determinar cual es la probabilidad de que reemplacen los equipos
+a cierto cliente.
+
+Una computadora se reemplaza si falla en menos de 800 días P($X < 800$)
+
+```{r}
+limite_garantia <- 800
+prob_reemplazo <- pnorm(q = limite_garantia, mean = media, sd = desviacion_tipica)
+prob_reemplazo
+```
+
+Probabilidad de reemplazo ($P(X < 800 \text{ días})$): 7.619853e-24 es
+decir cercano a cero.
+
+c) Dado un lote de 20 computadoras, ¿cual es numero esperado de computadoras
+que se regresen?
+
+```{r}
+n_lote_20 <- 20
+p_regreso <- prob_reemplazo
+valor_esperado_regresos <- n_lote_20 * p_regreso
+valor_esperado_regresos
+```
+
+ Número Esperado de regresos ($E(Y)$): 1.523971e-22 practicamente cero.
+
+d) ¿Cual es la probabilidad de que se regresen entre una y dos computadoras de 
+un lote de 30 computadoras?
+
+$$P(1 \le Y \le 2) \text{  }P(Y=1) + P(Y=2)$$
+
+```{r}
+n_lote_30 <- 30
+p_regreso <- prob_reemplazo
+
+prob_1 <- dbinom(x = 1, size = n_lote_30, prob = p_regreso)
+prob_2 <- dbinom(x = 2, size = n_lote_30, prob = p_regreso)
+
+prob_1_o_2_regresadas <- prob_1 + prob_2
+prob_1_o_2_regresadas
+```
+
+Probabilidad de 1 o 2 regresos: 2.285956e-22 también cercano a cero.
 
