@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Manuel Alejandro Serrano Macias">
+    <meta name="description" content="MIACD - Visualizacion de Datos - Tarea 1 Creación de Gráficos - Word Cloud ">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Cloud</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <!-- D3.js Libraries -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
+
+    <!-- html2pdf.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" xintegrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            background-color: white;
+            color: #29629A;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Definición de Windows Blue */
+        :root {
+            --windows-blue: #29629A;
+        }
+
+        /* --- PDF EXPORT OVERRIDES --- */
+        body.export-mode {
+            width: 1280px !important;
+            height: 720px !important;
+            align-items: flex-start !important;
+            justify-content: flex-start !important;
+            overflow: hidden !important;
+            background-color: white !important;
+        }
+
+        body.export-mode #content-to-export {
+            width: 1280px !important;
+            height: 720px !important;
+            margin: 0 !important;
+            padding: 20px !important;
+        }
+
+        body.export-mode header {
+            width: 100% !important;
+            margin-bottom: 10px !important;
+        }
+
+        body.export-mode #main-layout {
+            width: 100% !important;
+            height: 620px !important;
+            gap: 15px !important;
+        }
+        /* ---------------------------- */
+
+        /* Header Layout */
+        header {
+            width: 95vw;
+            height: auto; 
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 10px 0;
+            margin-bottom: 10px;
+        }
+
+        h1 { 
+            margin: 0; 
+            font-size: 28px; 
+            font-weight: 700; /* Extra bold for main title */
+            color: var(--windows-blue); 
+        } 
+
+        /* Controls - Positioned absolute at bottom */
+        #controls {
+            position: absolute; 
+            bottom: 20px; 
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5; 
+            background: rgba(255, 255, 255, 0.9); 
+            padding: 10px 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Main Content Grid */
+        #main-layout {
+            display: flex;
+            width: 95vw;
+            height: 85vh;
+            gap: 20px;
+        }
+
+        /* Chart Area (Left) */
+        #chart-container {
+            flex: 3;
+            position: relative;
+            background: white;
+            border: 1px solid #EBECF0;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        #word-cloud {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative; 
+            z-index: 1; 
+        }
+        
+        /* Chart Title/Source inside the container */
+        #chart-title {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            font-size: 25px; 
+            font-weight: normal;
+            color: var(--windows-blue); /* Windows Blue */
+            z-index: 2;
+        }
+
+        #chart-source {
+            position: absolute;
+            top: 55px; 
+            left: 30px;
+            font-size: 12px;
+            color: #6B778C;
+            z-index: 2;
+        }
+
+        #year-display {
+            font-size: 30px; 
+            font-weight: bold;
+            color: #ced0da; 
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            z-index: 0;
+            user-select: none;
+        }
+
+        /* Info Panel (Right) */
+        #info-panel {
+            flex: 1;
+            background: white;
+            border: 1px solid #EBECF0;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        #info-panel h2 {
+            color: var(--windows-blue);
+            font-weight: 700;
+            margin-top: 0;
+            border-bottom: 2px solid #EBECF0;
+            padding-bottom: 10px;
+        }
+
+        #info-panel ul {
+            padding-left: 20px;
+            line-height: 1.6;
+        }
+
+        #info-panel li {
+            margin-bottom: 15px;
+            font-size: 16px; 
+            color: #42526E;
+        }
+
+        #info-panel strong {
+            color: #172B4D;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: #172B4D;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 12px;
+            z-index: 10;
+        }
+
+        .form-range {
+            width: 250px; 
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Wrapper for PDF Export (The entire "slide" content) -->
+<div id="content-to-export">
+    <header>
+        <div>
+            <h1>Word Cloud (Nube de Palabras)</h1> 
+        </div>
+    </header>
+
+    <div id="main-layout">
+        <!-- Chart Section -->
+        <div id="chart-container">
+
+            <div id="chart-title">Tendencias de Lenguajes de Programación</div>
+            <div id="chart-source">Fuente: Estimaciones Históricas (TIOBE Index/StackOverflow Surveys)</div>
+            
+            <div id="year-display">No hay Datos Cargados</div>
+            <div id="word-cloud"></div>
+            <div class="tooltip" id="tooltip"></div>
+            
+            <!-- 
+                CONTROLS 
+                data-html2canvas-ignore="true" prevents this div from appearing in the PDF 
+            -->
+            <div id="controls" class="d-flex align-items-center gap-3" data-html2canvas-ignore="true">
+                <input type="file" id="json-file-input" accept=".json" style="display: none;" onchange="loadJSON(event)">
+                
+                <button onclick="document.getElementById('json-file-input').click()" class="btn btn-light rounded-4" title="Cargar un archivo de datos JSON">
+                    Cargar
+                </button>
+                
+                <button onclick="prevYear()" title="Año Anterior" class="btn btn-light rounded-4">&#9664;</button>
+                <input type="range" id="year-slider" class="form-range" min="2000" max="2025" value="2000" oninput="manualYear(this.value)">
+                <button onclick="nextYear()" title="Siguiente Año" class="btn btn-light rounded-4">&#9654;</button>
+
+                <!-- EXPORT PDF BUTTON -->
+                <button id="pdf-export-btn" onclick="exportToPDF()" class="btn btn-light rounded-4" title="Descargar Diapositiva como PDF">
+                    PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- Explanation Section -->
+        <div id="info-panel">
+            <h3>Comprendiendo las Nubes de Palabras</h3>
+            <ul>
+                <li>
+                    <strong>¿Qué son?</strong>
+                    Representación visual de texto donde su tamaño indica el valor, la frecuencia o la importancia de una palabra en los datos.
+                </li>
+                <li>
+                    <strong>Uso Principal:</strong>
+                    Visualizar rápidamente los términos más prominentes haciendo más fácil la comprensión de la información clave.
+                </li>
+                <li>
+                    <strong>Característica Clave:</strong>
+                    Ayuda a sintetizar grandes cantidades de información en un resumen visual intuitivo.
+                </li>
+                <li>
+                    <strong>Aplicaciones prácticas:</strong>
+                    Análisis de precepciones, sentimientos, reacciones, puntos de vista y tendencias.
+                </li>
+                <li>
+                    <strong>Desventajas:</strong>
+                    Falta de precisión cuantitativa, problemas de interpretación, limitaciones de análisis en relaciones y patrones complejos.
+                </li>
+                <li>
+                    <strong>Ejemplo de Gráfico:</strong>
+                    Tendencias de uso de lenguajes de programación a través del tiempo.
+                </li>
+           </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Atlassian-inspired Palette (Rank Based) ---
+    const colors = [
+        "#0052CC", "#00B8D9", "#36B37E", "#FF5630", "#FFAB00", 
+        "#6554C0", "#FF991F", "#006644", "#403294", "#DE350B"
+    ];
+
+    let dataset = [];
+    let currentYearIndex = 0;
+    let layout;
+    
+    // LOGICAL SIZE used for D3 calc (internal resolution)
+    // Reducido a 850x550 para asegurar un margen seguro y evitar el recorte en la exportación a PDF.
+    const LOGICAL_WIDTH = 850; 
+    const LOGICAL_HEIGHT = 550; 
+    
+    let svg;
+    let gGroup;
+
+    function seededRandom(seed) {
+        var m = 0x80000000;
+        var a = 1103515245;
+        var c = 12345;
+        var state = seed ? seed : Math.floor(Math.random() * (m - 1));
+        return function() {
+            state = (a * state + c) % m;
+            return state / (m - 1);
+        }
+    }
+
+    function initChart() {
+        const wordCloudDiv = document.getElementById('word-cloud');
+        wordCloudDiv.innerHTML = '';
+        svg = d3.select("#word-cloud").append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox", `0 0 ${LOGICAL_WIDTH} ${LOGICAL_HEIGHT}`)
+            .attr("preserveAspectRatio", "xMidYMid meet");
+        gGroup = svg.append("g")
+            .attr("transform", `translate(${LOGICAL_WIDTH / 2},${LOGICAL_HEIGHT / 2})`);
+    }
+
+    initChart();
+
+    function draw(words) {
+        const t = d3.transition().duration(600).ease(d3.easeCubicOut);
+        const text = gGroup.selectAll("text").data(words, d => d.text);
+        text.exit().transition(t).style("opacity", 1e-6).remove();
+        text.enter().append("text")
+            .style("font-size", "1px")
+            .style("font-family", "Roboto")
+            .style("font-weight", "bold")
+            .style("fill", d => d.color) 
+            .style("opacity", 1e-6)
+            .attr("text-anchor", "middle")
+            .text(d => d.text)
+            .merge(text)
+            .transition(t)
+            .style("font-size", d => d.size + "px")
+            .style("opacity", 1)
+            .style("fill", d => d.color) 
+            .attr("transform", d => `translate(${d.x},${d.y})rotate(${d.rotate})`);
+            
+        gGroup.selectAll("text")
+           .on("mouseover", function(event, d) {
+               const tt = document.getElementById('tooltip');
+               tt.style.opacity = 1;
+               tt.innerHTML = `<strong>${d.text}</strong><br>Clasificación: ${d.rank}`;
+               // Tooltip positioning relative to viewport
+               tt.style.left = (event.pageX + 10) + 'px';
+               tt.style.top = (event.pageY - 20) + 'px';
+           })
+           .on("mouseout", function() {
+               document.getElementById('tooltip').style.opacity = 0;
+           });
+    }
+
+    function updateCloud(yearIdx) {
+        if (dataset.length === 0) {
+            document.getElementById('year-display').innerText = "No hay Datos Cargados";
+            return;
+        }
+        if (yearIdx < 0 || yearIdx >= dataset.length) return;
+        
+        const yearData = dataset[yearIdx];
+        document.getElementById('year-display').innerText = yearData.year;
+        
+        const allYears = dataset.map(d => d.year);
+        const slider = document.getElementById('year-slider');
+        slider.min = Math.min(...allYears);
+        slider.max = Math.max(...allYears);
+        slider.value = yearData.year;
+
+        const maxVal = d3.max(yearData.words, d => d.size);
+        const fontScale = d3.scaleLinear().domain([0, maxVal]).range([16, 70]); 
+        const sortedWords = [...yearData.words].sort((a, b) => b.size - a.size);
+        const wordsWithColor = sortedWords.map((d, i) => ({
+            text: d.text,
+            size: fontScale(d.size),
+            original: d.size,
+            rank: i + 1,
+            color: colors[i % colors.length] 
+        }));
+
+        layout = d3.layout.cloud()
+            .size([LOGICAL_WIDTH, LOGICAL_HEIGHT])
+            .words(wordsWithColor)
+            .padding(1)
+            .rotate(0) 
+            .font("Roboto")
+            .fontSize(d => d.size)
+            .random(seededRandom(42))
+            .on("end", draw);
+
+        layout.start();
+    }
+
+    function prevYear() {
+        if (currentYearIndex > 0) {
+            currentYearIndex--;
+            updateCloud(currentYearIndex);
+        }
+    }
+
+    function nextYear() {
+        if (currentYearIndex < dataset.length - 1) {
+            currentYearIndex++;
+            updateCloud(currentYearIndex);
+        }
+    }
+
+    function manualYear(year) {
+        const yearInt = parseInt(year);
+        const idx = dataset.findIndex(d => d.year === yearInt);
+        if (idx !== -1) {
+            currentYearIndex = idx;
+            updateCloud(currentYearIndex);
+        }
+    }
+
+    function processData(json) {
+        dataset = json.map(y => ({
+            year: y.year,
+            words: y.languages.map(l => ({text: l.name, size: l.value}))
+        }));
+        dataset.sort((a, b) => a.year - b.year);
+        currentYearIndex = 0;
+        document.getElementById('chart-source').innerText = "Fuente: Estimaciones Históricas (TIOBE Index/StackOverflow Surveys)";
+        updateCloud(0);
+    }
+
+    function loadJSON(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const json = JSON.parse(e.target.result);
+                processData(json);
+            } catch (error) {
+                document.getElementById('year-display').innerText = "Error de Análisis JSON";
+            }
+        };
+        reader.readAsText(file);
+    }
+    
+    // --- FIXED PDF EXPORT FUNCTION ---
+    async function exportToPDF() {
+        const btn = document.getElementById('pdf-export-btn');
+        const originalHtml = btn.innerHTML;
+        
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Exportando...`;
+
+        try {
+            // CORRECCIÓN DE FUENTE: Esperar a que todas las fuentes CSS (Roboto) se carguen
+            // antes de que html2canvas capture la página.
+            await document.fonts.ready;
+        } catch (e) {
+            console.error("Error waiting for fonts to load:", e);
+        }
+
+        // 1. ACTIVATE "EXPORT MODE" (Forces standard 1280x720 slide size using CSS overrides)
+        document.body.classList.add('export-mode');
+
+        // 2. Target the element and define options
+        const element = document.getElementById('content-to-export'); 
+        const opt = {
+          margin:       0,
+          filename:     `NubeDePalabras_Diapositiva_${dataset[currentYearIndex] ? dataset[currentYearIndex].year : 'Vacia'}.pdf`,
+          image:        { type: 'jpeg', quality: 0.98 },
+          // Usar tamaño fijo para html2canvas para asegurar la resolución correcta
+          html2canvas:  { scale: 2, useCORS: true, scrollX: 0, scrollY: 0, width: 1280, height: 720 }, 
+          // Usar unidades 'px' y formato [1280, 720] para garantizar la escala 1:1
+          jsPDF:        { unit: 'px', format: [1280, 720], orientation: 'landscape', hotfixes: ['px_scaling'] }
+        };
+
+        try {
+            await html2pdf().set(opt).from(element).save();
+        } catch (error) {
+            console.error("PDF export failed:", error);
+            console.log("Error al exportar PDF. Por favor, revise la consola para más detalles.");
+        } finally {
+            // 3. DEACTIVATE "EXPORT MODE" (Return to responsive layout)
+            document.body.classList.remove('export-mode');
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
+        }
+    }
+
+    document.getElementById('year-display').innerText = "Cargar datos";
+
+</script>
+</body>
+</html>
