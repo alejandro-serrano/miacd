@@ -286,7 +286,14 @@
                 </li>
                 <li>
                     <strong>Ejemplo de Gráfico:</strong>
-                    Tendencias de uso de lenguajes de programación a través del tiempo.
+                    <ul>
+                        <li>
+                            Tendencias de uso de lenguajes de programación a través del tiempo.
+                        </li> 
+                        <li>
+                            Análisis de sentimiento pre y post pandemia.
+                        </li>
+                    </ul>
                 </li>
            </ul>
         </div>
@@ -294,10 +301,17 @@
 </div>
 
 <script>
-    // --- Atlassian-inspired Palette (Rank Based) ---
     const colors = [
-        "#0052CC", "#00B8D9", "#36B37E", "#FF5630", "#FFAB00", 
-        "#6554C0", "#FF991F", "#006644", "#403294", "#DE350B"
+        "#0052CC",
+        "#00B8D9",
+        "#36B37E",
+        "#FF5630",
+        "#FFAB00", 
+        "#6554C0",
+        "#FF991F",
+        "#006644",
+        "#403294",
+        "#DE350B"
     ];
 
     let dataset = [];
@@ -305,7 +319,6 @@
     let layout;
     
     // LOGICAL SIZE used for D3 calc (internal resolution)
-    // Reducido a 850x550 para asegurar un margen seguro y evitar el recorte en la exportación a PDF.
     const LOGICAL_WIDTH = 850; 
     const LOGICAL_HEIGHT = 550; 
     
@@ -370,38 +383,103 @@
            });
     }
 
+    // Accepts optional yearIdx; if omitted uses currentYearIndex
     function updateCloud(yearIdx) {
-        if (dataset.length === 0) {
+        // handle optional parameter
+        if (typeof yearIdx === 'number') {
+            currentYearIndex = yearIdx;
+        }
+        // safety: ensure dataset exists
+        if (!Array.isArray(dataset) || dataset.length === 0) {
             document.getElementById('year-display').innerText = "No hay Datos Cargados";
             return;
         }
-        if (yearIdx < 0 || yearIdx >= dataset.length) return;
-        
-        const yearData = dataset[yearIdx];
+        if (currentYearIndex < 0) currentYearIndex = 0;
+        if (currentYearIndex >= dataset.length) currentYearIndex = dataset.length - 1;
+
+        const yearData = dataset[currentYearIndex];
+        if (!yearData) return;
+
+        // Update year display and slider bounds
         document.getElementById('year-display').innerText = yearData.year;
-        
         const allYears = dataset.map(d => d.year);
         const slider = document.getElementById('year-slider');
         slider.min = Math.min(...allYears);
         slider.max = Math.max(...allYears);
         slider.value = yearData.year;
 
-        const maxVal = d3.max(yearData.words, d => d.size);
-        const fontScale = d3.scaleLinear().domain([0, maxVal]).range([16, 70]); 
-        const sortedWords = [...yearData.words].sort((a, b) => b.size - a.size);
-        const wordsWithColor = sortedWords.map((d, i) => ({
+        // rawWords expected format: [{text, size}, ...]
+        const rawWords = yearData.words || [];
+
+        // Build sortedWords with original values
+        const sortedWords = rawWords
+            .map((d, i) => ({
+                text: d.text,
+                original: d.size,
+                index: i
+            }))
+            .filter(d => d.text && d.original != null)
+            .sort((a, b) => b.original - a.original);
+
+        // Assign colors from your palette (consistent per rank)
+        sortedWords.forEach((d, i) => {
+            d.color = colors[i % colors.length];
+            d.rank = i + 1;
+        });
+
+        // Clear previous group content (layout will re-add)
+        gGroup.selectAll("*").remove();
+
+        // Compute font-size scale that fits the LOGICAL canvas
+        const maxFont = Math.min(LOGICAL_WIDTH, LOGICAL_HEIGHT) * 0.10; // upper cap
+        const minFont = Math.min(LOGICAL_WIDTH, LOGICAL_HEIGHT) * 0.018; // lower cap
+
+        // If all originals equal, d3.extent returns [x,x]; handle that
+        const extent = d3.extent(sortedWords, d => d.original);
+        if (extent[0] === extent[1]) {
+            extent[0] = extent[0] * 0.5;
+        }
+
+        // Detect small dataset (e.g., programming languages = ~20 words)
+        const isSmallDataset = sortedWords.length <= 40;
+
+        // Dynamic scaling
+        let minF = minFont;
+        let maxF = maxFont;
+
+        // Boost size for small datasets only
+        if (isSmallDataset) {
+            minF = minFont * 1.6;  // 60% bigger
+            maxF = maxFont * 1.6;  // 60% bigger
+        }
+
+        const sizeScale = d3.scaleLinear()
+            .domain(d3.extent(sortedWords, d => d.original))
+            .range([minF, maxF]);
+
+        // const sizeScale = d3.scaleLinear()
+        //     .domain(extent)
+        //     .range([minFont, maxFont]);
+
+        // WordsScaled passed to layout: include computed size and keep original value for reference
+        const wordsScaled = sortedWords.map(d => ({
             text: d.text,
-            size: fontScale(d.size),
-            original: d.size,
-            rank: i + 1,
-            color: colors[i % colors.length] 
+            value: d.original,
+            size: Math.max(minFont, Math.min(maxFont, sizeScale(d.original))),
+            color: d.color,
+            rank: d.rank
         }));
 
         layout = d3.layout.cloud()
             .size([LOGICAL_WIDTH, LOGICAL_HEIGHT])
-            .words(wordsWithColor)
-            .padding(1)
-            .rotate(0) 
+            .words(wordsScaled)
+            .padding(2)
+            .rotate(() => {
+                if (sortedWords.length <= 40) {
+                    return 0;
+                }
+                    return (~~(Math.random() * 6) - 3) * 30;
+            })
             .font("Roboto")
             .fontSize(d => d.size)
             .random(seededRandom(42))
@@ -434,14 +512,28 @@
     }
 
     function processData(json) {
-        dataset = json.map(y => ({
-            year: y.year,
-            words: y.languages.map(l => ({text: l.name, size: l.value}))
-        }));
+        // Detect sentiment dataset and update title + source
+        if (Array.isArray(json) && json.length > 0 && json[0].sentiment) {
+            document.getElementById("chart-title").innerText = "Análisis de sentimiento global pre y post pandemia";
+            document.getElementById('chart-source').innerText = "Fuente: Estudios y reportes globales Organización Mundial de la Salud";
+            dataset = json.map(y => ({
+                year: y.year,
+                words: y.sentiment.map(s => ({ text: s.name, size: s.value }))
+            }));
+        } else {
+            document.getElementById("chart-title").innerText = "Tendencias de Lenguajes de Programación";
+            document.getElementById('chart-source').innerText = "Fuente: Estimaciones Históricas (TIOBE Index/StackOverflow Surveys)";
+            // Support old "languages" structure
+            dataset = json.map(y => ({
+                year: y.year,
+                words: (y.languages || y.words || []).map(l => ({ text: l.name || l.text, size: l.value || l.size }))
+            }));
+        }
+
+        // Sort dataset and initialize view
         dataset.sort((a, b) => a.year - b.year);
         currentYearIndex = 0;
-        document.getElementById('chart-source').innerText = "Fuente: Estimaciones Históricas (TIOBE Index/StackOverflow Surveys)";
-        updateCloud(0);
+        updateCloud(currentYearIndex);
     }
 
     function loadJSON(event) {
@@ -453,6 +545,7 @@
                 const json = JSON.parse(e.target.result);
                 processData(json);
             } catch (error) {
+                console.error("JSON parse error:", error);
                 document.getElementById('year-display').innerText = "Error de Análisis JSON";
             }
         };
@@ -468,25 +561,20 @@
         btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Exportando...`;
 
         try {
-            // CORRECCIÓN DE FUENTE: Esperar a que todas las fuentes CSS (Roboto) se carguen
-            // antes de que html2canvas capture la página.
+            // Wait for fonts
             await document.fonts.ready;
         } catch (e) {
             console.error("Error waiting for fonts to load:", e);
         }
 
-        // 1. ACTIVATE "EXPORT MODE" (Forces standard 1280x720 slide size using CSS overrides)
         document.body.classList.add('export-mode');
 
-        // 2. Target the element and define options
         const element = document.getElementById('content-to-export'); 
         const opt = {
           margin:       0,
           filename:     `NubeDePalabras_Diapositiva_${dataset[currentYearIndex] ? dataset[currentYearIndex].year : 'Vacia'}.pdf`,
           image:        { type: 'jpeg', quality: 0.98 },
-          // Usar tamaño fijo para html2canvas para asegurar la resolución correcta
           html2canvas:  { scale: 2, useCORS: true, scrollX: 0, scrollY: 0, width: 1280, height: 720 }, 
-          // Usar unidades 'px' y formato [1280, 720] para garantizar la escala 1:1
           jsPDF:        { unit: 'px', format: [1280, 720], orientation: 'landscape', hotfixes: ['px_scaling'] }
         };
 
@@ -494,9 +582,7 @@
             await html2pdf().set(opt).from(element).save();
         } catch (error) {
             console.error("PDF export failed:", error);
-            console.log("Error al exportar PDF. Por favor, revise la consola para más detalles.");
         } finally {
-            // 3. DEACTIVATE "EXPORT MODE" (Return to responsive layout)
             document.body.classList.remove('export-mode');
             btn.disabled = false;
             btn.innerHTML = originalHtml;

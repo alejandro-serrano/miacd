@@ -1,0 +1,2813 @@
+[
+  {
+    "year": 2019,
+    "sentiment": [
+      {
+        "name": "optimism",
+        "value": 100
+      },
+      {
+        "name": "contentment",
+        "value": 96
+      },
+      {
+        "name": "happiness",
+        "value": 95
+      },
+      {
+        "name": "hope",
+        "value": 94
+      },
+      {
+        "name": "confidence",
+        "value": 92
+      },
+      {
+        "name": "calm",
+        "value": 91
+      },
+      {
+        "name": "relief",
+        "value": 89
+      },
+      {
+        "name": "gratitude",
+        "value": 88
+      },
+      {
+        "name": "curiosity",
+        "value": 87
+      },
+      {
+        "name": "excitement",
+        "value": 86
+      },
+      {
+        "name": "stress",
+        "value": 85
+      },
+      {
+        "name": "concern",
+        "value": 83
+      },
+      {
+        "name": "pressure",
+        "value": 82
+      },
+      {
+        "name": "fatigue",
+        "value": 81
+      },
+      {
+        "name": "busy",
+        "value": 80
+      },
+      {
+        "name": "rushed",
+        "value": 78
+      },
+      {
+        "name": "worry",
+        "value": 77
+      },
+      {
+        "name": "uncertainty",
+        "value": 75
+      },
+      {
+        "name": "overthinking",
+        "value": 74
+      },
+      {
+        "name": "doubt",
+        "value": 73
+      },
+      {
+        "name": "irritation",
+        "value": 72
+      },
+      {
+        "name": "restlessness",
+        "value": 71
+      },
+      {
+        "name": "exhaustion",
+        "value": 70
+      },
+      {
+        "name": "burnout",
+        "value": 69
+      },
+      {
+        "name": "distraction",
+        "value": 68
+      },
+      {
+        "name": "overload",
+        "value": 67
+      },
+      {
+        "name": "joy",
+        "value": 66
+      },
+      {
+        "name": "playfulness",
+        "value": 64
+      },
+      {
+        "name": "enthusiasm",
+        "value": 63
+      },
+      {
+        "name": "creativity",
+        "value": 62
+      },
+      {
+        "name": "mindfulness",
+        "value": 61
+      },
+      {
+        "name": "balance",
+        "value": 60
+      },
+      {
+        "name": "climate conscious",
+        "value": 58
+      },
+      {
+        "name": "eco anxiety",
+        "value": 57
+      },
+      {
+        "name": "environmental awareness",
+        "value": 56
+      },
+      {
+        "name": "nostalgia",
+        "value": 55
+      },
+      {
+        "name": "reflection",
+        "value": 54
+      },
+      {
+        "name": "self improvement",
+        "value": 53
+      },
+      {
+        "name": "determination",
+        "value": 52
+      },
+      {
+        "name": "motivation",
+        "value": 51
+      },
+      {
+        "name": "irritability",
+        "value": 50
+      },
+      {
+        "name": "frustration",
+        "value": 49
+      },
+      {
+        "name": "annoyance",
+        "value": 48
+      },
+      {
+        "name": "skepticism",
+        "value": 47
+      },
+      {
+        "name": "caution",
+        "value": 46
+      },
+      {
+        "name": "reservation",
+        "value": 45
+      },
+      {
+        "name": "tech enthusiasm",
+        "value": 44
+      },
+      {
+        "name": "fintech excitement",
+        "value": 43
+      },
+      {
+        "name": "ai curiosity",
+        "value": 42
+      },
+      {
+        "name": "community",
+        "value": 41
+      },
+      {
+        "name": "connection",
+        "value": 40
+      },
+      {
+        "name": "belonging",
+        "value": 39
+      },
+      {
+        "name": "romantic hope",
+        "value": 38
+      },
+      {
+        "name": "friendship",
+        "value": 37
+      },
+      {
+        "name": "adventure",
+        "value": 36
+      },
+      {
+        "name": "travel excitement",
+        "value": 35
+      },
+      {
+        "name": "wanderlust",
+        "value": 34
+      },
+      {
+        "name": "anticipation",
+        "value": 33
+      },
+      {
+        "name": "ambition",
+        "value": 32
+      },
+      {
+        "name": "economic concern",
+        "value": 31
+      },
+      {
+        "name": "political tension",
+        "value": 30
+      },
+      {
+        "name": "polarization",
+        "value": 29
+      },
+      {
+        "name": "media fatigue",
+        "value": 28
+      },
+      {
+        "name": "information overload",
+        "value": 27
+      },
+      {
+        "name": "focus",
+        "value": 26
+      },
+      {
+        "name": "growth",
+        "value": 25
+      },
+      {
+        "name": "progress",
+        "value": 24
+      },
+      {
+        "name": "disappointment",
+        "value": 23
+      },
+      {
+        "name": "letdown",
+        "value": 22
+      },
+      {
+        "name": "calculation",
+        "value": 21
+      },
+      {
+        "name": "planning",
+        "value": 20
+      },
+      {
+        "name": "goal setting",
+        "value": 19
+      },
+      {
+        "name": "peacefulness",
+        "value": 18
+      },
+      {
+        "name": "harmony",
+        "value": 17
+      },
+      {
+        "name": "stability",
+        "value": 16
+      },
+      {
+        "name": "fear",
+        "value": 15
+      },
+      {
+        "name": "mild anxiety",
+        "value": 14
+      },
+      {
+        "name": "anticipation of change",
+        "value": 13
+      },
+      {
+        "name": "newyear hope",
+        "value": 12
+      },
+      {
+        "name": "lifestyle improvement",
+        "value": 11
+      },
+      {
+        "name": "health awareness",
+        "value": 10
+      },
+      {
+        "name": "celebration",
+        "value": 9
+      },
+      {
+        "name": "festivity",
+        "value": 8
+      },
+      {
+        "name": "togetherness",
+        "value": 7
+      },
+      {
+        "name": "fashion excitement",
+        "value": 6
+      },
+      {
+        "name": "music joy",
+        "value": 5
+      },
+      {
+        "name": "movie hype",
+        "value": 4
+      },
+      {
+        "name": "sports energy",
+        "value": 3
+      },
+      {
+        "name": "play",
+        "value": 2
+      },
+      {
+        "name": "calmness",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "year": 2020,
+    "sentiment": [
+      {
+        "name": "anxiety",
+        "value": 100
+      },
+      {
+        "name": "fear",
+        "value": 98
+      },
+      {
+        "name": "uncertainty",
+        "value": 97
+      },
+      {
+        "name": "isolation",
+        "value": 96
+      },
+      {
+        "name": "stress",
+        "value": 95
+      },
+      {
+        "name": "lockdown",
+        "value": 94
+      },
+      {
+        "name": "pandemic fatigue",
+        "value": 93
+      },
+      {
+        "name": "loneliness",
+        "value": 92
+      },
+      {
+        "name": "worry",
+        "value": 91
+      },
+      {
+        "name": "confusion",
+        "value": 90
+      },
+      {
+        "name": "social distancing",
+        "value": 89
+      },
+      {
+        "name": "quarantine",
+        "value": 88
+      },
+      {
+        "name": "home office",
+        "value": 87
+      },
+      {
+        "name": "remote schooling",
+        "value": 86
+      },
+      {
+        "name": "uncertain future",
+        "value": 85
+      },
+      {
+        "name": "panic",
+        "value": 84
+      },
+      {
+        "name": "fear of infection",
+        "value": 83
+      },
+      {
+        "name": "health concern",
+        "value": 82
+      },
+      {
+        "name": "overthinking",
+        "value": 81
+      },
+      {
+        "name": "claustrophobia",
+        "value": 80
+      },
+      {
+        "name": "economic fear",
+        "value": 79
+      },
+      {
+        "name": "job insecurity",
+        "value": 78
+      },
+      {
+        "name": "financial stress",
+        "value": 77
+      },
+      {
+        "name": "market volatility",
+        "value": 76
+      },
+      {
+        "name": "news overload",
+        "value": 75
+      },
+      {
+        "name": "doomscrolling",
+        "value": 74
+      },
+      {
+        "name": "media fatigue",
+        "value": 73
+      },
+      {
+        "name": "misinformation",
+        "value": 72
+      },
+      {
+        "name": "conspiracy fears",
+        "value": 71
+      },
+      {
+        "name": "grief",
+        "value": 70
+      },
+      {
+        "name": "loss",
+        "value": 69
+      },
+      {
+        "name": "bereavement",
+        "value": 68
+      },
+      {
+        "name": "fragility",
+        "value": 67
+      },
+      {
+        "name": "frustration",
+        "value": 66
+      },
+      {
+        "name": "helplessness",
+        "value": 65
+      },
+      {
+        "name": "disruption",
+        "value": 64
+      },
+      {
+        "name": "cabin fever",
+        "value": 63
+      },
+      {
+        "name": "boredom",
+        "value": 62
+      },
+      {
+        "name": "monotony",
+        "value": 61
+      },
+      {
+        "name": "restlessness",
+        "value": 60
+      },
+      {
+        "name": "video call fatigue",
+        "value": 59
+      },
+      {
+        "name": "zoom fatigue",
+        "value": 58
+      },
+      {
+        "name": "virtual overload",
+        "value": 57
+      },
+      {
+        "name": "hope",
+        "value": 56
+      },
+      {
+        "name": "solidarity",
+        "value": 55
+      },
+      {
+        "name": "community support",
+        "value": 54
+      },
+      {
+        "name": "gratitude for healthcare workers",
+        "value": 53
+      },
+      {
+        "name": "mutual aid",
+        "value": 52
+      },
+      {
+        "name": "adaptation",
+        "value": 51
+      },
+      {
+        "name": "resilience",
+        "value": 50
+      },
+      {
+        "name": "creativity at home",
+        "value": 49
+      },
+      {
+        "name": "family time",
+        "value": 48
+      },
+      {
+        "name": "self reflection",
+        "value": 47
+      },
+      {
+        "name": "virtual connection",
+        "value": 46
+      },
+      {
+        "name": "online community",
+        "value": 45
+      },
+      {
+        "name": "distance learning",
+        "value": 44
+      },
+      {
+        "name": "remote living",
+        "value": 43
+      },
+      {
+        "name": "hygiene awareness",
+        "value": 42
+      },
+      {
+        "name": "disinfection habits",
+        "value": 41
+      },
+      {
+        "name": "fear of the unknown",
+        "value": 40
+      },
+      {
+        "name": "existential worry",
+        "value": 39
+      },
+      {
+        "name": "societal uncertainty",
+        "value": 38
+      },
+      {
+        "name": "national unity",
+        "value": 37
+      },
+      {
+        "name": "clapping for health workers",
+        "value": 36
+      },
+      {
+        "name": "public gratitude",
+        "value": 35
+      },
+      {
+        "name": "virtual events",
+        "value": 34
+      },
+      {
+        "name": "cooking trend",
+        "value": 33
+      },
+      {
+        "name": "baking phenomenon",
+        "value": 32
+      },
+      {
+        "name": "home workouts",
+        "value": 31
+      },
+      {
+        "name": "supply shortage worry",
+        "value": 30
+      },
+      {
+        "name": "panic buying",
+        "value": 29
+      },
+      {
+        "name": "toilet paper crisis",
+        "value": 28
+      },
+      {
+        "name": "disappointment",
+        "value": 27
+      },
+      {
+        "name": "event cancellations",
+        "value": 26
+      },
+      {
+        "name": "travel restrictions",
+        "value": 25
+      },
+      {
+        "name": "virtual socializing",
+        "value": 24
+      },
+      {
+        "name": "online gaming surge",
+        "value": 23
+      },
+      {
+        "name": "streaming boom",
+        "value": 22
+      },
+      {
+        "name": "volatility",
+        "value": 21
+      },
+      {
+        "name": "instability",
+        "value": 20
+      },
+      {
+        "name": "prayer",
+        "value": 19
+      },
+      {
+        "name": "spiritual reflection",
+        "value": 18
+      },
+      {
+        "name": "climate break",
+        "value": 17
+      },
+      {
+        "name": "environmental hope",
+        "value": 16
+      },
+      {
+        "name": "humanity",
+        "value": 15
+      },
+      {
+        "name": "togetherness",
+        "value": 14
+      },
+      {
+        "name": "kindness",
+        "value": 13
+      },
+      {
+        "name": "fatigue",
+        "value": 12
+      },
+      {
+        "name": "drained",
+        "value": 11
+      },
+      {
+        "name": "emotional exhaustion",
+        "value": 10
+      },
+      {
+        "name": "meditation",
+        "value": 9
+      },
+      {
+        "name": "slow living",
+        "value": 8
+      },
+      {
+        "name": "introspection",
+        "value": 7
+      },
+      {
+        "name": "flatten the curve",
+        "value": 6
+      },
+      {
+        "name": "mask culture",
+        "value": 5
+      },
+      {
+        "name": "handwashing",
+        "value": 4
+      },
+      {
+        "name": "restricted",
+        "value": 3
+      },
+      {
+        "name": "distant",
+        "value": 2
+      },
+      {
+        "name": "contained",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "year": 2021,
+    "sentiment": [
+      {
+        "name": "pandemic fatigue",
+        "value": 100
+      },
+      {
+        "name": "burnout",
+        "value": 98
+      },
+      {
+        "name": "exhaustion",
+        "value": 97
+      },
+      {
+        "name": "anxiety",
+        "value": 96
+      },
+      {
+        "name": "delta variant fear",
+        "value": 95
+      },
+      {
+        "name": "omicron uncertainty",
+        "value": 94
+      },
+      {
+        "name": "concern",
+        "value": 93
+      },
+      {
+        "name": "worry",
+        "value": 92
+      },
+      {
+        "name": "stress",
+        "value": 91
+      },
+      {
+        "name": "emotional drain",
+        "value": 90
+      },
+      {
+        "name": "vaccine hope",
+        "value": 89
+      },
+      {
+        "name": "vaccination relief",
+        "value": 88
+      },
+      {
+        "name": "vaccine optimism",
+        "value": 87
+      },
+      {
+        "name": "immunity excitement",
+        "value": 86
+      },
+      {
+        "name": "hesitancy",
+        "value": 85
+      },
+      {
+        "name": "polarization",
+        "value": 84
+      },
+      {
+        "name": "misinformation",
+        "value": 83
+      },
+      {
+        "name": "health fear",
+        "value": 82
+      },
+      {
+        "name": "variant anxiety",
+        "value": 81
+      },
+      {
+        "name": "hope",
+        "value": 80
+      },
+      {
+        "name": "cautious optimism",
+        "value": 79
+      },
+      {
+        "name": "anticipation",
+        "value": 78
+      },
+      {
+        "name": "reopening joy",
+        "value": 77
+      },
+      {
+        "name": "reunion excitement",
+        "value": 76
+      },
+      {
+        "name": "remote work fatigue",
+        "value": 75
+      },
+      {
+        "name": "zoom burnout",
+        "value": 74
+      },
+      {
+        "name": "hybrid work confusion",
+        "value": 73
+      },
+      {
+        "name": "job shifting",
+        "value": 72
+      },
+      {
+        "name": "great resignation",
+        "value": 71
+      },
+      {
+        "name": "career anxiety",
+        "value": 70
+      },
+      {
+        "name": "work uncertainty",
+        "value": 69
+      },
+      {
+        "name": "inflation worry",
+        "value": 68
+      },
+      {
+        "name": "economic anxiety",
+        "value": 67
+      },
+      {
+        "name": "supply chain stress",
+        "value": 66
+      },
+      {
+        "name": "social tension",
+        "value": 65
+      },
+      {
+        "name": "division",
+        "value": 64
+      },
+      {
+        "name": "argument fatigue",
+        "value": 63
+      },
+      {
+        "name": "isolation",
+        "value": 62
+      },
+      {
+        "name": "loneliness",
+        "value": 61
+      },
+      {
+        "name": "distance",
+        "value": 60
+      },
+      {
+        "name": "healing",
+        "value": 59
+      },
+      {
+        "name": "gratitude",
+        "value": 58
+      },
+      {
+        "name": "community support",
+        "value": 57
+      },
+      {
+        "name": "return to normal hope",
+        "value": 56
+      },
+      {
+        "name": "normalcy longing",
+        "value": 55
+      },
+      {
+        "name": "grief",
+        "value": 54
+      },
+      {
+        "name": "loss",
+        "value": 53
+      },
+      {
+        "name": "mourning",
+        "value": 52
+      },
+      {
+        "name": "mask fatigue",
+        "value": 51
+      },
+      {
+        "name": "restriction exhaustion",
+        "value": 50
+      },
+      {
+        "name": "health precaution awareness",
+        "value": 49
+      },
+      {
+        "name": "online community",
+        "value": 48
+      },
+      {
+        "name": "digital overload",
+        "value": 47
+      },
+      {
+        "name": "screen fatigue",
+        "value": 46
+      },
+      {
+        "name": "recovery hope",
+        "value": 45
+      },
+      {
+        "name": "healing optimism",
+        "value": 44
+      },
+      {
+        "name": "renewal",
+        "value": 43
+      },
+      {
+        "name": "travel anticipation",
+        "value": 42
+      },
+      {
+        "name": "canceled plans",
+        "value": 41
+      },
+      {
+        "name": "uncertain travel",
+        "value": 40
+      },
+      {
+        "name": "scientific trust",
+        "value": 39
+      },
+      {
+        "name": "medical hope",
+        "value": 38
+      },
+      {
+        "name": "public health awareness",
+        "value": 37
+      },
+      {
+        "name": "fatigue",
+        "value": 36
+      },
+      {
+        "name": "overwhelmed",
+        "value": 35
+      },
+      {
+        "name": "burnout peak",
+        "value": 34
+      },
+      {
+        "name": "solidarity",
+        "value": 33
+      },
+      {
+        "name": "togetherness",
+        "value": 32
+      },
+      {
+        "name": "collective effort",
+        "value": 31
+      },
+      {
+        "name": "adaptation",
+        "value": 30
+      },
+      {
+        "name": "coping",
+        "value": 29
+      },
+      {
+        "name": "resilience",
+        "value": 28
+      },
+      {
+        "name": "virtual events",
+        "value": 27
+      },
+      {
+        "name": "live streaming boom",
+        "value": 26
+      },
+      {
+        "name": "online gaming surge",
+        "value": 25
+      },
+      {
+        "name": "climate concern",
+        "value": 24
+      },
+      {
+        "name": "wildfire anxiety",
+        "value": 23
+      },
+      {
+        "name": "natural disaster stress",
+        "value": 22
+      },
+      {
+        "name": "political fatigue",
+        "value": 21
+      },
+      {
+        "name": "tension",
+        "value": 20
+      },
+      {
+        "name": "disagreement",
+        "value": 19
+      },
+      {
+        "name": "mindfulness",
+        "value": 18
+      },
+      {
+        "name": "self care",
+        "value": 17
+      },
+      {
+        "name": "emotional recovery",
+        "value": 16
+      },
+      {
+        "name": "online learning",
+        "value": 15
+      },
+      {
+        "name": "education stress",
+        "value": 14
+      },
+      {
+        "name": "family time",
+        "value": 13
+      },
+      {
+        "name": "gratitude moments",
+        "value": 12
+      },
+      {
+        "name": "small joys",
+        "value": 11
+      },
+      {
+        "name": "apprehension",
+        "value": 10
+      },
+      {
+        "name": "caution",
+        "value": 9
+      },
+      {
+        "name": "uncertain hope",
+        "value": 8
+      },
+      {
+        "name": "online fatigue",
+        "value": 7
+      },
+      {
+        "name": "routine disruption",
+        "value": 6
+      },
+      {
+        "name": "waiting",
+        "value": 5
+      },
+      {
+        "name": "quiet moments",
+        "value": 4
+      },
+      {
+        "name": "patience",
+        "value": 3
+      },
+      {
+        "name": "fragility",
+        "value": 2
+      },
+      {
+        "name": "stillness",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "year": 2022,
+    "sentiment": [
+      {
+        "name": "uncertainty",
+        "value": 100.0
+      },
+      {
+        "name": "inflation worry",
+        "value": 98.5
+      },
+      {
+        "name": "economic stress",
+        "value": 97.8
+      },
+      {
+        "name": "global tension",
+        "value": 97.2
+      },
+      {
+        "name": "war anxiety",
+        "value": 96.8
+      },
+      {
+        "name": "burnout",
+        "value": 95.4
+      },
+      {
+        "name": "job security fear",
+        "value": 94.7
+      },
+      {
+        "name": "pandemic fatigue",
+        "value": 94.1
+      },
+      {
+        "name": "climate anxiety",
+        "value": 93.8
+      },
+      {
+        "name": "productivity pressure",
+        "value": 93.5
+      },
+      {
+        "name": "remote work exhaustion",
+        "value": 92.9
+      },
+      {
+        "name": "digitization overwhelm",
+        "value": 92.3
+      },
+      {
+        "name": "housing cost stress",
+        "value": 92.0
+      },
+      {
+        "name": "mental overload",
+        "value": 91.6
+      },
+      {
+        "name": "information fatigue",
+        "value": 91.2
+      },
+      {
+        "name": "financial insecurity",
+        "value": 91.0
+      },
+      {
+        "name": "supply chain frustration",
+        "value": 90.8
+      },
+      {
+        "name": "energy price stress",
+        "value": 90.5
+      },
+      {
+        "name": "loneliness",
+        "value": 90.1
+      },
+      {
+        "name": "health concern",
+        "value": 89.9
+      },
+      {
+        "name": "variant anxiety",
+        "value": 89.3
+      },
+      {
+        "name": "depression",
+        "value": 89.0
+      },
+      {
+        "name": "fear of future",
+        "value": 88.7
+      },
+      {
+        "name": "unclear guidelines stress",
+        "value": 88.3
+      },
+      {
+        "name": "work life imbalance",
+        "value": 88.1
+      },
+      {
+        "name": "productivity guilt",
+        "value": 87.5
+      },
+      {
+        "name": "social disconnection",
+        "value": 87.1
+      },
+      {
+        "name": "post covid recovery stress",
+        "value": 86.8
+      },
+      {
+        "name": "policy confusion",
+        "value": 86.2
+      },
+      {
+        "name": "digital fatigue",
+        "value": 85.8
+      },
+      {
+        "name": "screen overload",
+        "value": 85.5
+      },
+      {
+        "name": "travel uncertainty",
+        "value": 85.2
+      },
+      {
+        "name": "remote school stress",
+        "value": 84.9
+      },
+      {
+        "name": "geopolitical fear",
+        "value": 84.6
+      },
+      {
+        "name": "safety concerns",
+        "value": 84.1
+      },
+      {
+        "name": "polarization exhaustion",
+        "value": 83.9
+      },
+      {
+        "name": "media overload",
+        "value": 83.5
+      },
+      {
+        "name": "conflict stress",
+        "value": 83.2
+      },
+      {
+        "name": "economic uncertainty",
+        "value": 83.0
+      },
+      {
+        "name": "supply shortage worry",
+        "value": 82.6
+      },
+      {
+        "name": "future doubt",
+        "value": 82.3
+      },
+      {
+        "name": "pandemic retrigger anxiety",
+        "value": 82.0
+      },
+      {
+        "name": "economic pressure",
+        "value": 81.7
+      },
+      {
+        "name": "job market stress",
+        "value": 81.5
+      },
+      {
+        "name": "school system uncertainty",
+        "value": 81.3
+      },
+      {
+        "name": "family responsibility stress",
+        "value": 80.9
+      },
+      {
+        "name": "fear of instability",
+        "value": 80.6
+      },
+      {
+        "name": "trust decline",
+        "value": 80.2
+      },
+      {
+        "name": "financial pressure",
+        "value": 80.0
+      },
+      {
+        "name": "social anxiety",
+        "value": 79.8
+      },
+      {
+        "name": "fear of change",
+        "value": 79.4
+      },
+      {
+        "name": "salary stagnation stress",
+        "value": 79.0
+      },
+      {
+        "name": "health system fatigue",
+        "value": 78.8
+      },
+      {
+        "name": "inflation anger",
+        "value": 78.5
+      },
+      {
+        "name": "global instability",
+        "value": 78.2
+      },
+      {
+        "name": "war sadness",
+        "value": 77.9
+      },
+      {
+        "name": "world uncertainty",
+        "value": 77.7
+      },
+      {
+        "name": "doubt",
+        "value": 77.4
+      },
+      {
+        "name": "general stress",
+        "value": 77.0
+      },
+      {
+        "name": "fear of crisis",
+        "value": 76.8
+      },
+      {
+        "name": "market volatility worry",
+        "value": 76.3
+      },
+      {
+        "name": "investment fear",
+        "value": 76.0
+      },
+      {
+        "name": "crypto crash anxiety",
+        "value": 75.7
+      },
+      {
+        "name": "housing market worry",
+        "value": 75.4
+      },
+      {
+        "name": "public health worry",
+        "value": 75.1
+      },
+      {
+        "name": "economic downturn fear",
+        "value": 74.9
+      },
+      {
+        "name": "gas price rage",
+        "value": 74.4
+      },
+      {
+        "name": "climate fear",
+        "value": 74.0
+      },
+      {
+        "name": "policy fatigue",
+        "value": 73.7
+      },
+      {
+        "name": "future anxiety",
+        "value": 73.4
+      },
+      {
+        "name": "global concern",
+        "value": 73.0
+      },
+      {
+        "name": "fear of recession",
+        "value": 72.8
+      },
+      {
+        "name": "energy crisis anxiety",
+        "value": 72.4
+      },
+      {
+        "name": "election stress",
+        "value": 72.0
+      },
+      {
+        "name": "public discourse exhaustion",
+        "value": 71.7
+      },
+      {
+        "name": "financial fear",
+        "value": 71.3
+      },
+      {
+        "name": "debt stress",
+        "value": 71.0
+      },
+      {
+        "name": "budget pressure",
+        "value": 70.8
+      },
+      {
+        "name": "socioeconomic stress",
+        "value": 70.4
+      },
+      {
+        "name": "emotional fatigue",
+        "value": 70.1
+      },
+      {
+        "name": "disappointment",
+        "value": 69.9
+      },
+      {
+        "name": "frustration",
+        "value": 69.6
+      },
+      {
+        "name": "anger",
+        "value": 69.3
+      },
+      {
+        "name": "worry",
+        "value": 69.0
+      },
+      {
+        "name": "shock",
+        "value": 68.6
+      },
+      {
+        "name": "sadness",
+        "value": 68.2
+      },
+      {
+        "name": "grief",
+        "value": 67.9
+      },
+      {
+        "name": "helplessness",
+        "value": 67.5
+      },
+      {
+        "name": "overwhelm",
+        "value": 67.1
+      },
+      {
+        "name": "concern",
+        "value": 66.8
+      },
+      {
+        "name": "apprehension",
+        "value": 66.5
+      },
+      {
+        "name": "unease",
+        "value": 66.2
+      },
+      {
+        "name": "worry for future",
+        "value": 65.8
+      },
+      {
+        "name": "grinding fatigue",
+        "value": 65.5
+      },
+      {
+        "name": "lingering anxiety",
+        "value": 65.2
+      },
+      {
+        "name": "habit change stress",
+        "value": 65.0
+      },
+      {
+        "name": "adjustment fatigue",
+        "value": 64.7
+      },
+      {
+        "name": "new normal stress",
+        "value": 64.4
+      },
+      {
+        "name": "confusion",
+        "value": 64.1
+      },
+      {
+        "name": "misinformation stress",
+        "value": 63.8
+      },
+      {
+        "name": "job transition stress",
+        "value": 63.4
+      },
+      {
+        "name": "tech dependency overload",
+        "value": 63.1
+      },
+      {
+        "name": "health uncertainty",
+        "value": 62.9
+      },
+      {
+        "name": "fear of variants",
+        "value": 62.4
+      },
+      {
+        "name": "family health worry",
+        "value": 62.0
+      },
+      {
+        "name": "school disruption stress",
+        "value": 61.7
+      },
+      {
+        "name": "parenting stress",
+        "value": 61.4
+      },
+      {
+        "name": "future unclearity",
+        "value": 61.0
+      },
+      {
+        "name": "fear of conflict",
+        "value": 60.7
+      },
+      {
+        "name": "economic confusion",
+        "value": 60.5
+      },
+      {
+        "name": "income concerns",
+        "value": 60.1
+      },
+      {
+        "name": "financial burden",
+        "value": 59.8
+      },
+      {
+        "name": "career uncertainty",
+        "value": 59.4
+      },
+      {
+        "name": "hope",
+        "value": 59.0
+      },
+      {
+        "name": "resilience",
+        "value": 58.7
+      },
+      {
+        "name": "solidarity",
+        "value": 58.4
+      },
+      {
+        "name": "community rebuilding",
+        "value": 58.0
+      },
+      {
+        "name": "collective strength",
+        "value": 57.7
+      },
+      {
+        "name": "recovery optimism",
+        "value": 57.3
+      },
+      {
+        "name": "innovation hope",
+        "value": 57.0
+      },
+      {
+        "name": "renewed energy",
+        "value": 56.6
+      },
+      {
+        "name": "post pandemic hopes",
+        "value": 56.2
+      },
+      {
+        "name": "vaccine confidence",
+        "value": 55.9
+      },
+      {
+        "name": "international support",
+        "value": 55.5
+      },
+      {
+        "name": "humanitarian concern",
+        "value": 55.2
+      },
+      {
+        "name": "global awareness",
+        "value": 54.8
+      },
+      {
+        "name": "empathy",
+        "value": 54.5
+      },
+      {
+        "name": "compassion",
+        "value": 54.2
+      },
+      {
+        "name": "gratitude",
+        "value": 53.9
+      },
+      {
+        "name": "kindness",
+        "value": 53.5
+      },
+      {
+        "name": "renewed socialization",
+        "value": 53.2
+      },
+      {
+        "name": "return to normalcy",
+        "value": 52.9
+      },
+      {
+        "name": "travel hope",
+        "value": 52.6
+      },
+      {
+        "name": "community events joy",
+        "value": 52.3
+      },
+      {
+        "name": "economic recovery hope",
+        "value": 51.9
+      },
+      {
+        "name": "workplace flexibility relief",
+        "value": 51.6
+      },
+      {
+        "name": "hybrid work relief",
+        "value": 51.3
+      },
+      {
+        "name": "adaptation confidence",
+        "value": 51.0
+      },
+      {
+        "name": "health recovery",
+        "value": 50.7
+      },
+      {
+        "name": "new opportunities",
+        "value": 50.3
+      },
+      {
+        "name": "reconnection joy",
+        "value": 50.0
+      }
+    ]
+  },
+  {
+    "year": 2023,
+    "sentiment": [
+      {
+        "name": "ai excitemement",
+        "value": 100.0
+      },
+      {
+        "name": "innovation optimism",
+        "value": 99.2
+      },
+      {
+        "name": "tech layoff anxiety",
+        "value": 98.7
+      },
+      {
+        "name": "economic uncertainty",
+        "value": 97.9
+      },
+      {
+        "name": "inflation fatigue",
+        "value": 97.4
+      },
+      {
+        "name": "climate concern",
+        "value": 96.8
+      },
+      {
+        "name": "employment worry",
+        "value": 96.5
+      },
+      {
+        "name": "future ambiguity",
+        "value": 96.1
+      },
+      {
+        "name": "ai fear",
+        "value": 95.8
+      },
+      {
+        "name": "data privacy concern",
+        "value": 95.4
+      },
+      {
+        "name": "global tension",
+        "value": 94.9
+      },
+      {
+        "name": "war fatigue",
+        "value": 94.5
+      },
+      {
+        "name": "climate anxiety",
+        "value": 94.1
+      },
+      {
+        "name": "housing cost stress",
+        "value": 93.6
+      },
+      {
+        "name": "interest rate worry",
+        "value": 93.3
+      },
+      {
+        "name": "tech disruption confusion",
+        "value": 93.0
+      },
+      {
+        "name": "automation fear",
+        "value": 92.6
+      },
+      {
+        "name": "job security concerns",
+        "value": 92.2
+      },
+      {
+        "name": "wellbeing fatigue",
+        "value": 91.8
+      },
+      {
+        "name": "overwhelm",
+        "value": 91.5
+      },
+      {
+        "name": "digital dependency stress",
+        "value": 91.1
+      },
+      {
+        "name": "market volatility worry",
+        "value": 90.7
+      },
+      {
+        "name": "economic slowdown fear",
+        "value": 90.4
+      },
+      {
+        "name": "recession concern",
+        "value": 90.0
+      },
+      {
+        "name": "burnout",
+        "value": 89.7
+      },
+      {
+        "name": "screen fatigue",
+        "value": 89.3
+      },
+      {
+        "name": "content overload",
+        "value": 89.0
+      },
+      {
+        "name": "misinformation anxiety",
+        "value": 88.7
+      },
+      {
+        "name": "geo political stress",
+        "value": 88.3
+      },
+      {
+        "name": "public trust decline",
+        "value": 87.9
+      },
+      {
+        "name": "climate grief",
+        "value": 87.6
+      },
+      {
+        "name": "polarization anxiety",
+        "value": 87.3
+      },
+      {
+        "name": "global division",
+        "value": 86.9
+      },
+      {
+        "name": "financial insecurity",
+        "value": 86.5
+      },
+      {
+        "name": "housing market fear",
+        "value": 86.1
+      },
+      {
+        "name": "income stress",
+        "value": 85.8
+      },
+      {
+        "name": "tech overwhelm",
+        "value": 85.4
+      },
+      {
+        "name": "uncertainty fear",
+        "value": 85.1
+      },
+      {
+        "name": "productivity pressure",
+        "value": 84.8
+      },
+      {
+        "name": "job hunt stress",
+        "value": 84.4
+      },
+      {
+        "name": "workload exhaustion",
+        "value": 84.0
+      },
+      {
+        "name": "life cost pressure",
+        "value": 83.6
+      },
+      {
+        "name": "stress",
+        "value": 83.2
+      },
+      {
+        "name": "sadness",
+        "value": 82.9
+      },
+      {
+        "name": "anger",
+        "value": 82.7
+      },
+      {
+        "name": "frustration",
+        "value": 82.3
+      },
+      {
+        "name": "loneliness",
+        "value": 82.0
+      },
+      {
+        "name": "fear of future",
+        "value": 81.7
+      },
+      {
+        "name": "doubt",
+        "value": 81.4
+      },
+      {
+        "name": "mental fatigue",
+        "value": 81.1
+      },
+      {
+        "name": "overthinking",
+        "value": 80.8
+      },
+      {
+        "name": "pressure",
+        "value": 80.5
+      },
+      {
+        "name": "confusion",
+        "value": 80.0
+      },
+      {
+        "name": "concern",
+        "value": 79.6
+      },
+      {
+        "name": "uncertainty",
+        "value": 79.3
+      },
+      {
+        "name": "disappointment",
+        "value": 79.0
+      },
+      {
+        "name": "digital worry",
+        "value": 78.7
+      },
+      {
+        "name": "cybersecurity stress",
+        "value": 78.3
+      },
+      {
+        "name": "ai job loss fear",
+        "value": 78.0
+      },
+      {
+        "name": "trust erosion",
+        "value": 77.6
+      },
+      {
+        "name": "social anxiety",
+        "value": 77.2
+      },
+      {
+        "name": "hope",
+        "value": 76.8
+      },
+      {
+        "name": "community support",
+        "value": 76.5
+      },
+      {
+        "name": "solidarity",
+        "value": 76.2
+      },
+      {
+        "name": "innovation hope",
+        "value": 75.9
+      },
+      {
+        "name": "creativity renewal",
+        "value": 75.5
+      },
+      {
+        "name": "recovery feelings",
+        "value": 75.2
+      },
+      {
+        "name": "optimism",
+        "value": 75.0
+      },
+      {
+        "name": "gratitude",
+        "value": 74.7
+      },
+      {
+        "name": "kindness",
+        "value": 74.4
+      },
+      {
+        "name": "social reconnection",
+        "value": 73.9
+      },
+      {
+        "name": "work life balance focus",
+        "value": 73.6
+      },
+      {
+        "name": "hybrid work acceptance",
+        "value": 73.2
+      },
+      {
+        "name": "wellness movement",
+        "value": 73.0
+      },
+      {
+        "name": "mental health focus",
+        "value": 72.7
+      },
+      {
+        "name": "eco activism",
+        "value": 72.3
+      },
+      {
+        "name": "generational shift",
+        "value": 71.9
+      },
+      {
+        "name": "career change hope",
+        "value": 71.6
+      },
+      {
+        "name": "renewed opportunities",
+        "value": 71.3
+      },
+      {
+        "name": "learning growth",
+        "value": 71.0
+      },
+      {
+        "name": "purpose search",
+        "value": 70.6
+      },
+      {
+        "name": "personal growth",
+        "value": 70.2
+      },
+      {
+        "name": "reinvention",
+        "value": 69.9
+      },
+      {
+        "name": "adaptation progress",
+        "value": 69.6
+      },
+      {
+        "name": "self reflection",
+        "value": 69.2
+      },
+      {
+        "name": "digital skill growth",
+        "value": 68.9
+      },
+      {
+        "name": "ai skill urgency",
+        "value": 68.5
+      },
+      {
+        "name": "future skill focus",
+        "value": 68.2
+      },
+      {
+        "name": "career transition energy",
+        "value": 67.8
+      },
+      {
+        "name": "new ambitions",
+        "value": 67.5
+      },
+      {
+        "name": "hope for stability",
+        "value": 67.1
+      }
+    ]
+  },
+  {
+    "year": 2024,
+    "sentiment": [
+      {
+        "name": "election anxiety",
+        "value": 100.0
+      },
+      {
+        "name": "global tension",
+        "value": 99.3
+      },
+      {
+        "name": "ai overwhelm",
+        "value": 98.7
+      },
+      {
+        "name": "automation stress",
+        "value": 98.2
+      },
+      {
+        "name": "deepfake concern",
+        "value": 97.9
+      },
+      {
+        "name": "misinformation fear",
+        "value": 97.5
+      },
+      {
+        "name": "war escalation worry",
+        "value": 96.8
+      },
+      {
+        "name": "economic uncertainty",
+        "value": 96.4
+      },
+      {
+        "name": "inflation relief",
+        "value": 95.9
+      },
+      {
+        "name": "interest rate relief",
+        "value": 95.6
+      },
+      {
+        "name": "energy cost concern",
+        "value": 95.3
+      },
+      {
+        "name": "climate disaster anxiety",
+        "value": 94.8
+      },
+      {
+        "name": "heatwave fear",
+        "value": 94.4
+      },
+      {
+        "name": "storm anxiety",
+        "value": 94.0
+      },
+      {
+        "name": "cost of living fatigue",
+        "value": 93.6
+      },
+      {
+        "name": "job market confusion",
+        "value": 93.3
+      },
+      {
+        "name": "workplace automation fear",
+        "value": 92.9
+      },
+      {
+        "name": "ai layoff worry",
+        "value": 92.4
+      },
+      {
+        "name": "privacy stress",
+        "value": 92.0
+      },
+      {
+        "name": "cyber attack fear",
+        "value": 91.6
+      },
+      {
+        "name": "digital identity concern",
+        "value": 91.3
+      },
+      {
+        "name": "political exhaustion",
+        "value": 90.9
+      },
+      {
+        "name": "polarization fatigue",
+        "value": 90.6
+      },
+      {
+        "name": "information fatigue",
+        "value": 90.2
+      },
+      {
+        "name": "burnout",
+        "value": 89.7
+      },
+      {
+        "name": "overload",
+        "value": 89.4
+      },
+      {
+        "name": "stress",
+        "value": 89.1
+      },
+      {
+        "name": "uncertainty",
+        "value": 88.7
+      },
+      {
+        "name": "economic stress",
+        "value": 88.3
+      },
+      {
+        "name": "job fear",
+        "value": 88.0
+      },
+      {
+        "name": "housing worry",
+        "value": 87.7
+      },
+      {
+        "name": "rent stress",
+        "value": 87.4
+      },
+      {
+        "name": "future fear",
+        "value": 86.9
+      },
+      {
+        "name": "conflict fear",
+        "value": 86.6
+      },
+      {
+        "name": "resource scarcity anxiety",
+        "value": 86.2
+      },
+      {
+        "name": "mental fatigue",
+        "value": 85.9
+      },
+      {
+        "name": "sadness",
+        "value": 85.5
+      },
+      {
+        "name": "anger",
+        "value": 85.2
+      },
+      {
+        "name": "frustration",
+        "value": 84.9
+      },
+      {
+        "name": "loneliness",
+        "value": 84.4
+      },
+      {
+        "name": "concern",
+        "value": 84.1
+      },
+      {
+        "name": "doubt",
+        "value": 83.8
+      },
+      {
+        "name": "fear",
+        "value": 83.4
+      },
+      {
+        "name": "public trust decline",
+        "value": 83.1
+      },
+      {
+        "name": "worry",
+        "value": 82.7
+      },
+      {
+        "name": "decision fatigue",
+        "value": 82.4
+      },
+      {
+        "name": "responsibility pressure",
+        "value": 82.1
+      },
+      {
+        "name": "technology confusion",
+        "value": 81.8
+      },
+      {
+        "name": "learning pressure",
+        "value": 81.4
+      },
+      {
+        "name": "career uncertainty",
+        "value": 81.1
+      },
+      {
+        "name": "health concern",
+        "value": 80.7
+      },
+      {
+        "name": "climate grief",
+        "value": 80.4
+      },
+      {
+        "name": "environmental stress",
+        "value": 80.0
+      },
+      {
+        "name": "productivity pressure",
+        "value": 79.7
+      },
+      {
+        "name": "social fatigue",
+        "value": 79.3
+      },
+      {
+        "name": "overthinking",
+        "value": 79.0
+      },
+      {
+        "name": "hybrid work tension",
+        "value": 78.6
+      },
+      {
+        "name": "screen tiredness",
+        "value": 78.3
+      },
+      {
+        "name": "misuse of ai fear",
+        "value": 77.9
+      },
+      {
+        "name": "ethical concerns",
+        "value": 77.6
+      },
+      {
+        "name": "job shift anxiety",
+        "value": 77.3
+      },
+      {
+        "name": "skill gap pressure",
+        "value": 77.0
+      },
+      {
+        "name": "education confusion",
+        "value": 76.7
+      },
+      {
+        "name": "uncertainty pressure",
+        "value": 76.3
+      },
+      {
+        "name": "shock",
+        "value": 75.9
+      },
+      {
+        "name": "stress recovery",
+        "value": 75.5
+      },
+      {
+        "name": "hope",
+        "value": 75.0
+      },
+      {
+        "name": "renewal",
+        "value": 74.7
+      },
+      {
+        "name": "optimism",
+        "value": 74.3
+      },
+      {
+        "name": "solidarity",
+        "value": 74.0
+      },
+      {
+        "name": "community strength",
+        "value": 73.8
+      },
+      {
+        "name": "innovation optimism",
+        "value": 73.4
+      },
+      {
+        "name": "ai hopefulness",
+        "value": 73.0
+      },
+      {
+        "name": "new opportunities",
+        "value": 72.5
+      },
+      {
+        "name": "creativity growth",
+        "value": 72.2
+      },
+      {
+        "name": "eco innovation hope",
+        "value": 71.8
+      },
+      {
+        "name": "youth activism",
+        "value": 71.4
+      },
+      {
+        "name": "mental health focus",
+        "value": 71.0
+      },
+      {
+        "name": "progress optimism",
+        "value": 70.7
+      },
+      {
+        "name": "career transition energy",
+        "value": 70.4
+      },
+      {
+        "name": "learning motivation",
+        "value": 70.0
+      },
+      {
+        "name": "global collaboration hope",
+        "value": 69.7
+      },
+      {
+        "name": "kindness",
+        "value": 69.4
+      },
+      {
+        "name": "compassion",
+        "value": 69.1
+      },
+      {
+        "name": "gratitude",
+        "value": 68.8
+      }
+    ]
+  },
+  {
+    "year": 2025,
+    "sentiment": [
+      {
+        "name": "ai dependence concern",
+        "value": 100.0
+      },
+      {
+        "name": "automation fear",
+        "value": 99.4
+      },
+      {
+        "name": "tech disruption overwhelm",
+        "value": 98.8
+      },
+      {
+        "name": "global instability fear",
+        "value": 98.4
+      },
+      {
+        "name": "climate emergency anxiety",
+        "value": 97.9
+      },
+      {
+        "name": "ai safety worry",
+        "value": 97.6
+      },
+      {
+        "name": "privacy loss anxiety",
+        "value": 97.1
+      },
+      {
+        "name": "cybersecurity threat fear",
+        "value": 96.8
+      },
+      {
+        "name": "geopolitical uncertainty",
+        "value": 96.4
+      },
+      {
+        "name": "economic caution",
+        "value": 96.0
+      },
+      {
+        "name": "election aftermath stress",
+        "value": 95.6
+      },
+      {
+        "name": "misinformation spike fear",
+        "value": 95.2
+      },
+      {
+        "name": "deepfake chaos concern",
+        "value": 94.8
+      },
+      {
+        "name": "energy crisis worry",
+        "value": 94.3
+      },
+      {
+        "name": "housing market pressure",
+        "value": 93.8
+      },
+      {
+        "name": "automation job shift",
+        "value": 93.4
+      },
+      {
+        "name": "skill gap anxiety",
+        "value": 93.0
+      },
+      {
+        "name": "career transition pressure",
+        "value": 92.7
+      },
+      {
+        "name": "income stress",
+        "value": 92.4
+      },
+      {
+        "name": "family responsibility stress",
+        "value": 92.0
+      },
+      {
+        "name": "economic adaptation",
+        "value": 91.7
+      },
+      {
+        "name": "resource scarcity fear",
+        "value": 91.3
+      },
+      {
+        "name": "future shock",
+        "value": 90.9
+      },
+      {
+        "name": "overload",
+        "value": 90.6
+      },
+      {
+        "name": "anxiety",
+        "value": 90.3
+      },
+      {
+        "name": "stress",
+        "value": 90.0
+      },
+      {
+        "name": "sadness",
+        "value": 89.6
+      },
+      {
+        "name": "fear",
+        "value": 89.4
+      },
+      {
+        "name": "anger",
+        "value": 89.0
+      },
+      {
+        "name": "loneliness",
+        "value": 88.6
+      },
+      {
+        "name": "doubt",
+        "value": 88.3
+      },
+      {
+        "name": "health concern",
+        "value": 87.9
+      },
+      {
+        "name": "climate grief",
+        "value": 87.6
+      },
+      {
+        "name": "eco fear",
+        "value": 87.2
+      },
+      {
+        "name": "uncertainty",
+        "value": 86.9
+      },
+      {
+        "name": "public trust loss",
+        "value": 86.5
+      },
+      {
+        "name": "social isolation",
+        "value": 86.1
+      },
+      {
+        "name": "polarization fatigue",
+        "value": 85.7
+      },
+      {
+        "name": "information overwhelm",
+        "value": 85.3
+      },
+      {
+        "name": "technology anxiety",
+        "value": 84.9
+      },
+      {
+        "name": "adaptation fatigue",
+        "value": 84.6
+      },
+      {
+        "name": "burnout",
+        "value": 84.3
+      },
+      {
+        "name": "future fear",
+        "value": 84.0
+      },
+      {
+        "name": "worry",
+        "value": 83.7
+      },
+      {
+        "name": "shock",
+        "value": 83.3
+      },
+      {
+        "name": "communication overload",
+        "value": 82.9
+      },
+      {
+        "name": "media exhaustion",
+        "value": 82.5
+      },
+      {
+        "name": "cost of living pressure",
+        "value": 82.1
+      },
+      {
+        "name": "job transition stress",
+        "value": 81.8
+      },
+      {
+        "name": "skill pressure",
+        "value": 81.4
+      },
+      {
+        "name": "education shift anxiety",
+        "value": 81.0
+      },
+      {
+        "name": "decision stress",
+        "value": 80.7
+      },
+      {
+        "name": "social fear",
+        "value": 80.3
+      },
+      {
+        "name": "identity confusion",
+        "value": 79.9
+      },
+      {
+        "name": "tech confusion",
+        "value": 79.6
+      },
+      {
+        "name": "ai ethics concern",
+        "value": 79.3
+      },
+      {
+        "name": "privacy conflict",
+        "value": 78.9
+      },
+      {
+        "name": "data usage worry",
+        "value": 78.5
+      },
+      {
+        "name": "global concern",
+        "value": 78.1
+      },
+      {
+        "name": "civil unrest fear",
+        "value": 77.7
+      },
+      {
+        "name": "economic transition",
+        "value": 77.3
+      },
+      {
+        "name": "healthcare access stress",
+        "value": 77.0
+      },
+      {
+        "name": "health system pressure",
+        "value": 76.7
+      },
+      {
+        "name": "productivity pressure",
+        "value": 76.3
+      },
+      {
+        "name": "screen burnout",
+        "value": 75.9
+      },
+      {
+        "name": "digital anxiety",
+        "value": 75.6
+      },
+      {
+        "name": "career redefinition",
+        "value": 75.2
+      },
+      {
+        "name": "life reprioritization",
+        "value": 74.8
+      },
+      {
+        "name": "emotional fatigue",
+        "value": 74.4
+      },
+      {
+        "name": "confusion",
+        "value": 74.0
+      },
+      {
+        "name": "fear of change",
+        "value": 73.7
+      },
+      {
+        "name": "overthinking",
+        "value": 73.3
+      },
+      {
+        "name": "stress adaptation",
+        "value": 73.0
+      },
+      {
+        "name": "hope",
+        "value": 72.6
+      },
+      {
+        "name": "renewal",
+        "value": 72.3
+      },
+      {
+        "name": "optimism",
+        "value": 72.0
+      },
+      {
+        "name": "innovation excitement",
+        "value": 71.6
+      },
+      {
+        "name": "ai optimism",
+        "value": 71.2
+      },
+      {
+        "name": "global collaboration hope",
+        "value": 70.8
+      },
+      {
+        "name": "environmental activism",
+        "value": 70.5
+      },
+      {
+        "name": "community support",
+        "value": 70.2
+      },
+      {
+        "name": "solidarity",
+        "value": 69.9
+      },
+      {
+        "name": "connection growth",
+        "value": 69.6
+      },
+      {
+        "name": "new skills hope",
+        "value": 69.3
+      },
+      {
+        "name": "career optimism",
+        "value": 69.0
+      },
+      {
+        "name": "resilience",
+        "value": 68.7
+      },
+      {
+        "name": "gratitude",
+        "value": 68.4
+      },
+      {
+        "name": "kindness",
+        "value": 68.0
+      },
+      {
+        "name": "compassion",
+        "value": 67.7
+      }
+    ]
+  }
+]
