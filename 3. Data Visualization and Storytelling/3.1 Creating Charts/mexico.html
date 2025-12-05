@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mapa Interactivo Climático</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #222; color: #fff; }
+        #container { display: flex; flex-direction: column; align-items: center; }
+        .map-path { stroke: #333; stroke-width: 0.5px; transition: fill 0.3s; }
+        
+        /* Controles */
+        .controls { margin: 20px; background: #333; padding: 15px; border-radius: 8px; }
+        input[type=range] { width: 300px; }
+        h1 span { color: #ff6b6b; }
+    </style>
+</head>
+<body>
+
+    <h1>Evolución Térmica: Año <span id="year-label">1913</span></h1>
+    
+    <div class="controls">
+        <label>Arrastra para avanzar en el tiempo:</label><br>
+        <input type="range" id="year-slider" min="1913" max="2013" step="1" value="1913">
+    </div>
+
+    <div id="container"></div>
+
+<script>
+    const width = 960, height = 500;
+    
+    // Configuración del Mapa
+    const svg = d3.select("#container").append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    // Proyección centrada para ver bien América y Europa
+    const projection = d3.geoMercator()
+        .scale(130)
+        .translate([width / 2, height / 1.5]);
+
+    const path = d3.geoPath().projection(projection);
+
+    // Escala de color (Azul frio -> Rojo caliente)
+    const colorScale = d3.scaleSequential(d3.interpolateRdYlBu) // Invertiremos el dominio
+        .domain([30, -10]); // De 30°C (Rojo) a -10°C (Azul)
+
+    // Cargar Datos (GeoJSON del mundo + CSV de temperaturas)
+    Promise.all([
+        d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson"),
+        d3.csv("GlobalLandTemperaturesByCountry.csv")
+    ]).then(function([geoData, tempData]) {
+
+        // --- 1. PROCESAMIENTO DE DATOS (QA y Optimización) ---
+        // Estructura de datos rápida: Objeto { "Año": { "Pais": Temp } }
+        let dataByYear = {};
+
+        tempData.forEach(d => {
+            if (!d.dt || !d.AverageTemperature) return; // Filtrar vacíos
+            
+            let year = d.dt.substring(0, 4); // Extraer año "YYYY"
+            if (year < 1913) return; // Solo últimos 100 años
+
+            let country = d.Country;
+            
+            // Corrección manual de nombres para coincidir con GeoJSON
+            if (country === "United States") country = "USA";
+            if (country === "Democratic Republic of the Congo") country = "Democratic Republic of the Congo";
+            
+            if (!dataByYear[year]) dataByYear[year] = {};
+            
+            // Promediar si hay varios meses (simplificación rápida: sobreescribir último o promediar)
+            // Para visualización fluida, usaremos el dato tal cual llega (mensual) o idealmente agrupar.
+            // Aquí tomamos el valor tal cual para simplificar el código educativo.
+            dataByYear[year][country] = +d.AverageTemperature;
+        });
+
+        // --- 2. DIBUJAR MAPA BASE ---
+        svg.append("g")
+            .selectAll("path")
+            .data(geoData.features)
+            .enter()
+            .append("path")
+            .attr("class", "map-path")
+            .attr("d", path)
+            .attr("fill", "#555") // Color base gris
+            .attr("id", d => "code-" + d.properties.name); // ID para buscar fácil
+
+        // --- 3. FUNCIÓN DE ACTUALIZACIÓN ---
+        function updateMap(year) {
+            d3.select("#year-label").text(year);
+            
+            let yearData = dataByYear[year];
+            if (!yearData) return;
+
+            svg.selectAll(".map-path")
+                .attr("fill", function(d) {
+                    let countryName = d.properties.name;
+                    let val = yearData[countryName];
+                    
+                    if (val) {
+                        return colorScale(val);
+                    } else {
+                        return "#444"; // Gris oscuro si no hay datos
+                    }
+                });
+        }
+
+        // --- 4. INTERACTIVIDAD ---
+        d3.select("#year-slider").on("input", function() {
+            updateMap(this.value);
+        });
+
+        // Carga inicial
+        updateMap(1913);
+
+    }).catch(err => console.log("Error cargando datos:", err));
+
+</script>
+</body>
+</html>
