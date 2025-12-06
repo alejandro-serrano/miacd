@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Debugging the Mind – Visualización Interactiva</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <h1>Debugging the Mind</h1>
+        <p class="subtitle">La brecha invisible en la salud mental dentro de la industria tecnológica</p>
+    </header>
+
+    <!-- Contenedor 1 -->
+    <section>
+      <h2>1. Pirámide Poblacional: Edad vs Género</h2>
+      <p>Esta pirámide muestra la distribución etaria de la muestra por género.</p>
+      <svg id="grafico1" width="800" height="500"></svg>
+    </section>
+
+
+    <!-- Contenedor 2 -->
+    <section>
+        <h2>2. ¿Salud Mental?</h2>
+        <div id="grafico2" ></div>
+    </section>
+
+
+    <!-- Contenedor 3 -->
+    <section>
+        <h2>3. Empresa Tech vs Interferencia de la Salud Mental</h2>
+        <p>
+            Cada celda muestra cuántas personas reportan distintos niveles de interferencia 
+            (1 = mínima, 5 = muy alta), separando entre quienes trabajan o no en una empresa tech.
+        </p>
+
+        <svg id="grafico3" width="900" height="600"></svg>
+    </section>
+
+    <!-- Contenedor 4 -->
+    <section>
+        <h2>4. Flujo de Beneficios → Conocimiento</h2>
+        <svg id="grafico4" width="850" height="450"></svg>
+    </section>
+
+    <!-- Contenedor 5 -->
+    <section>
+        <h2>5. Estigma: ¿Hablarías con tu jefe?</h2>
+        <svg id="grafico5" width="700" height="400"></svg>
+    </section>
+
+    <script src="js/utils.js"></script>
+    <script src="js/grafico1_genero.js"></script>
+    <script src="js/grafico2_waffle.js"></script>
+    <script src="js/grafico3_stackedbar.js"></script>
+    <script src="js/grafico4_sankey.js"></script>
+    <script src="js/grafico5_slope.js"></script>
+
+</body>
+</html>
