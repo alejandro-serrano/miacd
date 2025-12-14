@@ -1,0 +1,146 @@
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    margin: 40px;
+    background: #fafafa;
+    color: #222;
+}
+
+header h1 {
+    font-size: 2.8em;
+    color: #1f4e79;
+    margin-bottom: 0;
+    text-transform: none;
+}
+
+.subtitle {
+    margin-top: 4px;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.author {
+    margin-top: 4px;
+    font-size: 0.8em;
+    color: #555;
+}
+
+section {
+    margin-top: 60px;
+}
+
+h2 {
+    color: #1f4e79;
+    /* border-left: 8px solid #1f4e79; */
+    /* padding-left: 12px; */ 
+    text-transform: none;
+}
+
+#grafico2 div {
+    display: inline-block;
+}
+
+.reveal {
+  color: #555;
+}
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  color: #5499c7 !important;
+  text-transform: none !important;
+  letter-spacing: 0.02em;
+}
+
+.reveal h1 {
+  font-size: 1.9em !important;
+  line-height: 1.15 !important;
+  margin-bottom: 0.3em !important;
+  font-weight: 500;
+}
+
+.reveal h2 {
+  font-size: 1em !important;
+  line-height: 1.2 !important;
+  margin-bottom: 0.4em !important;
+  font-weight: 500;
+}
+
+.reveal p,
+.reveal .subtitle {
+  font-size: 0.85em !important;
+  line-height: 1.4 !important;
+}
+
+.reveal section {
+  padding-top: 10px !important;
+}
+
+.reveal .slide-layout {
+  display: grid;
+  grid-template-columns: 65% 35%; /* gráfica | video */
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  gap: 24px;
+}
+
+/* Columna izquierda: contenido */
+.reveal .slide-content {
+  text-align: left;
+}
+
+/* Columna derecha: zona de video */
+.reveal .slide-video {
+  width: 100%;
+  height: 100%;
+  border: 2px dashed rgba(0,0,0,0.15); /* referencia visual */
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 0.8em;
+}
+
+.reveal section {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.reveal .slide-layout {
+  height: 100%;
+  align-items: flex-start;
+}
+
+.closing-text {
+  font-size: 1.1em;
+  line-height: 1.6;
+  margin-bottom: 1em;
+  color: #333;
+}
+
+.closing-footer {
+  margin-top: 1.8em;
+  font-size: 1.15em;
+  font-weight: 500;
+  justify-content: center;
+  color: #333;
+}
+
+.highlight {
+  color: #5499c7;
+  font-weight: 600;
+}
+
+.tooltip {
+  position: fixed;
+  background: rgba(255,255,255,0.95);
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 0.75em;
+  color: #333;
+  pointer-events: none;
+  z-index: 9999;
+  display: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}

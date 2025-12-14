@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>La crisis silenciosa en la industria tecnológica</title>
+  <meta name="author" content="Manuel Alejandro Serrano Macias">
+  <meta name="description" content="MIACD - Visualizacion de Datos Narración de Historias">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Reveal core -->
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/reveal.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/theme/white.css">
+
+  <!-- Estilos  -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- D3 -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+</head>
+
+<div id="tooltip" class="tooltip"></div>
+
+<body>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- =========================
+       SLIDE 0 — PORTADA
+       ========================= -->
+      <section>
+        <div class="slide-layout">
+
+          <div class="slide-content">
+            <h1>Salud Mental</h1>
+            <p class="subtitle">
+              El desafío de la industria tecnológica
+            </p>
+            <p>
+              <small class="author">Alejandro Serrano</small>
+            </p>
+            <!--<p class="fragment fade-up" style="margin-top:30px">
+          <small class="author">Alejandro Serrano</small>
+        </p>-->
+          </div>
+
+          <!-- <div class="slide-video">
+        Video
+      </div> -->
+
+        </div>
+      </section>
+
+      <!-- =========================
+       SLIDE 1 — PIRÁMIDE
+       ========================= -->
+      <section data-state="piramide">
+        <div class="slide-layout">
+
+          <div class="slide-content">
+            <h2>¿Quiénes están detrás de los datos?</h2>
+            <p class="fragment fade-in">
+              Una población joven y diversa
+            </p>
+
+            <svg id="grafico1" width="680" height="400"></svg>
+          </div>
+
+          <!-- <div class="slide-video fragment fade-in">
+        Video
+      </div> -->
+
+        </div>
+      </section>
+
+      <!-- =========================
+       SLIDE 2 — WAFFLE
+       ========================= -->
+      <section data-state="waffle">
+        <div class="slide-layout">
+
+          <div class="slide-content">
+            <h2>No es un problema aislado</h2>
+            <p class="fragment fade-in">
+              ¿Una nueva normalidad?
+            </p>
+
+            <div id="grafico2"></div>
+          </div>
+
+          <!-- <div class="slide-video fragment fade-in">
+        Video
+      </div> -->
+
+        </div>
+      </section>
+
+      <!-- =========================
+       SLIDE 3 — STACKED BAR
+       ========================= -->
+      <section data-state="stacked">
+        <div class="slide-layout">
+
+          <div class="slide-content">
+            <h2>¿La modalidad laboral influye?</h2>
+            <p class="fragment fade-in">
+              La salud mental no es un problema de modalidad, es un problema del entorno laboral completo
+            </p>
+
+            <svg id="grafico3" width="680" height="400"></svg>
+          </div>
+
+          <!-- <div class="slide-video fragment fade-in">
+        Video
+      </div> -->
+
+        </div>
+      </section>
+
+      <!-- =========================
+       SLIDE 4 — SANKEY
+       ========================= -->
+      <section data-state="sankey">
+        <div class="slide-layout">
+
+          <div class="slide-content">
+            <h2>Descubriendo la falla en el estructural</h2>
+            <p class="fragment fade-in">
+              Beneficios existen, pero no siempre se conocen
+            </p>
+
+            <svg id="grafico4" width="680" height="400"></svg>
+          </div>
+
+          <!-- <div class="slide-video fragment fade-in">
+        Video
+      </div> -->
+
+        </div>
+      </section>
+
+      <!-- =========================
+       SLIDE 5 — SLOPE
+       ========================= -->
+      <section data-state="slope">
+        <div class="slide-layout">
+
+          <div class="slide-content">
+            <h2>El silencio como mecanismo de defensa</h2>
+            <p class="fragment fade-in">
+              No hablamos igual de salud mental que de otros temas
+            </p>
+
+            <svg id="grafico5" width="600" height="360"></svg>
+          </div>
+
+          <!-- <div class="slide-video fragment fade-in">
+        Video
+      </div> -->
+
+        </div>
+      </section>
+
+      <!-- =========================
+       SLIDE 6 — CIERRE
+       ========================= -->
+      <section>
+        <div class="slide-layout">
+
+          <!-- Contenido -->
+          <div class="slide-content">
+            <h2>La crisis silenciosa requiere acciones</h2>
+            <p class="closing-text fragment fade-in">
+              La verdadera <span class="highlight">innovación</span> no se mide en avances tecnológicos,
+              sino en la capacidad de construir <span class="highlight">espacios seguros</span>
+              donde las personas puedan estar bien
+              <span class="highlight">física y mentalmente</span>.
+            </p>
+          </div>
+
+          <!-- Video -->
+          <!-- <div class="slide-video fragment fade-in">
+        Video
+      </div> -->
+
+        </div>
+      </section>
+
+
+    </div>
+  </div>
+
+  <!-- =========================
+     REVEAL INIT
+     ========================= -->
+  <script src="https://unpkg.com/reveal.js/dist/reveal.js"></script>
+  <script src="https://unpkg.com/reveal.js/plugin/notes/notes.js"></script>
+
+  <script>
+    Reveal.initialize({
+      transition: 'fade',
+      slideNumber: true,
+      controls: true,
+      progress: true,
+      hash: true,
+
+      autoslide: 0,
+      autoslideStoppable: false,
+
+      width: 1200,
+      height: 800,
+      margin: 0.03,
+      minScale: 0.8,
+      maxScale: 1.0,
+
+      center: false,
+      plugins: [RevealNotes]
+    });
+
+
+    Reveal.on('slidechanged', event => {
+      const state = event.currentSlide.dataset.state;
+
+      if (state === 'piramide' && window.drawPiramide) drawPiramide();
+      if (state === 'waffle' && window.drawWaffle) drawWaffle();
+      if (state === 'stacked' && window.drawStacked) drawStacked();
+      if (state === 'sankey' && window.drawSankey) drawSankey();
+      if (state === 'slope' && window.drawSlope) drawSlope();
+    });
+  </script>
+
+  <script src="js/utils.js"></script>
+  <script src="js/grafico1_genero.js"></script>
+  <script src="js/grafico2_waffle.js"></script>
+  <script src="js/grafico3_stackedbar.js"></script>
+  <script src="js/grafico4_sankey.js"></script>
+  <script src="js/grafico5_slope.js"></script>
+
+</body>
+
+</html>
