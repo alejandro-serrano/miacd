@@ -1,0 +1,76 @@
+{
+  "price_by_neighbourhood": {
+    "Miguel Hidalgo": 1296,
+    "Cuajimalpa de Morelos": 1257,
+    "Cuauhtémoc": 1174,
+    "Milpa Alta": 946,
+    "Álvaro Obregón": 900,
+    "Benito Juárez": 810,
+    "Coyoacán": 792,
+    "La Magdalena Contreras": 790,
+    "Iztacalco": 745,
+    "Venustiano Carranza": 680,
+    "Tlalpan": 636,
+    "Xochimilco": 617,
+    "Iztapalapa": 543,
+    "Gustavo A. Madero": 551,
+    "Azcapotzalco": 512,
+    "Tláhuac": 344
+  },
+  "price_by_bedrooms": {
+    "1": 809,
+    "2": 1346,
+    "3": 2030,
+    "4": 3188,
+    "5": 3647
+  },
+  "models": [
+    { "name": "Árbol de Decisión", "short": "Árbol",    "r2": 0.419,  "mae": 513.43, "rmse": 875.37 },
+    { "name": "Random Forest",     "short": "RF",        "r2": 0.5372, "mae": 454.37, "rmse": 781.29 },
+    { "name": "Gradient Boosting", "short": "GB",        "r2": 0.5621, "mae": 448.54, "rmse": 760.01 }
+  ],
+  "dim_reduction": [
+    { "name": "GB — original",        "r2": 0.5621, "mae": 448.54, "rmse": 760.01,  "group": "original" },
+    { "name": "RF — original",         "r2": 0.5372, "mae": 454.37, "rmse": 781.29,  "group": "original" },
+    { "name": "RF — 5 importancia",    "r2": 0.4513, "mae": 505.16, "rmse": 850.74,  "group": "seleccion" },
+    { "name": "RF — PCA (10 comp.)",   "r2": 0.4281, "mae": 512.18, "rmse": 868.48,  "group": "pca" },
+    { "name": "GB — PCA (10 comp.)",   "r2": 0.4189, "mae": 519.30, "rmse": 875.44,  "group": "pca" },
+    { "name": "Árbol — original",      "r2": 0.419,  "mae": 513.43, "rmse": 875.37,  "group": "original" },
+    { "name": "RF — 5 correlación",    "r2": 0.3627, "mae": 550.88, "rmse": 916.81,  "group": "seleccion" },
+    { "name": "Árbol — PCA (10 comp.)","r2": 0.2832, "mae": 574.11, "rmse": 972.34,  "group": "pca" }
+  ],
+  "pca_variance": [
+    0.195, 0.330, 0.432, 0.516, 0.589, 0.647, 0.697, 0.741, 0.772, 0.800,
+    0.826, 0.849, 0.870, 0.889, 0.906, 0.922, 0.960, 1.000
+  ],
+  "feature_importance": [
+    { "variable": "bedrooms",         "importance": 0.2502 },
+    { "variable": "bathrooms",        "importance": 0.1832 },
+    { "variable": "property_type",    "importance": 0.0978 },
+    { "variable": "availability_365", "importance": 0.0622 },
+    { "variable": "host_listings",    "importance": 0.0511 },
+    { "variable": "accommodates",     "importance": 0.0490 },
+    { "variable": "neighbourhood",    "importance": 0.0450 },
+    { "variable": "room_type",        "importance": 0.0421 },
+    { "variable": "review_rating",    "importance": 0.0380 },
+    { "variable": "min_nights",       "importance": 0.0312 }
+  ],
+  "correlations": [
+    { "variable": "accommodates", "corr": 0.507 },
+    { "variable": "bedrooms",     "corr": 0.435 },
+    { "variable": "bathrooms",    "corr": 0.383 },
+    { "variable": "beds",         "corr": 0.373 },
+    { "variable": "room_type",    "corr": 0.306 }
+  ],
+  "coyoacan": {
+    "count": 248,
+    "min": 260,
+    "median": 1184,
+    "mean": 1330,
+    "max": 6409,
+    "estimated": 1375.52,
+    "range_low": 926.98,
+    "range_high": 1824.06
+  },
+  "total_listings": 23330
+}
