@@ -22,7 +22,7 @@ function drawBedrooms() {
     const x = d3.scaleBand().domain(entries.map(d => d.beds)).range([0, iW]).padding(0.45);
     const y = d3.scaleLinear().domain([0, d3.max(entries, d => d.value) * 1.15]).range([iH, 0]);
 
-    const colors = ["#a3cef1","#5499c7","#e8846a","#f4b942","#1f4e79"];
+    const colors = ["#a3cef1","#5499c7","#7BC6B0","#f4b942","#1f4e79"];
 
     // Bars
     g.selectAll(".bar")
@@ -32,11 +32,11 @@ function drawBedrooms() {
       .attr("y", iH)
       .attr("width", x.bandwidth())
       .attr("height", 0)
-      .attr("fill", (d, i) => d.beds === 2 ? "#e8846a" : "#5499c7")
+      .attr("fill", (d, i) => d.beds === 2 ? "#7BC6B0" : "#5499c7")
       .attr("rx", 4)
       .on("mouseover", (event, d) => {
         tooltip.style("display", "block")
-          .html(`<b>${d.beds} hab.</b><br>Precio mediano: <b>$${d.value.toLocaleString()} MXN</b>`);
+          .html(`<b>${d.beds} hab.</b><br>Mediana precio: <b>$${d.value.toLocaleString()} MXN</b>`);
       })
       .on("mousemove", event => {
         tooltip.style("left", event.clientX + 10 + "px").style("top", event.clientY - 20 + "px");
@@ -55,7 +55,7 @@ function drawBedrooms() {
       .attr("text-anchor", "middle")
       .attr("font-size", "11px")
       .attr("font-weight", d => d.beds === 2 ? "bold" : "normal")
-      .attr("fill", d => d.beds === 2 ? "#e8846a" : "#444")
+      .attr("fill", d => d.beds === 2 ? "#7BC6B0" : "#444")
       .attr("opacity", 0)
       .text(d => `$${d.value.toLocaleString()}`)
       .transition().delay((d, i) => 400 + i * 120).duration(400)
@@ -81,7 +81,7 @@ function drawBedrooms() {
         .attr("y", y(gab.value) - 28)
         .attr("text-anchor", "middle")
         .attr("font-size", "10px")
-        .attr("fill", "#e8846a")
+        .attr("fill", "#7BC6B0")
         .attr("opacity", 0)
         .text("← Gabriela")
         .transition().delay(900).duration(500)

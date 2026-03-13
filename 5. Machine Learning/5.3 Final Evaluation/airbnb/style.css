@@ -1,57 +1,104 @@
-/* ============================================================
-   AIRBNB PRESENTATION — STYLE
-   ============================================================ */
-
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap');
-
-:root {
-  --blue-dark:  #1f4e79;
-  --blue-mid:   #5499c7;
-  --blue-light: #a3cef1;
-  --coral:      #e8846a;
-  --coral-light:#f2b5a0;
-  --green:      #78c2ad;
-  --amber:      #f4b942;
-  --bg:         #fafafa;
-  --text:       #222;
-  --muted:      #666;
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    margin: 40px;
+    background: #fafafa;
+    color: #222;
 }
 
-/* ---- REVEAL OVERRIDES ---- */
-.reveal,
-.reveal .slides,
-.reveal .slide-background {
-  background: #ffffff !important;
+header h1 {
+    font-size: 2.8em;
+    color: #1f4e79;
+    margin-bottom: 0;
+    text-transform: none;
+}
+
+.subtitle {
+    margin-top: 4px;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.author {
+    margin-top: 4px;
+    font-size: 0.8em;
+    color: #555;
+}
+
+section {
+    margin-top: 60px;
+}
+
+h2 {
+    color: #1f4e79;
+    /* border-left: 8px solid #1f4e79; */
+    /* padding-left: 12px; */ 
+    text-transform: none;
+}
+
+#grafico2 div {
+    display: inline-block;
 }
 
 .reveal {
-  font-family: 'DM Sans', sans-serif;
-  color: var(--text);
+  color: #555;
 }
-
-.reveal h1, .reveal h2, .reveal h3 {
-  font-family: 'DM Serif Display', Georgia, serif;
-  color: var(--blue-dark) !important;
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  color: #5499c7 !important;
   text-transform: none !important;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.02em;
 }
 
 .reveal h1 {
-  font-size: 2.1em !important;
-  line-height: 1.1 !important;
-  margin-bottom: 0.2em !important;
+  font-size: 1.9em !important;
+  line-height: 1.15 !important;
+  margin-bottom: 0.3em !important;
+  font-weight: 500;
 }
 
 .reveal h2 {
-  font-size: 1.15em !important;
+  font-size: 1em !important;
   line-height: 1.2 !important;
-  margin-bottom: 0.3em !important;
+  margin-bottom: 0.4em !important;
+  font-weight: 500;
 }
 
-.reveal p, .reveal li, .reveal small {
-  font-size: 0.82em !important;
-  line-height: 1.5 !important;
-  color: var(--muted);
+.reveal p,
+.reveal .subtitle {
+  font-size: 0.85em !important;
+  line-height: 1.4 !important;
+}
+
+.reveal section {
+  padding-top: 10px !important;
+}
+
+.reveal .slide-layout {
+  display: grid;
+  grid-template-columns: 100%;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  gap: 24px;
+}
+
+/* Columna izquierda: contenido */
+.reveal .slide-content {
+  text-align: left;
+}
+
+/* Columna derecha: zona de video */
+.reveal .slide-video {
+  width: 100%;
+  height: 100%;
+  border: 2px dashed rgba(0,0,0,0.15); /* referencia visual */
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 0.8em;
 }
 
 .reveal section {
@@ -59,161 +106,41 @@
   padding-bottom: 0 !important;
 }
 
-/* ---- LAYOUT ---- */
-.slide-layout {
-  display: grid;
-  grid-template-columns: 100%;
-  align-items: flex-start;
-  width: 100%;
+.reveal .slide-layout {
   height: 100%;
-  gap: 0;
+  align-items: flex-start;
 }
 
-.slide-content { text-align: left; }
+.closing-text {
+  font-size: 1.1em;
+  line-height: 1.6;
+  margin-bottom: 1em;
+  color: #333;
+}
 
-/* ---- PORTADA ---- */
-.portada-tag {
-  display: inline-block;
-  background: var(--coral);
-  color: #fff;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.65em;
+.closing-footer {
+  margin-top: 1.8em;
+  font-size: 1.15em;
+  font-weight: 500;
+  justify-content: center;
+  color: #333;
+}
+
+.highlight {
+  color: #5499c7;
   font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 4px 12px;
-  border-radius: 20px;
-  margin-bottom: 18px;
 }
 
-.portada-price {
-  font-family: 'DM Serif Display', serif;
-  font-size: 5em;
-  color: var(--coral);
-  line-height: 1;
-  margin: 10px 0 0 0;
-}
-
-.portada-sub {
-  font-size: 0.75em !important;
-  color: var(--muted) !important;
-  margin-top: 6px !important;
-}
-
-/* ---- HIGHLIGHT BOX ---- */
-.highlight-box {
-  background: #fff;
-  border-left: 4px solid var(--coral);
-  padding: 10px 16px;
-  border-radius: 0 8px 8px 0;
-  margin: 12px 0 0 0;
-  font-size: 0.75em;
-  color: var(--text);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-
-.highlight-box strong { color: var(--blue-dark); }
-
-/* ---- STAT CARDS ---- */
-.stat-row {
-  display: flex;
-  gap: 14px;
-  margin-top: 16px;
-}
-
-.stat-card {
-  flex: 1;
-  background: #fff;
-  border-radius: 10px;
-  padding: 12px 14px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-  text-align: center;
-}
-
-.stat-number {
-  font-family: 'DM Serif Display', serif;
-  font-size: 1.7em;
-  color: var(--blue-dark);
-  line-height: 1;
-}
-
-.stat-label {
-  font-size: 0.62em;
-  color: var(--muted);
-  margin-top: 4px;
-}
-
-.stat-card.coral .stat-number { color: var(--coral); }
-.stat-card.green  .stat-number { color: var(--green); }
-.stat-card.amber  .stat-number { color: var(--amber); }
-
-/* ---- TOOLTIP ---- */
 .tooltip {
   position: fixed;
-  background: rgba(255,255,255,0.97);
-  border: 1px solid #ddd;
+  background: rgba(255,255,255,0.95);
+  border: 1px solid #ccc;
   border-radius: 6px;
-  padding: 8px 12px;
-  font-size: 0.72em;
+  padding: 8px 10px;
+  font-size: 0.75em;
   color: #333;
   pointer-events: none;
   z-index: 9999;
   display: none;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
-  font-family: 'DM Sans', sans-serif;
-}
-
-/* ---- CLOSING ---- */
-.closing-quote {
-  font-family: 'DM Serif Display', serif;
-  font-size: 1.35em;
-  color: var(--blue-dark);
-  line-height: 1.4;
-  border-left: 5px solid var(--coral);
-  padding-left: 20px;
-  margin: 20px 0;
-}
-
-.closing-price {
-  font-family: 'DM Serif Display', serif;
-  font-size: 3em;
-  color: var(--coral);
-  margin: 0;
-  line-height: 1;
-}
-
-.closing-price-label {
-  font-size: 0.72em !important;
-  color: var(--muted) !important;
-}
-
-.closing-bullets {
-  list-style: none;
-  padding: 0;
-  margin: 16px 0 0 0;
-}
-
-.closing-bullets li {
-  padding: 6px 0;
-  padding-left: 20px;
-  position: relative;
-  font-size: 0.78em !important;
-  color: var(--text) !important;
-  border-bottom: 1px solid #eee;
-}
-
-.closing-bullets li::before {
-  content: '→';
-  position: absolute;
-  left: 0;
-  color: var(--coral);
-  font-weight: bold;
-}
-
-/* ---- AUTHOR TAG ---- */
-.author-tag {
-  margin-top: 20px;
-  font-size: 0.65em;
-  color: var(--muted);
-  letter-spacing: 0.05em;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }

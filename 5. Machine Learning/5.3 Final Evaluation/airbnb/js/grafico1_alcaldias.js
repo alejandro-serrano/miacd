@@ -25,7 +25,7 @@ function drawAlcaldias() {
     const y = d3.scaleBand().domain(entries.map(d => d.name)).range([0, iH]).padding(0.28);
 
     // Highlight Coyoacán
-    const barColor = d => d.name === "Coyoacán" ? "#e8846a" : "#5499c7";
+    const barColor = d => d.name === "Coyoacán" ? "#7BC6B0" : "#5499c7";
 
     g.selectAll(".bar")
       .data(entries)
@@ -39,7 +39,7 @@ function drawAlcaldias() {
       .attr("rx", 3)
       .on("mouseover", (event, d) => {
         tooltip.style("display", "block")
-          .html(`<b>${d.name}</b><br>Precio mediano: <b>$${d.value.toLocaleString()} MXN</b>`);
+          .html(`<b>${d.name}</b><br>Mediana precio: <b>$${d.value.toLocaleString()} MXN</b>`);
       })
       .on("mousemove", event => {
         tooltip.style("left", event.clientX + 10 + "px").style("top", event.clientY - 20 + "px");
@@ -56,7 +56,7 @@ function drawAlcaldias() {
       .attr("y", d => y(d.name) + y.bandwidth() / 2)
       .attr("alignment-baseline", "middle")
       .attr("font-size", "10px")
-      .attr("fill", d => d.name === "Coyoacán" ? "#e8846a" : "#888")
+      .attr("fill", d => d.name === "Coyoacán" ? "#7BC6B0" : "#888")
       .attr("font-weight", d => d.name === "Coyoacán" ? "bold" : "normal")
       .attr("opacity", 0)
       .text(d => `$${d.value.toLocaleString()}`)
@@ -67,7 +67,7 @@ function drawAlcaldias() {
     g.append("g").call(d3.axisLeft(y).tickSize(0))
       .selectAll("text")
       .attr("font-size", "10px")
-      .attr("fill", d => d === "Coyoacán" ? "#e8846a" : "#444")
+      .attr("fill", d => d === "Coyoacán" ? "#7BC6B0" : "#444")
       .attr("font-weight", d => d === "Coyoacán" ? "bold" : "normal");
 
     g.select(".domain").remove();

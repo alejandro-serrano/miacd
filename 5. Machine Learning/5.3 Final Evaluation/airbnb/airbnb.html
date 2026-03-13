@@ -1,9 +1,12 @@
 <!doctype html>
 <html lang="es">
+
 <head>
   <meta charset="utf-8">
-  <title>Predicción de Precio Airbnb — Caso Gabriela</title>
+  <title>Alejandro Serrano - Aprendizaje Automático</title>
   <meta name="author" content="Manuel Alejandro Serrano Macias">
+  <meta name="description" content="MIACD - Aprendizaje Automático">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/reveal.css">
@@ -16,441 +19,318 @@
 <div id="tooltip" class="tooltip"></div>
 
 <body>
-<div class="reveal">
-<div class="slides">
+  <div class="reveal">
+    <div class="slides">
 
-  <!-- =========================================================
-       SLIDE 0 — PORTADA
-       ========================================================= -->
-  <section>
-    <div class="slide-layout">
-      <div class="slide-content">
-        <div class="portada-tag">Proyecto Final · Aprendizaje Automático</div>
-        <h1>¿En cuánto debería Gabriela rentar su departamento?</h1>
-        <p class="portada-sub">Un modelo predictivo de precios para Airbnb CDMX</p>
-        <div class="stat-row" style="margin-top:24px">
-          <div class="stat-card">
-            <div class="stat-number">23,330</div>
-            <div class="stat-label">Propiedades analizadas</div>
-          </div>
-          <div class="stat-card coral">
-            <div class="stat-number">18</div>
-            <div class="stat-label">Variables predictoras</div>
-          </div>
-          <div class="stat-card green">
-            <div class="stat-number">3</div>
-            <div class="stat-label">Modelos comparados</div>
+      <!-- SLIDE 0 — PORTADA -->
+      <section>
+        <div class="slide-layout">
+          <div class="slide-content" style="text-align: center;">
+            <h1>¡Ni muy caro, ni muy barato!</h1>
+            <p class="subtitle">Un modelo de para encontrar el precio ideal en Airbnb</p>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_Bélo.svg" alt="Airbnb"
+              style="height: 36px; margin-bottom: 16px; opacity: 0.85; display: block; margin-left: auto; margin-right: auto;">
+
+            <p><small class="author">Manuel Alejandro Serrano Macias</small></p>
           </div>
         </div>
-        <p class="author-tag">Manuel Alejandro Serrano Macias · ID 0286155</p>
-      </div>
-    </div>
-    <aside class="notes">
-      Quiero contarles la historia de Gabriela. Es una profesionista en la Ciudad de México
-      que decidió poner en renta su departamento en Coyoacán: dos habitaciones, internet,
-      televisión y estacionamiento, en Airbnb.
+        <aside class="notes">
+          Quiero contarles la historia de Gabriela. Es una profesionista en la Ciudad de México
+          que decidió poner en renta su departamento en Coyoacán: dos habitaciones, internet,
+          televisión y estacionamiento, en Airbnb.
 
-      Al revisar los precios de la competencia encontró algo confuso: departamentos similares
-      al suyo, en la misma zona, con precios de $300 hasta más de $3,000 pesos por noche.
-      ¿Por qué tanta variación? ¿Cómo sabe cuánto cobrar?
+          Al revisar los precios de la competencia encontró algo confuso: departamentos similares
+          al suyo, en la misma zona, con precios de $300 hasta más de $3,000 pesos por noche.
+          ¿Por qué tanta variación? ¿Cómo sabe cuánto cobrar?
 
-      Ese es el problema que vamos a resolver hoy. Usamos datos reales de 23,330 propiedades
-      en la CDMX, comparamos tres modelos de aprendizaje automático, aplicamos reducción de
-      dimensionalidad por selección de variables y por PCA, y al final damos una respuesta
-      concreta: cuánto debería cobrar Gabriela por noche.
-    </aside>
-  </section>
+          Ese es el problema que vamos a resolver hoy. Usamos datos reales de 23,330 propiedades
+          en la CDMX, comparamos tres modelos de aprendizaje automático, aplicamos reducción de
+          dimensionalidad por selección de variables y por Análisis de componentes (PCA) , y al final damos una respuesta
+          concreta: cuánto debería cobrar Gabriela por noche.
+        </aside>
+      </section>
 
-  <!-- =========================================================
-       SLIDE 1 — EL PROBLEMA / CONTEXTO DE PRECIOS
-       ========================================================= -->
-  <section data-state="alcaldias">
-    <div class="slide-layout">
-      <div class="slide-content">
-        <h2>Gabriela quiere rentar su departamento en Coyoacán</h2>
-        <p class="fragment fade-in">
-          Al revisar Airbnb encontró precios desde $300 hasta $3,000 pesos por noche
-          en propiedades similares. ¿Cómo sabe cuánto cobrar?
-        </p>
-        <div class="highlight-box fragment fade-in">
-          <strong>El problema:</strong> un precio muy bajo deja dinero sobre la mesa.
-          Un precio muy alto espanta huéspedes.
-          La solución: usar <strong>datos reales</strong> para tomar esa decisión.
-        </div>
-        <svg id="grafico1" width="1100" height="300" style="margin-top:10px"></svg>
-      </div>
-    </div>
-    <aside class="notes">
-      Esta gráfica muestra el precio mediano por noche en cada alcaldía de la CDMX,
-      considerando todos los tipos de propiedad.
-
-      Coyoacán — marcada en coral — tiene un precio mediano de $792 pesos por noche.
-      Está por debajo de Miguel Hidalgo o Cuauhtémoc, que son las zonas más caras.
-
-      Pero ojo: ese número incluye cuartos privados y habitaciones compartidas.
-      Cuando filtramos solo departamentos completos con dos habitaciones, el precio
-      sube considerablemente, como veremos en la siguiente diapositiva.
-
-      La gráfica también nos dice que la ubicación sí importa, pero no es el único factor.
-      Por eso necesitamos un modelo que considere múltiples variables al mismo tiempo.
-    </aside>
-  </section>
-
-  <!-- =========================================================
-       SLIDE 2 — LOS DATOS / PREPROCESAMIENTO
-       ========================================================= -->
-  <section data-state="habitaciones">
-    <div class="slide-layout">
-      <div class="slide-content">
-        <h2>Los datos: 23,330 propiedades en toda la CDMX</h2>
-        <p class="fragment fade-in">
-          El precio sube claramente con el número de habitaciones.
-          Un departamento de 2 habitaciones como el de Gabriela tiene un precio mediano de
-          <strong style="color:#e8846a">$1,346 MXN/noche</strong>.
-        </p>
-        <svg id="grafico2" width="900" height="290"
-          style="margin-top:10px; display:block; margin-left:auto; margin-right:auto;"></svg>
-        <div class="highlight-box fragment fade-in" style="margin-top:10px">
-          <strong>Preprocesamiento:</strong> limpieza de precios (texto → número),
-          eliminación de duplicados, imputación de nulos con mediana,
-          codificación de variables categóricas con LabelEncoder.
-          De 79 variables originales se seleccionaron <strong>18</strong> con sentido predictivo.
-        </div>
-      </div>
-    </div>
-    <aside class="notes">
-      Los datos vienen de tres archivos CSV con información de Airbnb para la CDMX.
-      Después de limpiarlos quedamos con 23,330 propiedades únicas con precio disponible.
-
-      El preprocesamiento tuvo tres etapas principales:
-      Primero, el precio venía como texto con formato de pesos y comas; lo convertimos a número
-      y filtramos propiedades con precios entre $100 y $10,000 para eliminar outliers extremos.
-      Segundo, eliminamos duplicados por ID de listing y quedamos con registros únicos.
-      Tercero, imputamos valores faltantes con la mediana — más robusta que la media ante valores
-      extremos — y codificamos las variables categóricas como la alcaldía y el tipo de propiedad
-      con LabelEncoder.
-
-      De 79 columnas originales seleccionamos 18 que tienen sentido para predecir el precio
-      antes de publicar un anuncio: zona, tipo de propiedad, habitaciones, baños, calificaciones,
-      disponibilidad, entre otras.
-
-      La gráfica muestra algo intuitivo: a más habitaciones, mayor precio. Un departamento de
-      2 habitaciones tiene una mediana de $1,346 pesos por noche. Ese es el benchmark de Gabriela.
-    </aside>
-  </section>
-
-  <!-- =========================================================
-       SLIDE 3 — TRES MODELOS
-       ========================================================= -->
-  <section data-state="modelos">
-    <div class="slide-layout">
-      <div class="slide-content">
-        <h2>Tres modelos, una pregunta: ¿cuál predice mejor?</h2>
-        <p class="fragment fade-in">
-          División <strong>70% entrenamiento / 30% prueba</strong>.
-          Métricas: R² (varianza explicada), MAE (error promedio) y RMSE (penaliza errores grandes).
-        </p>
-        <svg id="grafico3" width="900" height="340"
-          style="margin-top:8px; display:block; margin-left:auto; margin-right:auto;"></svg>
-        <p class="fragment fade-in" style="margin-top:6px">
-          El <strong style="color:#e8846a">Gradient Boosting</strong> construye árboles
-          secuencialmente — cada uno corrige los errores del anterior —
-          logrando el mejor R² (0.562), menor MAE ($448) y menor RMSE ($760 MXN).
-        </p>
-      </div>
-    </div>
-    <aside class="notes">
-      Entrenamos tres modelos en orden creciente de complejidad, siempre con la misma
-      división: 70% para entrenar y 30% para evaluar.
-
-      Usamos tres métricas:
-      R² nos dice qué porcentaje de la variación en el precio logra explicar el modelo.
-      MAE es el error promedio en pesos — en promedio, cuánto se equivoca el modelo.
-      RMSE penaliza más los errores grandes; si RMSE está muy por encima del MAE,
-      hay predicciones donde el modelo falla por cantidades muy altas.
-
-      El Árbol de Decisión es nuestra línea base: R² 0.42, MAE $513, RMSE $875.
-      Fácil de interpretar pero limitado en precisión.
-
-      El Random Forest mejora al promediar 200 árboles distintos: R² 0.54, MAE $454, RMSE $781.
-
-      El Gradient Boosting es el ganador: R² 0.56, MAE $448, RMSE $760.
-      Construye los árboles de forma secuencial — cada uno corrige los errores del anterior —
-      y logra las mejores métricas en los tres indicadores.
-
-      El R² de 0.56 no es perfecto, pero los precios en Airbnb tienen un componente subjetivo
-      — las fotos, la descripción, la reputación del anfitrión — que ningún modelo puede
-      capturar con datos estructurados.
-    </aside>
-  </section>
-
-  <!-- =========================================================
-       SLIDE 4 — IMPORTANCIA DE VARIABLES
-       ========================================================= -->
-  <section data-state="importancia">
-    <div class="slide-layout">
-      <div class="slide-content">
-        <h2>¿Qué variables mueven el precio?</h2>
-        <p class="fragment fade-in">
-          Selección de variables por <strong>correlación</strong> e
-          <strong>importancia</strong> del Random Forest.
-          Pocas variables concentran la mayor parte de la información.
-        </p>
-        <svg id="grafico4" width="1000" height="310" style="margin-top:8px"></svg>
-        <div class="highlight-box fragment fade-in" style="margin-top:8px">
-          Las 5 por importancia → R² 0.451 &nbsp;|&nbsp;
-          Las 5 por correlación → R² 0.363 &nbsp;|&nbsp;
-          <strong>vs. R² 0.537 con las 18 variables</strong>
-        </div>
-      </div>
-    </div>
-    <aside class="notes">
-      Una pregunta válida es: ¿realmente necesitamos las 18 variables?
-
-      Aplicamos reducción de dimensionalidad por dos métodos de selección de variables.
-      Primero por correlación con el precio: las 5 más correlacionadas son accommodates,
-      bedrooms, bathrooms, beds y room_type.
-      Segundo por Feature Importance del Random Forest.
-
-      Las barras en coral son las más importantes: habitaciones con 25% y baños con 18%.
-      Después aparecen tipo de propiedad, disponibilidad anual y número de listings del anfitrión.
-
-      Es interesante que la correlación y la importancia del modelo no coinciden exactamente.
-      Por ejemplo, accommodates tiene la mayor correlación con el precio (0.51) pero en
-      importancia queda por debajo de bedrooms y bathrooms. Esto se debe a que la Feature
-      Importance captura relaciones no lineales que la correlación no ve.
-
-      Con las 5 de mayor importancia obtenemos R² 0.45 — perdemos precisión pero simplificamos
-      mucho el modelo. Con las 5 de mayor correlación el desempeño cae más, a R² 0.36.
-    </aside>
-  </section>
-
-  <!-- =========================================================
-       SLIDE 5 — PCA: VARIANZA ACUMULADA
-       ========================================================= -->
-  <section data-state="pca">
-    <div class="slide-layout">
-      <div class="slide-content">
-        <h2>Reducción de dimensionalidad con PCA</h2>
-        <p class="fragment fade-in">
-          PCA no descarta variables, las <strong>comprime</strong> en nuevas dimensiones
-          que maximizan la varianza retenida. Se necesitan
-          <strong style="color:#e8846a">10 componentes</strong> para retener el 80% de
-          la información de las 18 variables originales.
-        </p>
-        <svg id="grafico6" width="900" height="300"
-          style="margin-top:10px; display:block; margin-left:auto; margin-right:auto;"></svg>
-        <div class="highlight-box fragment fade-in" style="margin-top:10px">
-          Con solo <strong>2 componentes</strong> se captura el 33% de la varianza —
-          suficiente para visualizar patrones, pero insuficiente para predecir bien.
-          Por eso usamos las <strong>10 componentes</strong> que alcanzan el 83.9%.
-        </div>
-      </div>
-    </div>
-    <aside class="notes">
-      A diferencia de la selección de variables, PCA no elimina variables originales sino
-      que las transforma en nuevas dimensiones — componentes principales — ordenadas de mayor
-      a menor varianza explicada.
-
-      Antes de aplicar PCA es obligatorio escalar los datos con StandardScaler para que todas
-      las variables tengan media cero y desviación estándar uno. Sin este paso, las variables
-      con mayor rango numérico dominarían las componentes y sesgarían los resultados.
-
-      La gráfica muestra la varianza acumulada conforme agregamos componentes.
-      La línea coral marca el umbral del 80%. Se necesitan 10 componentes para cruzarlo,
-      lo que significa pasar de 18 dimensiones a 10 reteniendo el 83.9% de la información.
-
-      Con solo 2 componentes se captura el 33% — eso es suficiente para hacer visualizaciones
-      en 2D como hicimos en el ejercicio de películas, pero no para predecir precios con precisión.
-      Por eso usamos 10 componentes para entrenar los modelos.
-    </aside>
-  </section>
-
-  <!-- =========================================================
-       SLIDE 6 — COMPARACIÓN COMPLETA DE DIMENSIONALIDAD
-       ========================================================= -->
-  <section data-state="dimcomparacion">
-    <div class="slide-layout">
-      <div class="slide-content">
-        <h2>¿Qué estrategia de reducción funciona mejor?</h2>
-        <p class="fragment fade-in">
-          PCA aplicado a los tres algoritmos vs. selección de variables.
-          En todos los casos las variables originales ganan — y el Gradient Boosting sigue siendo el mejor.
-        </p>
-        <svg id="grafico7" width="1050" height="320" style="margin-top:8px"></svg>
-        <div class="highlight-box fragment fade-in" style="margin-top:8px">
-          PCA perjudica más al Árbol de Decisión (R² cae de 0.42 a 0.28) que a los ensambles,
-          que son más <strong>robustos a la transformación del espacio de variables</strong>.
-        </div>
-      </div>
-    </div>
-    <aside class="notes">
-      Esta gráfica resume el experimento completo de reducción de dimensionalidad.
-      Comparamos tres estrategias aplicadas a los tres algoritmos.
-
-      Los modelos con variables originales — en azul — son los más precisos en todos los casos.
-      La selección por Feature Importance — en amarillo — mantiene un desempeño razonable.
-      PCA — en verde agua — tiene resultados variables según el algoritmo.
-
-      El hallazgo más interesante es cómo PCA afecta de forma diferente a cada modelo.
-      El Árbol de Decisión cae drásticamente de R² 0.42 a 0.28 con PCA — pierde casi un tercio
-      de su capacidad predictiva. Los árboles simples no manejan bien espacios transformados
-      porque sus divisiones son perpendiculares a los ejes originales.
-      Random Forest y Gradient Boosting, al ser ensambles, son más robustos: RF baja de 0.54 a 0.43
-      y GB de 0.56 a 0.42.
-
-      Conclusión: para este dataset la selección de variables supera a PCA como técnica de
-      reducción, y el modelo completo con Gradient Boosting es la mejor opción para predecir
-      el precio de Gabriela.
-    </aside>
-  </section>
-
-  <!-- =========================================================
-       SLIDE 7 — RESPUESTA A GABRIELA
-       ========================================================= -->
-  <section data-state="coyoacan">
-    <div class="slide-layout">
-      <div class="slide-content">
-        <h2>La respuesta para Gabriela</h2>
-        <p class="fragment fade-in">
-          Coyoacán · 2 habitaciones · Departamento completo · 248 propiedades comparables
-        </p>
-        <svg id="grafico5" width="1000" height="265" style="margin-top:8px"></svg>
-        <div class="stat-row fragment fade-in" style="margin-top:12px">
-          <div class="stat-card coral">
-            <div class="stat-number">$1,375</div>
-            <div class="stat-label">Precio estimado MXN/noche</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-number">$1,184</div>
-            <div class="stat-label">Mediana del mercado</div>
-          </div>
-          <div class="stat-card green">
-            <div class="stat-number">$927–$1,824</div>
-            <div class="stat-label">Rango (± MAE del modelo)</div>
+      <!-- SLIDE 1 — CONTEXTO DE PRECIOS -->
+      <section data-state="alcaldias">
+        <div class="slide-layout">
+          <div class="slide-content">
+            <h2>¿Quiénes fijan los precios y dónde?</h2>
+            <p class="fragment fade-in">
+              Coyoacán: mediana de <span class="highlight">$792.00 MXN/noche</span>
+            </p>
+            <svg id="grafico1" width="1100" height="350" style="margin-top:10px"></svg>
           </div>
         </div>
-      </div>
-    </div>
-    <aside class="notes">
-      Ahora la respuesta que buscábamos desde el inicio.
+        <aside class="notes">
+          Esta gráfica muestra la mediana de precio por noche en cada alcaldía de la CDMX,
+          considerando todos los tipos de propiedad.
 
-      En Coyoacán hay 248 propiedades comparables a la de Gabriela: departamento completo
-      con 2 habitaciones. El precio mediano es $1,184 y el promedio $1,330 pesos por noche.
+          Coyoacán tiene una mediana de precio de $792 pesos por noche.
+          Está por debajo de Miguel Hidalgo o Cuauhtémoc, que son las zonas más caras.
 
-      La línea verde en la gráfica muestra la mediana del mercado.
-      La línea coral es el precio que el Gradient Boosting — nuestro mejor modelo —
-      predice para Gabriela: $1,375 pesos por noche.
-      El rango usando el MAE del modelo va de $927 a $1,824 pesos.
+          Pero ese número incluye cuartos privados y habitaciones compartidas.
+          Cuando filtramos solo departamentos completos con dos habitaciones, el precio
+          sube considerablemente, como veremos más adelante.
 
-      Que el modelo estime $1,375 — por encima de la mediana de $1,184 — tiene sentido
-      porque considera características específicas del departamento: estacionamiento, internet,
-      TV y una zona consolidada de Coyoacán.
+          La ubicación importa, pero no es el único factor. Por eso necesitamos un modelo
+          que considere múltiples variables al mismo tiempo.
+        </aside>
+      </section>
 
-      La recomendación práctica: como anfitriona nueva sin reseñas, iniciar entre $1,100 y $1,200
-      para atraer las primeras reservas y construir reputación. Conforme acumule calificaciones
-      positivas, puede subir hacia el estimado de $1,375 o más, ya que el historial de reseñas
-      es un factor que el mercado premia.
-    </aside>
-  </section>
-
-  <!-- =========================================================
-       SLIDE 8 — CONCLUSIONES
-       ========================================================= -->
-  <section>
-    <div class="slide-layout">
-      <div class="slide-content">
-        <h2>Conclusiones</h2>
-        <ul class="closing-bullets fragment fade-in">
-          <li>El <strong>Gradient Boosting</strong> fue el mejor modelo: R² 0.562, MAE $448, RMSE $760 MXN/noche.</li>
-          <li>Las variables más influyentes son <strong>habitaciones</strong> (25%) y <strong>baños</strong> (18%) según Feature Importance.</li>
-          <li>La selección por Feature Importance supera a PCA como técnica de reducción para este dataset.</li>
-          <li>PCA afecta más al Árbol de Decisión (R² cae de 0.42 a 0.28) que a los ensambles, que son más robustos a la transformación del espacio de variables.</li>
-          <li>Gabriela debería publicar a <strong style="color:#e8846a">$1,100–$1,375 MXN/noche</strong> e ir subiendo conforme acumule reseñas.</li>
-        </ul>
-        <div class="closing-quote fragment fade-in">
-          El aprendizaje automático no reemplaza el juicio de Gabriela,
-          pero le da una base objetiva para tomar una mejor decisión.
+      <!-- SLIDE 2 — LOS DATOS -->
+      <section data-state="habitaciones">
+        <div class="slide-layout">
+          <div class="slide-content">
+            <h2>El tamaño del espacio define el precio</h2>
+            <p class="fragment fade-in">
+              2 habitaciones como las de Gabriela: mediana de <span class="highlight">$1,346.00 MXN/noche</span>
+            </p>
+            <svg id="grafico2" width="900" height="360"
+              style="margin-top:10px; display:block; margin-left:auto; margin-right:auto;"></svg>
+          </div>
         </div>
-        <p class="author-tag fragment fade-in">
-          Manuel Alejandro Serrano Macias · MIACD · Aprendizaje Automático
-        </p>
-      </div>
+        <aside class="notes">
+          Los datos procesados vienen un archivo CSV con información de Airbnb para la CDMX.
+          Después de limpiarlos quedamos con 23,330 propiedades únicas con precio disponible.
+
+          El preprocesamiento tuvo tres etapas: limpiar el formato de precio (texto a número),
+          eliminar duplicados, e imputar nulos con mediana y codificar categóricas con LabelEncoder.
+          De 79 columnas originales seleccionamos 18 con sentido predictivo.
+
+          A más habitaciones, mayor precio. Un departamento de 2 habitaciones tiene una mediana
+          de $1,346 pesos por noche. Ese es el benchmark de Gabriela.
+        </aside>
+      </section>
+
+      <!-- SLIDE 3 — TRES MODELOS -->
+      <section data-state="modelos">
+        <div class="slide-layout">
+          <div class="slide-content">
+            <h2>Tres modelos, ¿cuál predice mejor?</h2>
+            <p class="fragment fade-in">
+              El precio es nuestra variable objetivo - División 70/30 - métricas: R², MAE y RMSE
+            </p>
+            <svg id="grafico3" width="900" height="360"
+              style="margin-top:10px; display:block; margin-left:auto; margin-right:auto;"></svg>
+          </div>
+        </div>
+        <aside class="notes">
+          Entrenamos tres modelos con la misma división: 70% entrenar, 30% evaluar.
+
+          R² (coeficiente de determinación) mide qué porcentaje de la variación en el precio explica el modelo.
+          MAE (error absoluto medio) es el error promedio en pesos.
+          RMSE (raíz del error cuadrático medio) penaliza más los errores grandes.
+
+          El Árbol de Decisión es la línea base: R² 0.42, MAE $513, RMSE $875.
+          El Random Forest promedia 200 árboles: R² 0.54, MAE $454, RMSE $781.
+          El Gradient Boosting construye árboles secuencialmente, cada uno corrigiendo al anterior:
+          R² 0.56, MAE $448, RMSE $760 — el mejor en los tres indicadores.
+        </aside>
+      </section>
+
+      <!-- SLIDE 4 — IMPORTANCIA DE VARIABLES -->
+      <section data-state="importancia">
+        <div class="slide-layout">
+          <div class="slide-content">
+            <h2>¿Qué variables mueven el precio?</h2>
+            <p class="fragment fade-in">
+              <span class="highlight">Habitaciones</span> y <span class="highlight">baños</span> dominan sobre la
+              ubicación
+            </p>
+            <svg id="grafico4" width="1000" height="350" style="margin-top:10px"></svg>
+          </div>
+        </div>
+        <aside class="notes">
+          Aplicamos dos métodos de selección de variables.
+          Por correlación con el precio: accommodates, bedrooms, bathrooms, beds y room_type.
+          Por Feature Importance del Random Forest: habitaciones 25%, baños 18%, tipo de
+          propiedad 10%, disponibilidad anual y listings del anfitrión.
+
+          Interesante: accommodates tiene la mayor correlación (0.51) pero en importancia del
+          modelo queda por debajo de bedrooms. La Feature Importance captura relaciones no lineales.
+
+          Con las 5 de mayor importancia: R² 0.45.
+          Con las 5 de mayor correlación: R² 0.36.
+          vs. R² 0.54 con las 18 variables originales.
+        </aside>
+      </section>
+
+      <!-- SLIDE 5 — PCA VARIANZA -->
+      <section data-state="pca">
+        <div class="slide-layout">
+          <div class="slide-content">
+            <h2>Reducción de dimensionalidad con PCA</h2>
+            <p class="fragment fade-in">
+              <span class="highlight">10 componentes</span> retienen el 83.9% de la varianza
+            </p>
+            <svg id="grafico6" width="900" height="360"
+              style="margin-top:10px; display:block; margin-left:auto; margin-right:auto;"></svg>
+          </div>
+        </div>
+        <aside class="notes">
+          Análisis de componentes (PCA) no elimina variables sino que las transforma en nuevas dimensiones ordenadas
+          de mayor a menor varianza explicada. Requiere escalar con StandardScaler primero.
+
+          La gráfica muestra la varianza acumulada conforme agregamos componentes.
+          La línea coral marca el umbral del 80%. Se necesitan 10 componentes para cruzarlo,
+          pasando de 18 dimensiones a 10 reteniendo el 83.9% de la información.
+
+          Con 2 componentes se captura el 33% — suficiente para visualizaciones 2D como en
+          el ejercicio de películas, pero no para predecir precios.
+        </aside>
+      </section>
+
+      <!-- SLIDE 6 — COMPARACIÓN COMPLETA DIMENSIONALIDAD -->
+      <section data-state="dimcomparacion">
+        <div class="slide-layout">
+          <div class="slide-content">
+            <h2>Variables originales vs. reducción</h2>
+            <p class="fragment fade-in">
+              PCA perjudica más al <span class="highlight">Árbol de Decisión</span>
+            </p>
+            <svg id="grafico7" width="1050" height="350" style="margin-top:10px"></svg>
+          </div>
+        </div>
+        <aside class="notes">
+          Esta gráfica resume el experimento completo de reducción de dimensionalidad.
+          Tres estrategias aplicadas a los tres algoritmos.
+
+          Variables originales en azul — los más precisos en todos los casos.
+          Selección por Feature Importance en amarillo — desempeño razonable.
+          PCA en verde agua — resultados variables según el algoritmo.
+
+          El Árbol de Decisión cae de R² 0.42 a 0.28 con PCA — pierde casi un tercio.
+          Los árboles simples no manejan bien espacios transformados porque sus divisiones
+          son perpendiculares a los ejes originales.
+          Random Forest baja de 0.54 a 0.43 y Gradient Boosting de 0.56 a 0.42 — más robustos.
+
+          Conclusión: selección de variables supera a PCA para este dataset.
+        </aside>
+      </section>
+
+      <!-- SLIDE 7 — RESPUESTA A GABRIELA -->
+      <section data-state="coyoacan">
+        <div class="slide-layout">
+          <div class="slide-content">
+            <h2>¿Cuánto debería cobrar Gabriela?</h2>
+            <p class="fragment fade-in">
+              248 propiedades comparables · el modelo estima <span class="highlight">$1,375.52 MXN/noche</span>
+            </p>
+            <svg id="grafico5" width="1000" height="360" style="margin-top:10px"></svg>
+          </div>
+        </div>
+        <aside class="notes">
+          En Coyoacán hay 248 propiedades comparables: departamento completo con 2 habitaciones.
+          La mediana de precio es $1,184 y el promedio $1,330 pesos por noche.
+
+          La línea verde muestra la mediana del mercado.
+          La línea coral es el precio que el Gradient Boosting predice para Gabriela: $1,375 pesos.
+          El rango usando el MAE error absoluto medio del modelo va de $926.98 a $1,824 pesos.
+
+          El modelo estima por encima de la mediana porque considera características específicas:
+          estacionamiento, internet, TV y Coyoacán consolidado.
+
+          Recomendación práctica: iniciar entre $1,100 y $1,200 para atraer las primeras reservas
+          y construir reputación. Subir hacia $1,375 conforme acumule calificaciones positivas.
+        </aside>
+      </section>
+
+      <!-- SLIDE 8 — CIERRE -->
+      <section>
+        <div class="slide-layout">
+          <div class="slide-content">
+            <h2>El modelo no reemplaza el juicio de Gabriela</h2>
+            <p class="closing-text fragment fade-in">
+              pero le da una base <span class="highlight">objetiva</span>
+              para publicar a <span class="highlight">$1,100–$1,375 MXN/noche</span>
+              y ajustar con sus primeras reseñas.
+            </p>
+            <p class="closing-footer fragment fade-in">
+              <svg viewBox="0 0 160 130" width="220" height="180" style="display:block; margin: 20px auto 0;">
+
+                <!-- Eje Y -->
+                <line x1="22" y1="8" x2="22" y2="106" stroke="#d0dce8" stroke-width="1.5" stroke-linecap="round" />
+                <!-- Eje X -->
+                <line x1="22" y1="106" x2="148" y2="106" stroke="#d0dce8" stroke-width="1.5" stroke-linecap="round" />
+
+                <!-- Barras crecientes — azules a coral -->
+                <rect x="30" y="82" width="20" height="24" fill="#a3cef1" rx="3" />
+                <rect x="58" y="64" width="20" height="42" fill="#5499c7" rx="3" />
+                <rect x="86" y="44" width="20" height="62" fill="#1f4e79" rx="3" />
+                <rect x="114" y="24" width="20" height="82" fill="#7BC6B0" rx="3" />
+
+                <!-- Flecha diagonal -->
+                <line x1="36" y1="88" x2="128" y2="20" stroke="#5b9d8a" stroke-width="4" stroke-linecap="round" />
+                <polygon points="133,16 116,22 126,32" fill="#5b9d8a" />
+
+              </svg>
+            </p>
+          </div>
+        </div>
+        <aside class="notes">
+          El Gradient Boosting fue el mejor modelo: R² 0.56, MAE $448, RMSE $760.
+
+          Las variables más importantes son físicas — habitaciones y baños. El tamaño del
+          espacio es el principal determinante del precio, por encima de la ubicación.
+
+          La selección de variables supera a PCA. La Feature Importance captura relaciones
+          no lineales que la correlación simple no ve.
+
+          PCA es más dañino para modelos simples. Los ensambles son más robustos porque
+          promedian muchos árboles y amortiguan la transformación del espacio.
+
+          La recomendación: publicar entre $1,100 y $1,375 pesos por noche. Arrancar en el
+          rango bajo para atraer las primeras reservas. Con reseñas, subir hacia el extremo superior.
+
+          El aprendizaje automático no reemplaza el juicio de Gabriela — las fotos, la descripción
+          y la atención al huésped no están en los datos — pero le da una base objetiva.
+
+          Gracias. Quedo abierto a preguntas.
+        </aside>
+      </section>
+
     </div>
-    <aside class="notes">
-      Para cerrar, cinco puntos clave.
+  </div>
 
-      Uno: el Gradient Boosting fue el mejor modelo en los tres indicadores.
-      Un RMSE de $760 vs MAE de $448 indica que hay algunas propiedades difíciles de predecir —
-      probablemente propiedades de lujo o con características muy particulares.
+  <script src="https://unpkg.com/reveal.js/dist/reveal.js"></script>
+  <script src="https://unpkg.com/reveal.js/dist/plugin/notes.js"></script>
 
-      Dos: las variables más importantes son físicas — habitaciones y baños — lo que confirma
-      que el tamaño del espacio es el principal determinante del precio, por encima de la ubicación.
+  <script>
+    Reveal.initialize({
+      transition: 'fade',
+      slideNumber: true,
+      controls: true,
+      progress: true,
+      hash: true,
+      width: '100%',
+      height: '100%',
+      margin: 0.03,
+      minScale: 0.8,
+      maxScale: 1.0,
+      center: false,
+      plugins: [RevealNotes]
+    });
 
-      Tres: la selección de variables supera a PCA en este contexto. La Feature Importance
-      captura relaciones no lineales que la correlación simple no ve, y las variables originales
-      son más interpretables que las componentes principales.
+    Reveal.on('slidechanged', event => {
+      const state = event.currentSlide.dataset.state;
+      if (state === 'alcaldias' && window.drawAlcaldias) drawAlcaldias();
+      if (state === 'habitaciones' && window.drawBedrooms) drawBedrooms();
+      if (state === 'modelos' && window.drawModelos) drawModelos();
+      if (state === 'importancia' && window.drawImportancia) drawImportancia();
+      if (state === 'pca' && window.drawPCAVarianza) drawPCAVarianza();
+      if (state === 'dimcomparacion' && window.drawDimComparacion) drawDimComparacion();
+      if (state === 'coyoacan' && window.drawCoyoacan) drawCoyoacan();
+    });
+  </script>
 
-      Cuatro: PCA es más dañino para modelos simples como el Árbol de Decisión. Los ensambles
-      como Random Forest y Gradient Boosting son más robustos porque promedian muchos árboles
-      y amortiguan el efecto de la transformación del espacio.
-
-      Cinco: la recomendación concreta para Gabriela es publicar entre $1,100 y $1,375 pesos
-      por noche. Arrancar en el rango bajo le permite atraer las primeras reservas y construir
-      reputación. Con reseñas, puede subir hacia el extremo superior del rango.
-
-      El aprendizaje automático no reemplaza el juicio de Gabriela — hay factores como las fotos,
-      la descripción y la atención al huésped que el modelo no puede medir — pero le da una
-      base objetiva y cuantificable para tomar una mejor decisión.
-
-      Gracias. Quedo abierto a preguntas.
-    </aside>
-  </section>
-
-</div>
-</div>
-
-<!-- =========================================================
-     REVEAL INIT
-     ========================================================= -->
-<script src="https://unpkg.com/reveal.js/dist/reveal.js"></script>
-<script src="https://unpkg.com/reveal.js/plugin/notes/notes.js"></script>
-
-<script>
-  Reveal.initialize({
-    transition: 'fade',
-    slideNumber: true,
-    controls: true,
-    progress: true,
-    hash: true,
-    width: 1200,
-    height: 800,
-    margin: 0.05,
-    minScale: 0.5,
-    maxScale: 1.0,
-    center: false,
-    //plugins: [RevealNotes]
-  });
-
-  Reveal.on('slidechanged', event => {
-    const state = event.currentSlide.dataset.state;
-    if (state === 'alcaldias'      && window.drawAlcaldias)      drawAlcaldias();
-    if (state === 'habitaciones'   && window.drawBedrooms)       drawBedrooms();
-    if (state === 'modelos'        && window.drawModelos)        drawModelos();
-    if (state === 'importancia'    && window.drawImportancia)    drawImportancia();
-    if (state === 'pca'            && window.drawPCAVarianza)    drawPCAVarianza();
-    if (state === 'dimcomparacion' && window.drawDimComparacion) drawDimComparacion();
-    if (state === 'coyoacan'       && window.drawCoyoacan)       drawCoyoacan();
-  });
-</script>
-
-<script src="js/grafico1_alcaldias.js"></script>
-<script src="js/grafico2_habitaciones.js"></script>
-<script src="js/grafico3_modelos.js"></script>
-<script src="js/grafico4_importancia.js"></script>
-<script src="js/grafico5_coyoacan.js"></script>
-<script src="js/grafico6_pca_varianza.js"></script>
-<script src="js/grafico7_dim_comparacion.js"></script>
+  <script src="js/grafico1_alcaldias.js"></script>
+  <script src="js/grafico2_habitaciones.js"></script>
+  <script src="js/grafico3_modelos.js"></script>
+  <script src="js/grafico4_importancia.js"></script>
+  <script src="js/grafico5_coyoacan.js"></script>
+  <script src="js/grafico6_pca_varianza.js"></script>
+  <script src="js/grafico7_dim_comparacion.js"></script>
 
 </body>
+
 </html>

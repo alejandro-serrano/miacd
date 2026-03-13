@@ -16,7 +16,7 @@ function drawModelos() {
     const iH = height - margin.top - margin.bottom;
 
     const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
-    const colors = ["#a3cef1", "#5499c7", "#e8846a"];
+    const colors = ["#a3cef1", "#5499c7", "#7BC6B0"];
 
     const x = d3.scaleBand().domain(models.map(d => d.name)).range([0, iW]).padding(0.45);
     const yR2 = d3.scaleLinear().domain([0, 0.70]).range([iH, 0]);
@@ -46,7 +46,7 @@ function drawModelos() {
       .attr("x", d => x(d.name) + x.bandwidth() / 2)
       .attr("y", d => yR2(d.r2) - 7)
       .attr("text-anchor", "middle").attr("font-size", "13px").attr("font-weight", "bold")
-      .attr("fill", (d, i) => i === 2 ? "#c0604a" : "#1f4e79").attr("opacity", 0)
+      .attr("fill", (d, i) => i === 2 ? "#5b9d8a" : "#1f4e79").attr("opacity", 0)
       .text(d => `R²  ${d.r2.toFixed(3)}`)
       .transition().delay((d, i) => 600 + i*150).duration(400).attr("opacity", 1);
 
@@ -55,7 +55,7 @@ function drawModelos() {
     g.append("text")
       .attr("x", x(best.name) + x.bandwidth()/2).attr("y", yR2(best.r2) - 24)
       .attr("text-anchor", "middle").attr("font-size", "9px")
-      .attr("fill", "#e8846a").attr("font-weight", "bold").attr("letter-spacing", "0.06em")
+      .attr("fill", "#7BC6B0").attr("font-weight", "bold").attr("letter-spacing", "0.06em")
       .attr("opacity", 0).text("✓ MEJOR MODELO")
       .transition().delay(1300).duration(500).attr("opacity", 1);
 
@@ -100,14 +100,14 @@ function drawModelos() {
       svg.append("text").attr("x", cx).attr("y", tableTop + 14)
         .attr("text-anchor", "middle").attr("font-size", "13px")
         .attr("font-weight", i === 2 ? "bold" : "normal")
-        .attr("fill", i === 2 ? "#c0604a" : "#555").attr("opacity", 0)
+        .attr("fill", i === 2 ? "#5b9d8a" : "#555").attr("opacity", 0)
         .text(`$${d.mae.toFixed(0)}`)
         .transition().delay(900 + i*100).duration(400).attr("opacity", 1);
 
       svg.append("text").attr("x", cx).attr("y", tableTop + 46)
         .attr("text-anchor", "middle").attr("font-size", "13px")
         .attr("font-weight", i === 2 ? "bold" : "normal")
-        .attr("fill", i === 2 ? "#c0604a" : "#555").attr("opacity", 0)
+        .attr("fill", i === 2 ? "#5b9d8a" : "#555").attr("opacity", 0)
         .text(`$${d.rmse.toFixed(0)}`)
         .transition().delay(1000 + i*100).duration(400).attr("opacity", 1);
     });

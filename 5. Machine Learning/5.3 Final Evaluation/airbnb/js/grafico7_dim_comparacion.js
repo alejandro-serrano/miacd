@@ -49,7 +49,7 @@ function drawDimComparacion() {
       .attr("alignment-baseline", "middle")
       .attr("font-size", "11px")
       .attr("font-weight", d => d.name.startsWith("GB — orig") ? "bold" : "normal")
-      .attr("fill", d => d.name.startsWith("GB — orig") ? "#c0604a" : "#666")
+      .attr("fill", d => d.name.startsWith("GB — orig") ? "#5b9d8a" : "#666")
       .attr("opacity", 0)
       .text(d => d.r2.toFixed(3))
       .transition().delay((d, i) => 300 + i*80).duration(400).attr("opacity", 1);
@@ -58,7 +58,7 @@ function drawDimComparacion() {
     g.append("g").call(d3.axisLeft(y).tickSize(0))
       .selectAll("text")
       .attr("font-size", "11px")
-      .attr("fill", d => d.startsWith("GB — orig") ? "#c0604a" : "#444")
+      .attr("fill", d => d.startsWith("GB — orig") ? "#5b9d8a" : "#444")
       .attr("font-weight", d => d.startsWith("GB — orig") ? "bold" : "normal");
 
     g.select(".domain").remove();

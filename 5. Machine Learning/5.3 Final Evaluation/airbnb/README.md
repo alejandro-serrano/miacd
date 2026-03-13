@@ -1,4 +1,4 @@
-# Predicción de Precio Airbnb — Caso Gabriela
+# ¡Ni muy caro, ni muy barato! — Un modelo de para encontrar el precio ideal en Airbnb
 **Proyecto Final · Aprendizaje Automático · MIACD**
 Manuel Alejandro Serrano Macias · ID 0286155
 
@@ -12,23 +12,23 @@ Presentación interactiva desarrollada con [Reveal.js](https://revealjs.com/) y 
 
 ```
 airbnb/
-├── airbnb.html              ← Presentación principal
-├── style.css               ← Estilos de la presentación
+├── airbnb.html             Presentación principal (abrir esto)
+├── style.css               Estilos de la presentación
 ├── data/
-│   └── airbnb_data.json    ← Datos pre-calculados para las gráficas
+│   └── airbnb_data.json    Datos pre-calculados para las gráficas
 └── js/
-    ├── grafico1_alcaldias.js     → Precio mediano por alcaldía
-    ├── grafico2_habitaciones.js  → Precio por número de habitaciones
-    ├── grafico3_modelos.js       → Comparación R², MAE y RMSE
-    ├── grafico4_importancia.js   → Feature Importance del Random Forest
-    ├── grafico5_coyoacan.js      → Distribución de precios en Coyoacán
-    ├── grafico6_pca_varianza.js  → Varianza explicada acumulada por PCA
-    └── grafico7_dim_comparacion.js → Comparación completa de estrategias
+    ├── grafico1_alcaldias.js        Precio mediano por alcaldía
+    ├── grafico2_habitaciones.js     Precio por número de habitaciones
+    ├── grafico3_modelos.js          Comparación R², MAE y RMSE
+    ├── grafico4_importancia.js      Feature Importance del Random Forest
+    ├── grafico5_coyoacan.js         Distribución de precios en Coyoacán
+    ├── grafico6_pca_varianza.js     Varianza explicada acumulada por PCA
+    └── grafico7_dim_comparacion.js  Comparación completa de estrategias
 ```
 
 > **Importante:** La presentación usa `d3.json()` para cargar los datos desde `data/airbnb_data.json`.
 > Los navegadores bloquean este tipo de peticiones cuando se abre el archivo directamente
-> (`file://`), por lo que **es necesario servir el proyecto desde un servidor local**.
+> (`file://`), por lo que **es necesario abrir el proyecto desde un servidor local**.
 
 ---
 
@@ -73,7 +73,7 @@ airbnb/
 
 3. Abre tu navegador y ve a:
    ```
-   http://localhost:8000
+   http://localhost:8000/airbnb.html
    ```
 
 4. Para detener el servidor presiona `Ctrl+C` en la terminal.

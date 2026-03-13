@@ -21,7 +21,7 @@ function drawImportancia() {
     const y = d3.scaleBand().domain(entries.map(d => d.variable)).range([0, iH]).padding(0.3);
 
     const highlight = ["bedrooms", "bathrooms"];
-    const barColor = d => highlight.includes(d.variable) ? "#e8846a" : "#5499c7";
+    const barColor = d => highlight.includes(d.variable) ? "#7BC6B0" : "#5499c7";
 
     g.selectAll(".bar")
       .data(entries)
@@ -50,7 +50,7 @@ function drawImportancia() {
       .attr("y", d => y(d.variable) + y.bandwidth() / 2)
       .attr("alignment-baseline", "middle")
       .attr("font-size", "10px")
-      .attr("fill", d => highlight.includes(d.variable) ? "#c0604a" : "#888")
+      .attr("fill", d => highlight.includes(d.variable) ? "#5b9d8a" : "#888")
       .attr("font-weight", d => highlight.includes(d.variable) ? "bold" : "normal")
       .attr("opacity", 0)
       .text(d => `${(d.importance * 100).toFixed(1)}%`)
@@ -60,7 +60,7 @@ function drawImportancia() {
     g.append("g").call(d3.axisLeft(y).tickSize(0))
       .selectAll("text")
       .attr("font-size", "11px")
-      .attr("fill", d => highlight.includes(d) ? "#e8846a" : "#444")
+      .attr("fill", d => highlight.includes(d) ? "#5b9d8a" : "#444")
       .attr("font-weight", d => highlight.includes(d) ? "bold" : "normal");
 
     g.select(".domain").remove();
