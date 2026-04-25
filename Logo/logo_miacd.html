@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="author" content="Manuel Alejandro Serrano Macias">
+  <meta name="description" content="MIACD - Propuesta Logo">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Logo MIACD 2025 – 2027</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: white;
+      font-family: Georgia, serif;
+    }
+    .controls {
+      margin-top: 1rem;
+      display: flex;
+      gap: 12px;
+    }
+    button {
+      font-family: Georgia, serif;
+      font-size: 13px;
+      padding: 6px 18px;
+      border: 0.5px solid #4A7DB5;
+      background: white;
+      color: #4A7DB5;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover { background: #f0f5fb; }
+  </style>
+</head>
+<body>
+
+<div id="logo-container"></div>
+
+<div class="controls">
+  <button onclick="animatePulse()">Pulsar red</button>
+  <button onclick="animateSigmoid()">Trazar sigmoide</button>
+  <button onclick="resetAnim()">Reiniciar</button>
+</div>
+
+<script>
+  /* ─── Paleta ─────────────────────────────────────────── */
+  const BASE = "#4A7DB5";   // azul medio — nodos y conexiones
+  const DEEP = "#2A5A8C";   // azul profundo — sigmoide
+  const CIAN = "#5DCAA5";   // cian — nodos capa E y nodo central
+
+  /* ─── Canvas ─────────────────────────────────────────── */
+  const W = 520, H = 520;
+  const cx = 260, cy = 240, R = 196;
+
+  const svg = d3.select("#logo-container")
+    .append("svg")
+    .attr("width", W).attr("height", H)
+    .style("background", "white");
+
+  /* ─── Clip circular ──────────────────────────────────── */
+  svg.append("defs").append("clipPath").attr("id", "cc")
+    .append("circle").attr("cx", cx).attr("cy", cy).attr("r", R);
+
+  svg.append("circle")
+    .attr("cx", cx).attr("cy", cy).attr("r", R)
+    .attr("fill", "white");
+
+  /* ─── Borde punteado ─────────────────────────────────── */
+  svg.append("circle")
+    .attr("cx", cx).attr("cy", cy).attr("r", R)
+    .attr("fill", "none")
+    .attr("stroke", BASE)
+    .attr("stroke-width", 0.8)
+    .attr("stroke-dasharray", "5,8")
+    .attr("opacity", 0.4);
+
+  const g = svg.append("g").attr("clip-path", "url(#cc)");
+
+  /*
+   * Offset de coordenadas:
+   * El SVG original usa cx=340, cy=300.
+   * Aquí usamos cx=260, cy=240. Delta: dx=-80, dy=-60.
+   */
+  const dx = -80, dy = -60;
+
+  /* ─── Conexiones (idénticas al SVG original) ─────────── */
+  const conns = [
+    // Capa A → Capa B
+    [210,250, 290,230], [210,250, 290,280], [210,250, 290,330],
+    [210,300, 290,230], [210,300, 290,280], [210,300, 290,330], [210,300, 290,380],
+    [210,350, 290,280], [210,350, 290,330], [210,350, 290,380],
+    // Capa B → Nodo central
+    [290,230, 340,300], [290,280, 340,300], [290,330, 340,300], [290,380, 340,300],
+    // Nodo central → Capa D
+    [340,300, 390,220], [340,300, 390,270], [340,300, 390,330], [340,300, 390,380],
+    // Capa D → Capa E
+    [390,220, 470,250], [390,220, 470,300],
+    [390,270, 470,250], [390,270, 470,300],
+    [390,330, 470,300], [390,330, 470,350],
+    [390,380, 470,300], [390,380, 470,350],
+  ];
+
+  g.selectAll("line.conn")
+    .data(conns).enter()
+    .append("line")
+    .attr("x1", d => d[0]+dx).attr("y1", d => d[1]+dy)
+    .attr("x2", d => d[2]+dx).attr("y2", d => d[3]+dy)
+    .attr("stroke", BASE)
+    .attr("stroke-width", 0.8)
+    .attr("opacity", 0.22);
+
+  /* ─── Nodos por capa ─────────────────────────────────── */
+  const layerNodes = [
+    { data: [[210,250],[210,300],[210,350]],           color: BASE },
+    { data: [[290,230],[290,280],[290,330],[290,380]], color: BASE },
+    { data: [[390,220],[390,270],[390,330],[390,380]], color: BASE },
+    { data: [[470,250],[470,300],[470,350]],           color: CIAN },
+  ];
+
+  const allNodeSels = layerNodes.map(layer =>
+    g.selectAll(null).data(layer.data).enter()
+      .append("circle")
+      .attr("cx", d => d[0]+dx).attr("cy", d => d[1]+dy)
+      .attr("r", 5.5)
+      .attr("fill", "white")
+      .attr("stroke", layer.color)
+      .attr("stroke-width", 1.5)
+      .attr("opacity", 0.85)
+  );
+
+  const allNodeData = layerNodes.flatMap(l => l.data);
+
+  /* ─── Sigmoide: σ(x) = 1 / (1 + e^-x) ──────────────── */
+  /*
+   * Arranca en x=145 (después de nodos capa A en x=130)
+   * Termina en x=375 (antes de nodos capa E en x=390)
+   * Amplitud vertical ±95px desde cy, pasando por cy en el centro.
+   */
+  function sigmoid(x) { return 1 / (1 + Math.exp(-x)); }
+
+  const xStart = cx - 115;
+  const xEnd   = cx + 115;
+  const yAmplitude = 95;
+
+  const sigPoints = d3.range(-5.5, 5.55, 0.1).map(t => [
+    xStart + (t + 5.5) / 11 * (xEnd - xStart),
+    cy + yAmplitude - sigmoid(t) * yAmplitude * 2,
+  ]);
+
+  const lineGen = d3.line()
+    .x(d => d[0]).y(d => d[1])
+    .curve(d3.curveCatmullRom.alpha(0.5));
+
+  const sigPath = g.append("path")
+    .datum(sigPoints)
+    .attr("d", lineGen)
+    .attr("fill", "none")
+    .attr("stroke", DEEP)
+    .attr("stroke-width", 1.2)
+    .attr("stroke-linecap", "round");
+
+  const sigLen = sigPath.node().getTotalLength();
+  sigPath.attr("stroke-dasharray", sigLen).attr("stroke-dashoffset", 0);
+
+  /* ─── Nodo central (punto de inflexión) ──────────────── */
+  g.append("circle")
+    .attr("cx", cx).attr("cy", cy).attr("r", 15)
+    .attr("fill", "none").attr("stroke", CIAN)
+    .attr("stroke-width", 0.8).attr("opacity", 0.3);
+
+  const cOuter = g.append("circle")
+    .attr("cx", cx).attr("cy", cy).attr("r", 10)
+    .attr("fill", "white").attr("stroke", CIAN).attr("stroke-width", 2);
+
+  const cDot = g.append("circle")
+    .attr("cx", cx).attr("cy", cy).attr("r", 4.5)
+    .attr("fill", CIAN);
+
+  /* ─── Texto dentro del círculo ───────────────────────── */
+  /*
+   * cy=240, R=196 → borde inferior en y=436.
+   * sepY=384, texto termina en ~y=427, con margen al borde punteado.
+   */
+  const sepY = cy + R - 52;
+
+  svg.append("line")
+    .attr("x1", cx-45).attr("x2", cx+45)
+    .attr("y1", sepY).attr("y2", sepY)
+    .attr("stroke", BASE).attr("stroke-width", 0.5).attr("opacity", 0.25);
+
+  svg.append("text")
+    .attr("x", cx).attr("y", sepY+24)
+    .attr("text-anchor", "middle")
+    .attr("font-family", "Georgia, serif")
+    .attr("font-size", 28).attr("font-weight", 700).attr("letter-spacing", 8)
+    .attr("fill", BASE)
+    .text("MIACD");
+
+  svg.append("text")
+    .attr("x", cx).attr("y", sepY+43)
+    .attr("text-anchor", "middle")
+    .attr("font-family", "Georgia, serif")
+    .attr("font-size", 12).attr("font-weight", 400).attr("letter-spacing", 4)
+    .attr("fill", BASE).attr("opacity", 0.7)
+    .text("2025 \u2013 2027");
+
+  /* ─── Hover en nodos ─────────────────────────────────── */
+  allNodeSels.forEach(sel => {
+    sel
+      .on("mouseover", function() {
+        d3.select(this).transition().duration(150).attr("r", 8).attr("opacity", 1);
+      })
+      .on("mouseout", function() {
+        d3.select(this).transition().duration(150).attr("r", 5.5).attr("opacity", 0.85);
+      });
+  });
+
+  cDot
+    .on("mouseover", function() {
+      d3.select(this).transition().duration(150).attr("r", 7);
+      cOuter.transition().duration(150).attr("r", 14);
+    })
+    .on("mouseout", function() {
+      d3.select(this).transition().duration(150).attr("r", 4.5);
+      cOuter.transition().duration(150).attr("r", 10);
+    });
+
+  /* ─── Animaciones ────────────────────────────────────── */
+
+  // Pulso en cascada de izquierda a derecha
+  function animatePulse() {
+    allNodeData.forEach(([ox, oy], i) => {
+      g.append("circle")
+        .attr("cx", ox+dx).attr("cy", oy+dy).attr("r", 5.5)
+        .attr("fill", "none").attr("stroke", BASE).attr("opacity", 0.9)
+        .transition().delay(i * 55).duration(250)
+        .attr("r", 11).attr("opacity", 0)
+        .remove();
+    });
+    cDot.transition().delay(allNodeData.length * 55).duration(400)
+      .attr("r", 8).transition().duration(400).attr("r", 4.5);
+    cOuter.transition().delay(allNodeData.length * 55).duration(400)
+      .attr("r", 16).transition().duration(400).attr("r", 10);
+  }
+
+  // Dibujo animado de la sigmoide
+  function animateSigmoid() {
+    sigPath
+      .attr("stroke-dashoffset", sigLen)
+      .transition().duration(2000).ease(d3.easeLinear)
+      .attr("stroke-dashoffset", 0);
+  }
+
+  // Reiniciar todo
+  function resetAnim() {
+    sigPath.interrupt().attr("stroke-dashoffset", 0);
+    cDot.interrupt().attr("r", 4.5);
+    cOuter.interrupt().attr("r", 10);
+  }
+</script>
+</body>
+</html>
