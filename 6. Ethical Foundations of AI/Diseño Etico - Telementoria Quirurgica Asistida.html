@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Plataforma de Telementoría Intraoperatoria — Diseño Ético</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ====== CANVAS 36" x 48" @ 100 DPI ====== */
+  /* 36" = 3600px ancho ; 48" = 4800px alto */
+  :root{
+    --ink:#0F2235;            /* azul profundo, casi negro */
+    --ink-2:#1B3A5B;          /* azul medio */
+    --teal:#0E7C86;           /* teal corporativo */
+    --teal-2:#7CB7BD;         /* teal claro */
+    --gold:#B8893C;           /* dorado para acentos */
+    --gold-light:#E6D5B5;     /* dorado pálido */
+    --crimson:#9B2C2C;        /* alerta crítico */
+    --crimson-light:#F4E1E1;
+    --green:#2F6F4E;
+    --green-light:#DDEBE0;
+    --paper:#FFFFFF;
+    --paper-tint:#FAF8F4;     /* crema */
+    --paper-soft:#F2EFE8;
+    --line:#1B3A5B;
+    --line-soft:#D9D2C2;
+    --muted:#5B6B7C;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    width:3600px; height:4800px;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    font-feature-settings:"ss01","cv11","kern";
+    -webkit-font-smoothing:antialiased;
+  }
+  body{
+    padding:75px 100px 65px;
+    position:relative;
+  }
+  /* ===== TIPOGRAFÍA ===== */
+  .display{
+    font-family:'EB Garamond', serif;
+    font-weight:700;
+    letter-spacing:-0.02em;
+    line-height:0.95;
+  }
+  .subdisplay{
+    font-family:'EB Garamond', serif;
+    font-weight:500;
+    font-style:italic;
+    letter-spacing:-0.005em;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:600;
+    font-size:20px;
+    letter-spacing:0.24em;
+    text-transform:uppercase;
+    color:var(--teal);
+  }
+  .small-caps{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:600;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    font-size:18px;
+    color:var(--muted);
+  }
+
+  /* ===== HEADER ===== */
+  .header{
+    display:grid;
+    grid-template-columns:1fr 420px;
+    gap:70px;
+    padding-bottom:40px;
+    border-bottom:3px solid var(--ink);
+    margin-bottom:42px;
+  }
+  .header-left .eyebrow{
+    color:var(--gold);
+    font-size:26px;
+    margin-bottom:22px;
+  }
+  .title-1{
+    font-size:110px;
+    line-height:0.92;
+    color:var(--ink);
+    margin-bottom:8px;
+  }
+  .title-2{
+    font-size:110px;
+    line-height:0.92;
+    color:var(--teal);
+    margin-bottom:24px;
+  }
+  .subtitle{
+    font-size:32px;
+    color:var(--muted);
+    line-height:1.3;
+    max-width:1850px;
+    font-weight:300;
+    margin-bottom:22px;
+  }
+  .principle-tag{
+    display:inline-block;
+    background:var(--ink);
+    color:var(--paper-tint);
+    padding:16px 38px;
+    font-family:'JetBrains Mono', monospace;
+    font-weight:600;
+    font-size:26px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    margin-bottom:32px;
+  }
+  .header-meta{
+    display:flex;
+    gap:50px;
+    margin-top:24px;
+  }
+  .meta-block{
+    display:flex;
+    align-items:flex-start;
+    gap:20px;
+  }
+  .meta-icon{
+    width:64px; height:64px;
+    border:2px solid var(--ink);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .meta-icon svg{width:34px; height:34px}
+  .meta-text .small-caps{font-size:18px; margin-bottom:6px}
+  .meta-text .meta-content{font-size:22px; line-height:1.35; color:var(--ink); font-weight:500}
+
+  .header-right{
+    background:var(--paper-tint);
+    border:2px solid var(--ink);
+    padding:36px 34px;
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+  }
+  .info-card{
+    display:flex;
+    gap:18px;
+    align-items:flex-start;
+  }
+  .info-icon{
+    width:54px; height:54px;
+    background:var(--ink);
+    border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .info-icon svg{width:30px; height:30px; stroke:var(--paper-tint); fill:none; stroke-width:2.2}
+  .info-card-title{font-size:18px; font-weight:800; letter-spacing:0.18em; text-transform:uppercase; color:var(--ink); margin-bottom:4px}
+  .info-card-text{font-size:22px; color:var(--muted); line-height:1.32; font-weight:500}
+
+  /* ===== SECCIONES (NUMERADAS) ===== */
+  .section{
+    margin-bottom:22px;
+  }
+  .section-header{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    margin-bottom:16px;
+    padding-bottom:10px;
+    border-bottom:2px solid var(--line-soft);
+  }
+  .section-num{
+    width:56px; height:56px;
+    background:var(--teal);
+    color:white;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'EB Garamond', serif;
+    font-weight:500;
+    font-style:italic;
+    font-size:32px;
+  }
+  .section-title{
+    font-family:'EB Garamond', serif;
+    font-weight:500;
+    font-size:38px;
+    letter-spacing:-0.005em;
+    color:var(--ink);
+    text-transform:none;
+  }
+  .section-sub{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:500;
+    font-size:16px;
+    color:var(--muted);
+    margin-left:auto;
+    font-style:normal;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+  }
+
+  /* ===== GRID DE DOS COLUMNAS PARA SECCIONES SUPERIORES ===== */
+  .two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:60px;
+  }
+  .three-col{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:36px;
+  }
+
+  /* ===== INTRO / PROBLEMA ===== */
+  .intro-grid{
+    display:grid;
+    grid-template-columns:1fr 1.3fr;
+    gap:32px;
+  }
+  .problem-card{
+    background:var(--paper-tint);
+    border-left:6px solid var(--gold);
+    padding:22px 26px;
+  }
+  .problem-label{
+    display:flex; align-items:center; gap:12px;
+    margin-bottom:10px;
+  }
+  .problem-label svg{width:32px; height:32px; stroke:var(--gold); fill:none; stroke-width:2.2}
+  .problem-label .label-text{font-size:16px; letter-spacing:0.16em; font-weight:800; text-transform:uppercase; color:var(--gold)}
+  .problem-text{font-size:20px; line-height:1.4; color:var(--ink); font-weight:400}
+  .problem-text strong{font-weight:700}
+  .problem-text.quote{font-family:'EB Garamond', serif; font-style:italic; font-weight:500; font-size:21px}
+
+  /* Features inline */
+  .features-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-top:14px;
+  }
+  .feat{
+    display:flex; gap:12px; align-items:flex-start;
+    padding:11px 13px;
+    background:white;
+    border:1.5px solid var(--line-soft);
+    border-radius:6px;
+  }
+  .feat-icon{width:46px; height:46px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    background:var(--paper-tint); border-radius:6px;}
+  .feat-icon svg{width:26px; height:26px; stroke:var(--teal); fill:none; stroke-width:2}
+  .feat-title{font-size:16px; font-weight:800; color:var(--ink); margin-bottom:2px; text-transform:uppercase; letter-spacing:0.08em}
+  .feat-desc{font-size:14.5px; color:var(--muted); line-height:1.35}
+
+  /* Arquitectura del sistema */
+  .arch-box{
+    background:white;
+    border:2px solid var(--ink);
+    border-radius:8px;
+    padding:18px 28px 14px;
+    margin-top:18px;
+  }
+  .arch-title{font-size:18px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink); margin-bottom:8px; text-align:center}
+  .arch-flow{
+    display:grid;
+    grid-template-columns:1fr 60px 1fr 60px 1fr;
+    align-items:stretch;
+    gap:0;
+  }
+  .arch-node{
+    border:2px solid var(--teal);
+    border-radius:8px;
+    padding:18px 14px;
+    text-align:center;
+    background:var(--paper-tint);
+  }
+  .arch-node-icon{width:54px; height:54px; margin:0 auto 10px; background:var(--teal); border-radius:50%;
+    display:flex; align-items:center; justify-content:center;}
+  .arch-node-icon svg{width:30px; height:30px; stroke:white; fill:none; stroke-width:2}
+  .arch-node-title{font-size:16px; font-weight:800; text-transform:uppercase; letter-spacing:0.12em; color:var(--ink); margin-bottom:6px}
+  .arch-node-desc{font-size:13.5px; color:var(--muted); line-height:1.35}
+  .arch-arrow{display:flex; align-items:center; justify-content:center; color:var(--teal); font-size:36px; font-weight:300}
+  .arch-footer{
+    background:var(--ink);
+    color:var(--paper-tint);
+    padding:14px 18px;
+    margin-top:18px;
+    border-radius:6px;
+    font-size:15px;
+    text-align:center;
+    letter-spacing:0.06em;
+    font-weight:600;
+  }
+  .arch-footer .dot{color:var(--gold); margin:0 14px}
+
+  /* ===== PREOCUPACIONES ÉTICAS (S2) ===== */
+  .ethics-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 0.85fr;
+    gap:24px;
+  }
+  .ethics-col{
+    background:var(--paper-tint);
+    padding:20px 18px;
+    border-radius:8px;
+  }
+  .ethics-col-title{
+    font-size:17px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--teal); margin-bottom:14px;
+    border-bottom:2px solid var(--teal); padding-bottom:7px;
+  }
+  .ethics-item{
+    display:flex; gap:11px; align-items:flex-start;
+    padding:7px 0;
+    border-bottom:1px dashed var(--line-soft);
+  }
+  .ethics-item:last-child{border-bottom:none}
+  .ethics-icon{
+    width:38px; height:38px; flex-shrink:0;
+    background:white;
+    border:1.5px solid var(--teal);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .ethics-icon svg{width:20px; height:20px; stroke:var(--teal); fill:none; stroke-width:2.2}
+  .ethics-text-block{flex:1}
+  .ethics-name{font-size:16px; font-weight:800; color:var(--ink); margin-bottom:2px}
+  .ethics-desc{font-size:13.5px; color:var(--muted); line-height:1.32}
+  /* col Fjeld con badges */
+  .priority-badge{
+    display:inline-block;
+    font-size:10.5px;
+    font-weight:800;
+    padding:2px 7px;
+    border-radius:3px;
+    letter-spacing:0.1em;
+    margin-left:6px;
+    vertical-align:middle;
+  }
+  .pri-high{background:var(--crimson); color:white}
+  .pri-med{background:var(--gold); color:white}
+
+  /* Justicia transversal */
+  .justicia-card{
+    background:var(--ink);
+    color:white;
+    border-radius:8px;
+    padding:24px 22px;
+  }
+  .justicia-card .ethics-col-title{color:var(--gold-light); border-color:var(--gold)}
+  .justicia-card .ethics-desc, .justicia-card .ethics-name{color:white}
+  .justicia-icon-big{
+    width:80px; height:80px;
+    background:var(--gold);
+    border-radius:50%;
+    margin:0 auto 14px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .justicia-icon-big svg{width:46px; height:46px; stroke:white; fill:none; stroke-width:2}
+  .justicia-text{font-size:15px; line-height:1.5; color:var(--paper-tint); margin-bottom:14px}
+
+  /* ===== SECCIÓN 3: SOLUCIÓN ===== */
+  .solution-banner{
+    background:linear-gradient(135deg, var(--ink) 0%, var(--ink-2) 100%);
+    color:white;
+    padding:26px 34px;
+    border-radius:10px;
+    margin-bottom:22px;
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:30px;
+    align-items:center;
+  }
+  .solution-icon{
+    width:96px; height:96px;
+    background:var(--gold);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .solution-icon svg{width:52px; height:52px; stroke:white; fill:none; stroke-width:2}
+  .solution-eyebrow{font-size:15px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold-light); margin-bottom:6px; font-weight:700}
+  .solution-title{font-family:'EB Garamond', serif; font-size:32px; font-weight:700; line-height:1.1; margin-bottom:8px}
+  .solution-text{font-size:17px; line-height:1.45; color:var(--paper-tint); font-weight:300}
+
+  .solution-pillars{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:20px;
+  }
+  .pillar{
+    background:var(--paper-tint);
+    border-top:5px solid var(--teal);
+    padding:18px 20px;
+    border-radius:0 0 8px 8px;
+  }
+  .pillar-num{font-family:'EB Garamond', serif; font-size:38px; font-weight:700; color:var(--teal); line-height:1; margin-bottom:6px}
+  .pillar-title{font-size:17px; font-weight:800; text-transform:uppercase; letter-spacing:0.1em; color:var(--ink); margin-bottom:8px}
+  .pillar-desc{font-size:14px; line-height:1.45; color:var(--muted)}
+
+  /* ===== SECCIÓN 4: RIESGOS Y EVALUACIÓN ===== */
+  .risks-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+  }
+
+  /* Mapa de riesgos (cuadrante SVG) */
+  .risk-map-wrap{
+    background:white;
+    border:2px solid var(--ink);
+    border-radius:10px;
+    padding:16px 22px 14px;
+    display:flex;
+    flex-direction:column;
+  }
+  .risk-map-title{
+    font-size:16px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--ink); text-align:center; margin-bottom:8px;
+    padding-bottom:8px; border-bottom:2px solid var(--ink);
+  }
+  .risk-legend{
+    margin-top:10px;
+    padding-top:10px;
+    border-top:1px dashed var(--line-soft);
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:6px 18px;
+  }
+  .legend-row{
+    display:flex; align-items:center; gap:9px;
+  }
+  .legend-bullet{
+    width:14px; height:14px; border-radius:50%;
+    flex-shrink:0;
+    opacity:0.7;
+  }
+  .legend-text{font-size:12.5px; color:var(--ink); line-height:1.3}
+  .legend-text strong{font-weight:800}
+
+  /* FMEA reformateado como barras horizontales */
+  .fmea-card{
+    background:white;
+    border:2px solid var(--ink);
+    border-radius:10px;
+    padding:18px 22px 14px;
+  }
+  .fmea-title{
+    font-size:16px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--ink); margin-bottom:14px;
+    text-align:center; padding-bottom:8px; border-bottom:2px solid var(--ink);
+  }
+  .fmea-bar-row{
+    display:grid;
+    grid-template-columns:38px 1fr;
+    gap:14px;
+    padding:11px 0 9px;
+    align-items:flex-start;
+    border-bottom:1px dashed var(--line-soft);
+  }
+  .fmea-bar-row:last-of-type{border-bottom:none}
+  .fmea-bar-num{
+    width:34px; height:34px;
+    background:var(--ink);
+    color:white;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'EB Garamond',serif;
+    font-weight:700;
+    font-size:17px;
+    margin-top:2px;
+  }
+  .fmea-bar-content{display:flex; flex-direction:column; gap:6px}
+  .fmea-bar-label{
+    display:flex; justify-content:space-between; align-items:baseline;
+    gap:12px;
+  }
+  .fmea-bar-name{
+    font-size:15px; font-weight:700; color:var(--ink); line-height:1.25;
+  }
+  .fmea-bar-name em{font-style:italic; color:var(--muted); font-weight:500}
+  .fmea-bar-value{
+    font-family:'EB Garamond',serif; font-weight:700;
+    font-size:22px; color:var(--ink);
+    line-height:1;
+    flex-shrink:0;
+    letter-spacing:-0.01em;
+  }
+  .fmea-bar-track{
+    height:14px;
+    background:var(--paper-soft);
+    border-radius:7px;
+    overflow:hidden;
+    margin-top:3px;
+  }
+  .fmea-bar-fill{
+    height:100%;
+    border-radius:7px;
+    opacity:0.88;
+  }
+  .fmea-bar-tag{
+    font-size:11px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--muted); margin-top:2px;
+  }
+  .fmea-formula{
+    margin-top:14px;
+    text-align:center;
+    font-size:12px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--muted);
+    font-weight:600;
+  }
+
+  /* Índice de riesgos y oportunidades debajo del cuadrante */
+  .risk-index{
+    margin-top:14px;
+    display:grid;
+    grid-template-columns:2.2fr 1fr;
+    gap:20px;
+    background:var(--paper-tint);
+    padding:14px 18px;
+    border-radius:8px;
+  }
+  .risk-index-h{
+    font-size:13px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase;
+    color:#9B2C2C; margin-bottom:8px;
+  }
+  .risk-index-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:5px 14px;
+  }
+  .risk-index-col:last-child .risk-index-grid{grid-template-columns:1fr; gap:5px}
+  .ri-chip{
+    display:flex; align-items:center; gap:8px;
+    font-size:11.5px; color:var(--ink); line-height:1.2;
+    font-weight:500;
+  }
+  .ri-n{
+    width:20px; height:20px;
+    border-radius:50%;
+    color:white;
+    font-family:'EB Garamond',serif;
+    font-weight:700;
+    font-size:10.5px;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+
+  /* ===== STAKEHOLDERS DIAGRAM ===== */
+  .stakeholders{
+    background:var(--paper-tint);
+    border-radius:10px;
+    padding:22px 26px;
+    margin-bottom:22px;
+  }
+  .stakeholders-title{font-size:17px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink); margin-bottom:16px; text-align:center}
+  .stake-row{
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:14px;
+    margin-bottom:14px;
+  }
+  .stake-row:last-child{margin-bottom:0; grid-template-columns:repeat(5, 1fr)}
+  .stake-item{
+    text-align:center;
+    padding:12px 6px;
+    background:white;
+    border-radius:8px;
+    border:1.5px solid var(--line-soft);
+  }
+  .stake-item.center{background:var(--ink); color:white; border-color:var(--ink)}
+  .stake-icon{
+    width:46px; height:46px;
+    background:var(--paper-tint);
+    border-radius:50%;
+    margin:0 auto 6px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .stake-icon svg{width:26px; height:26px; stroke:var(--teal); fill:none; stroke-width:2}
+  .stake-item.center .stake-icon{background:var(--gold)}
+  .stake-item.center .stake-icon svg{stroke:white}
+  .stake-name{font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink); line-height:1.3}
+  .stake-item.center .stake-name{color:white}
+  .stake-role{font-size:11px; color:var(--muted); margin-top:3px}
+  .stake-item.center .stake-role{color:var(--gold-light)}
+
+  /* ===== MITIGACIÓN ===== */
+  .mitigation-grid{
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:18px;
+  }
+  .mit-card{
+    background:white;
+    border:2px solid var(--ink);
+    border-radius:8px;
+    padding:16px 14px;
+    text-align:center;
+  }
+  .mit-icon-wrap{
+    width:60px; height:60px;
+    margin:0 auto 10px;
+    background:var(--gold);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .mit-icon-wrap svg{width:32px; height:32px; stroke:white; fill:none; stroke-width:2}
+  .mit-num{font-family:'EB Garamond',serif; font-weight:700; color:var(--gold); font-size:16px; margin-bottom:3px}
+  .mit-title{font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink); margin-bottom:6px; line-height:1.2}
+  .mit-text{font-size:12px; color:var(--muted); line-height:1.4; text-align:left}
+
+  /* ===== PRIMEROS RESULTADOS ===== */
+  .results-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:20px;
+  }
+  .result-card{
+    background:white;
+    border-top:5px solid var(--gold);
+    padding:18px 18px;
+    border-radius:0 0 8px 8px;
+    box-shadow:0 2px 0 var(--line-soft);
+  }
+  .result-num{
+    font-family:'EB Garamond', serif;
+    font-weight:700;
+    font-size:46px;
+    color:var(--ink);
+    line-height:1;
+    margin-bottom:4px;
+    letter-spacing:-0.02em;
+  }
+  .result-unit{font-size:16px; font-weight:500; color:var(--teal); margin-bottom:10px; letter-spacing:0.04em}
+  .result-label{font-size:12px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:5px}
+  .result-desc{font-size:13px; color:var(--ink); line-height:1.4}
+
+  /* ===== CONCLUSIONES ===== */
+  .conclusion{
+    background:linear-gradient(135deg, var(--ink) 0%, var(--ink-2) 100%);
+    color:white;
+    border-radius:10px;
+    padding:30px 38px;
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:30px;
+  }
+  .conc-quote{
+    font-family:'EB Garamond', serif;
+    font-style:italic;
+    font-size:25px;
+    font-weight:500;
+    line-height:1.3;
+    color:white;
+    grid-column:1 / -1;
+    text-align:center;
+    border-bottom:1px solid rgba(255,255,255,0.2);
+    padding-bottom:20px;
+    margin-bottom:4px;
+  }
+  .conc-quote-attr{font-family:'Inter'; font-style:normal; font-size:13px; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold-light); display:block; margin-top:12px; font-weight:600}
+  .conc-block .conc-h{font-size:15px; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold-light); margin-bottom:10px; font-weight:800; display:flex; align-items:center; gap:10px}
+  .conc-block .conc-h-num{
+    width:32px; height:32px; background:var(--gold); border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'EB Garamond',serif; font-style:normal; font-weight:700; color:white; font-size:16px;
+  }
+  .conc-block p{font-size:14px; line-height:1.55; color:var(--paper-tint); font-weight:300}
+
+  /* ===== REFERENCIAS ===== */
+  .refs-grid{
+    display:grid;
+    grid-template-columns:repeat(6, 1fr);
+    gap:14px;
+  }
+  .ref-card{
+    background:var(--paper-tint);
+    border-left:4px solid var(--teal);
+    padding:14px 14px;
+    border-radius:0 4px 4px 0;
+  }
+  .ref-num{
+    width:26px; height:26px; background:var(--teal); color:white;
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:13px;
+    margin-bottom:8px;
+  }
+  .ref-text{font-size:11.5px; line-height:1.45; color:var(--ink); font-weight:400}
+  .ref-text strong{font-weight:700}
+
+  /* ===== FOOTER ===== */
+  .footer{
+    margin-top:32px;
+    padding-top:22px;
+    border-top:3px solid var(--ink);
+    display:grid;
+    grid-template-columns:repeat(6, 1fr) 1.4fr;
+    gap:24px;
+    align-items:center;
+  }
+  .footer-pill{
+    display:flex; align-items:center; gap:12px;
+  }
+  .footer-pill svg{width:36px; height:36px; stroke:var(--teal); fill:none; stroke-width:2}
+  .footer-pill-text{font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.1em; color:var(--ink); line-height:1.2}
+  .footer-univ{
+    text-align:right;
+  }
+  .footer-univ-name{font-family:'EB Garamond',serif; font-weight:700; font-size:18px; color:var(--ink); letter-spacing:-0.01em}
+  .footer-univ-sub{font-size:12px; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-top:3px; font-style:italic; font-weight:400}
+
+  /* ===== UTILS ===== */
+  .ic-stroke{stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+
+  /* Marca de agua sutil decorativa */
+  .corner-mark{
+    position:absolute;
+    top:60px; right:130px;
+    font-family:'EB Garamond', serif;
+    font-style:italic;
+    font-size:18px;
+    color:var(--muted);
+    letter-spacing:0.04em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<div class="header">
+  <div class="header-left">
+    <div class="eyebrow">Diseño Ético en IA</div>
+    <h1 class="display title-1">Plataforma de Telementoría</h1>
+    <h1 class="display title-2">Intraoperatoria y Analítica</h1>
+    <p class="subtitle">para cirugía robótica asistida — diseño ético desde su concepción bajo el principio rector:</p>
+    <div class="principle-tag">Asistir, no decidir</div>
+    <p class="subtitle" style="margin-bottom:0">La IA mide y estructura; el juicio clínico y la responsabilidad permanecen en el cirujano local y en el mentor humano.</p>
+
+    <div class="header-meta">
+      <div class="meta-block">
+        <div class="meta-icon">
+          <svg viewBox="0 0 24 24" class="ic-stroke" stroke="#0F2235"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="meta-text">
+          <div class="small-caps">Autores</div>
+          <div class="meta-content">Daniel Ávila Ávila<br>Manuel Alejandro Serrano Macias</div>
+        </div>
+      </div>
+      <div class="meta-block">
+        <div class="meta-icon">
+          <svg viewBox="0 0 24 24" class="ic-stroke" stroke="#0F2235"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        </div>
+        <div class="meta-text">
+          <div class="small-caps">Programa</div>
+          <div class="meta-content">Maestría en IA y Ciencia de Datos<br>Fundamentos Antropológicos y Éticos de la IA<br><span style="font-family:'EB Garamond',serif;font-style:italic;color:var(--teal);font-weight:500">Universidad Panamericana · Campus Aguascalientes</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <div class="info-card">
+      <div class="info-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/></svg>
+      </div>
+      <div>
+        <div class="info-card-title">Sujeto Medido</div>
+        <div class="info-card-text">El cirujano residente <em>(no el paciente)</em></div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">
+        <svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      </div>
+      <div>
+        <div class="info-card-title">Propósito</div>
+        <div class="info-card-text">Exclusivamente educativo — sin uso evaluativo</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10"/></svg>
+      </div>
+      <div>
+        <div class="info-card-title">Alcance</div>
+        <div class="info-card-text">Comparativo internacional<br>México · EE.UU. · Unión Europea</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <div>
+        <div class="info-card-title">Marco Metodológico</div>
+        <div class="info-card-text">Floridi (5 principios) · Fjeld (8 temas) · SMACTR</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 1. INTRODUCCIÓN: PROBLEMA ===================== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <div class="section-title">Introducción · Problema a abordar</div>
+    <div class="section-sub">Antecedentes y pregunta de investigación</div>
+  </div>
+
+  <div class="intro-grid">
+    <div>
+      <div class="problem-card">
+        <div class="problem-label">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span class="label-text">Pregunta de Investigación</span>
+        </div>
+        <p class="problem-text quote">¿Cómo asegurar que una plataforma que mide el desempeño del cirujano en formación apoye su aprendizaje sin convertirse en un sistema de vigilancia que degrade la confianza pedagógica?</p>
+      </div>
+
+      <div class="problem-card" style="margin-top:18px;border-left-color:var(--crimson)">
+        <div class="problem-label">
+          <svg viewBox="0 0 24 24" style="stroke:var(--crimson)"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span class="label-text" style="color:var(--crimson)">Tres tensiones específicas</span>
+        </div>
+        <p class="problem-text" style="font-size:18px"><strong>El sujeto medido es el residente:</strong> la IA mide a una persona identificable en relación de poder asimétrica.<br><br><strong>Asimetría mentor-aprendiz:</strong> la tecnología puede acentuar o distorsionar una relación ya desigual.<br><br><strong>Doble consentimiento:</strong> del paciente y del residente, este último difícilmente libre.</p>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="font-family:'EB Garamond',serif;font-weight:600;font-size:30px;color:var(--ink);line-height:1.2;margin-bottom:14px;">El reto: <em style="color:var(--teal)">function creep</em> en cirugía robótica</h3>
+      <p style="font-size:18px; line-height:1.55; color:var(--ink); margin-bottom:16px;">
+        La cirugía robótica asistida creció <strong>+15% anual</strong> desde 2019. Un residente requiere entre decenas y cientos de procedimientos supervisados para alcanzar competencia. Hoy esa formación depende de un modelo presencial que limita estructuralmente el acceso a expertise: <strong>~40 sistemas robóticos en México frente a más de 7,000 en EE.UU.</strong>
+      </p>
+      <p style="font-size:17px; line-height:1.55; color:var(--muted); margin-bottom:18px;">
+        Sistemas como <strong>Da Vinci</strong> (Intuitive Surgical) y <strong>Ottava</strong> (J&amp;J MedTech) habilitan ecosistemas conectados. <strong>Polyphonic</strong> (J&amp;J, 2024) es el referente: plataforma abierta para mentoría remota con IA. <em>Un minuto de video quirúrgico equivale a más de 25 imágenes de TC en alta resolución</em> — el problema técnico es de escala; el ético, de gobernanza.
+      </p>
+
+      <div class="features-row">
+        <div class="feat">
+          <div class="feat-icon"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+          <div><div class="feat-title">Telementoría en tiempo real</div><div class="feat-desc">Video, voz, anotación sobre imagen quirúrgica</div></div>
+        </div>
+        <div class="feat">
+          <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v.5a2.5 2.5 0 0 1-5 0V5a2 2 0 0 0-2 2v5a3 3 0 0 0 3 3 3 3 0 0 0 3-3"/><path d="M12 2a3 3 0 0 1 3 3v.5a2.5 2.5 0 0 0 5 0V5a2 2 0 0 1 2 2v5a3 3 0 0 1-3 3 3 3 0 0 1-3-3"/></svg></div>
+          <div><div class="feat-title">Analítica con IA</div><div class="feat-desc">Segmentación de fases y métricas descriptivas</div></div>
+        </div>
+        <div class="feat">
+          <div class="feat-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <div><div class="feat-title">Cifrado E2E</div><div class="feat-desc">Anonimización y segregación arquitectónica</div></div>
+        </div>
+        <div class="feat">
+          <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+          <div><div class="feat-title">Propósito Educativo</div><div class="feat-desc">Sin uso evaluativo ni acreditativo</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 2. SOLUCIÓN PROPUESTA ===================== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <div class="section-title">Solución propuesta</div>
+    <div class="section-sub">Arquitectura socio-técnica del sistema</div>
+  </div>
+
+  <div class="solution-banner">
+    <div class="solution-icon">
+      <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    </div>
+    <div>
+      <div class="solution-eyebrow">Propuesta del proyecto</div>
+      <div class="solution-title">Diseñar éticamente desde cero una plataforma que combina telementoría intraoperatoria y analítica de IA bajo gobernanza explícita.</div>
+      <div class="solution-text">La interpretación, el juicio clínico y la responsabilidad médica permanecen en el cirujano local y en el mentor humano. El sistema soporta tres casos de uso que cubren el ciclo formativo: telementoría intraoperatoria (CU-01), revisión asincrónica de grabaciones (CU-02) y preparación estructurada de casos (CU-03).</div>
+    </div>
+  </div>
+
+  <div class="arch-box">
+    <div class="arch-title">Arquitectura general del sistema</div>
+    <div style="height:540px; display:flex; justify-content:center; align-items:center; overflow:hidden;">
+    <svg viewBox="0 0 1500 480" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" style="display:block;" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .arch-eyebrow{font-family:'Inter',sans-serif;font-weight:800;font-size:24px;letter-spacing:3px;fill:#B8893C}
+          .arch-item{font-family:'EB Garamond',serif;font-size:24px;fill:#0F2235}
+          .arch-item-light{font-family:'EB Garamond',serif;font-size:22px;fill:#FAF8F4}
+          .arch-foot{font-family:'Inter',sans-serif;font-size:18px;fill:#5B6B7C}
+          .arch-foot-gold{font-family:'Inter',sans-serif;font-weight:800;font-size:15px;letter-spacing:2px;fill:#B8893C}
+          .arch-cap{font-family:'Inter',sans-serif;font-weight:800;font-size:15px;letter-spacing:2px}
+        </style>
+      </defs>
+
+      <!-- ===== QUIRÓFANO LOCAL ===== -->
+      <g>
+        <rect x="20" y="30" width="440" height="420" rx="14" fill="#FAF8F4" stroke="#0F2235" stroke-width="2"/>
+        <text x="240" y="74" text-anchor="middle" class="arch-eyebrow">QUIRÓFANO LOCAL</text>
+        <line x1="80" y1="92" x2="400" y2="92" stroke="#0F2235" stroke-width="1"/>
+
+        <!-- consola robótica -->
+        <g transform="translate(70 120)" stroke="#0F2235" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="0" y="0" width="48" height="38" rx="2"/>
+          <line x1="12" y1="38" x2="12" y2="52"/>
+          <line x1="36" y1="38" x2="36" y2="52"/>
+          <line x1="0" y1="52" x2="48" y2="52"/>
+        </g>
+        <text x="140" y="150" class="arch-item">Consola robótica</text>
+
+        <!-- video -->
+        <g transform="translate(70 195)" stroke="#0F2235" stroke-width="2" fill="none" stroke-linejoin="round">
+          <rect x="0" y="0" width="48" height="34" rx="2"/>
+          <polygon points="18,8 18,26 32,17" fill="#0F2235"/>
+        </g>
+        <text x="140" y="220" class="arch-item">Video quirúrgico</text>
+
+        <!-- telemetría -->
+        <g transform="translate(70 260)" stroke="#0F2235" stroke-width="2" fill="none" stroke-linecap="round">
+          <circle cx="24" cy="18" r="14"/>
+          <line x1="24" y1="6" x2="24" y2="18"/>
+          <line x1="24" y1="18" x2="32" y2="22"/>
+        </g>
+        <text x="140" y="288" class="arch-item">Telemetría consola</text>
+
+        <!-- cirujano -->
+        <g transform="translate(70 325)" stroke="#0F2235" stroke-width="2" fill="none" stroke-linecap="round">
+          <circle cx="24" cy="12" r="10"/>
+          <path d="M6,38 Q24,22 42,38"/>
+        </g>
+        <text x="140" y="350" class="arch-item">Cirujano residente</text>
+
+        <text x="240" y="402" text-anchor="middle" class="arch-foot">El cirujano local conserva</text>
+        <text x="240" y="426" text-anchor="middle" class="arch-foot">siempre la autoridad última</text>
+      </g>
+
+      <!-- ===== PLATAFORMA IA (núcleo oscuro) ===== -->
+      <g>
+        <rect x="530" y="30" width="440" height="420" rx="14" fill="#0F2235" stroke="#0F2235" stroke-width="2"/>
+        <text x="750" y="74" text-anchor="middle" class="arch-eyebrow">PLATAFORMA IA</text>
+        <line x1="590" y1="92" x2="910" y2="92" stroke="#B8893C" stroke-width="1"/>
+
+        <!-- segmentación: rombo -->
+        <g transform="translate(580 120)" stroke="#FAF8F4" stroke-width="2" fill="none" stroke-linejoin="round">
+          <path d="M5,20 L22,3 L39,20 L22,37 Z"/>
+          <line x1="22" y1="3" x2="22" y2="37"/>
+          <line x1="5" y1="20" x2="39" y2="20"/>
+        </g>
+        <text x="650" y="148" class="arch-item-light">Segmentación de fases</text>
+
+        <!-- métricas: chart -->
+        <g transform="translate(580 195)" stroke="#FAF8F4" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="0,30 13,17 24,24 36,6 48,15"/>
+        </g>
+        <text x="650" y="220" class="arch-item-light">Métricas descriptivas</text>
+
+        <!-- visualización: lupa -->
+        <g transform="translate(580 260)" stroke="#FAF8F4" stroke-width="2" fill="none" stroke-linecap="round">
+          <circle cx="22" cy="18" r="11"/>
+          <line x1="30" y1="26" x2="44" y2="40"/>
+        </g>
+        <text x="650" y="288" class="arch-item-light">Visualización tiempo real</text>
+
+        <!-- caja USO DESCRIPTIVO -->
+        <rect x="580" y="330" width="340" height="98" rx="8" fill="none" stroke="#B8893C" stroke-width="1.5"/>
+        <text x="750" y="360" text-anchor="middle" class="arch-cap" fill="#B8893C">USO DESCRIPTIVO</text>
+        <text x="750" y="390" text-anchor="middle" font-family="Inter, sans-serif" font-size="17" fill="#FAF8F4">El sistema muestra datos;</text>
+        <text x="750" y="414" text-anchor="middle" font-family="Inter, sans-serif" font-size="17" fill="#FAF8F4">la interpretación es del mentor.</text>
+      </g>
+
+      <!-- ===== MENTOR REMOTO ===== -->
+      <g>
+        <rect x="1040" y="30" width="440" height="420" rx="14" fill="#FAF8F4" stroke="#0F2235" stroke-width="2"/>
+        <text x="1260" y="74" text-anchor="middle" class="arch-eyebrow">MENTOR REMOTO</text>
+        <line x1="1100" y1="92" x2="1420" y2="92" stroke="#0F2235" stroke-width="1"/>
+
+        <!-- guía en tiempo real: persona -->
+        <g transform="translate(1090 120)" stroke="#0F2235" stroke-width="2" fill="none" stroke-linecap="round">
+          <circle cx="24" cy="14" r="11"/>
+          <path d="M6,38 Q24,22 42,38"/>
+        </g>
+        <text x="1160" y="150" class="arch-item">Guía en tiempo real</text>
+
+        <!-- anotación: callout -->
+        <g transform="translate(1090 195)" stroke="#0F2235" stroke-width="2" fill="none" stroke-linejoin="round">
+          <path d="M3,3 L40,3 L40,28 L24,28 L18,34 L18,28 L3,28 Z"/>
+          <line x1="10" y1="13" x2="33" y2="13"/>
+          <line x1="10" y1="20" x2="28" y2="20"/>
+        </g>
+        <text x="1160" y="220" class="arch-item">Anotación sobre video</text>
+
+        <!-- retroalimentación: doc con flecha -->
+        <g transform="translate(1090 260)" stroke="#0F2235" stroke-width="2" fill="none" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M3,3 L36,3 L42,12 L36,20 L3,20 Z"/>
+          <line x1="3" y1="28" x2="42" y2="28"/>
+          <line x1="3" y1="36" x2="42" y2="36"/>
+        </g>
+        <text x="1160" y="288" class="arch-item">Retroalimentación</text>
+
+        <!-- sesión trazable: reloj -->
+        <g transform="translate(1090 325)" stroke="#0F2235" stroke-width="2" fill="none" stroke-linecap="round">
+          <circle cx="24" cy="24" r="14"/>
+          <path d="M24,12 L24,24 L32,30"/>
+        </g>
+        <text x="1160" y="350" class="arch-item">Sesión trazable</text>
+
+        <text x="1260" y="402" text-anchor="middle" class="arch-foot">Expertise sin desplazamiento.</text>
+        <text x="1260" y="430" text-anchor="middle" class="arch-foot-gold">EXCLUSIVAMENTE EDUCATIVO</text>
+      </g>
+
+      <!-- ===== FLECHAS DE FLUJO ===== -->
+      <g stroke="#B8893C" stroke-width="3" fill="#B8893C">
+        <line x1="465" y1="240" x2="525" y2="240"/>
+        <polygon points="525,240 514,232 514,248"/>
+        <line x1="975" y1="240" x2="1035" y2="240"/>
+        <polygon points="1035,240 1024,232 1024,248"/>
+      </g>
+    </svg>
+    </div>
+    <div style="text-align:center;font-family:'Inter',sans-serif;font-size:14px;color:var(--ink);margin-top:6px;letter-spacing:0.04em">
+      Transmisión cifrada · Datos anonimizados · Control del cirujano local · Propósito exclusivamente educativo
+    </div>
+  </div>
+
+  <div class="solution-pillars" style="margin-top:18px">
+    <div class="pillar">
+      <div class="pillar-num">CU-01</div>
+      <div class="pillar-title">Telementoría intraoperatoria</div>
+      <div class="pillar-desc">Mentor remoto guía en tiempo real al residente con contexto estructurado por IA. Trazabilidad de la sesión. Cirujano local conserva autoridad ejecutiva.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">CU-02</div>
+      <div class="pillar-title">Revisión asincrónica</div>
+      <div class="pillar-desc">Grabación anonimizada segmentada por fase, con métricas descriptivas y anotación posterior del mentor. Aprendizaje reflexivo basado en evidencia.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">CU-03</div>
+      <div class="pillar-title">Preparación de casos</div>
+      <div class="pillar-desc">Búsqueda por fase quirúrgica, consulta de clips anotados de casos similares, checklist preoperatorio y discusión guiada con mentor.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 3. PREOCUPACIONES Y RIESGOS ===================== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <div class="section-title">Preocupaciones y riesgos éticos</div>
+    <div class="section-sub">Marcos de Floridi y Fjeld · Eje transversal de justicia</div>
+  </div>
+
+  <div class="ethics-grid">
+    <!-- Floridi -->
+    <div class="ethics-col">
+      <div class="ethics-col-title">Marco de Floridi · 5 principios</div>
+      <div class="ethics-item">
+        <div class="ethics-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+        <div class="ethics-text-block">
+          <div class="ethics-name">Beneficencia</div>
+          <div class="ethics-desc">Promover el bienestar — acceso a expertise y mejor formación</div>
+        </div>
+      </div>
+      <div class="ethics-item">
+        <div class="ethics-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="ethics-text-block">
+          <div class="ethics-name">No maleficencia</div>
+          <div class="ethics-desc">Privacidad y seguridad — vigilancia, fuga del video, latencia crítica</div>
+        </div>
+      </div>
+      <div class="ethics-item">
+        <div class="ethics-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></div>
+        <div class="ethics-text-block">
+          <div class="ethics-name">Autonomía</div>
+          <div class="ethics-desc">Control humano — autoridad ejecutiva local y doble consentimiento</div>
+        </div>
+      </div>
+      <div class="ethics-item">
+        <div class="ethics-icon"><svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M6 6v14"/><path d="M18 6v14"/><path d="M3 6l9-4 9 4"/><path d="M3 20h18"/></svg></div>
+        <div class="ethics-text-block">
+          <div class="ethics-name">Justicia</div>
+          <div class="ethics-desc">Equidad — sesgos por escuela, antropometría y brecha de acceso</div>
+        </div>
+      </div>
+      <div class="ethics-item">
+        <div class="ethics-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <div class="ethics-text-block">
+          <div class="ethics-name">Explicabilidad</div>
+          <div class="ethics-desc">Transparencia — métricas con apariencia objetiva, opacas en su cálculo</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fjeld -->
+    <div class="ethics-col">
+      <div class="ethics-col-title">Marco de Fjeld · 8 temas</div>
+      <div class="ethics-item"><div class="ethics-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="ethics-text-block"><div class="ethics-name">Privacidad <span class="priority-badge pri-high">Alta</span></div><div class="ethics-desc">Doble sujeto: paciente y residente</div></div></div>
+      <div class="ethics-item"><div class="ethics-icon"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg></div><div class="ethics-text-block"><div class="ethics-name">Responsabilidad <span class="priority-badge pri-high">Alta</span></div><div class="ethics-desc">Mentor remoto, cirujano local, fabricante</div></div></div>
+      <div class="ethics-item"><div class="ethics-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="ethics-text-block"><div class="ethics-name">Seguridad <span class="priority-badge pri-high">Alta</span></div><div class="ethics-desc">Latencia y caída en momentos críticos</div></div></div>
+      <div class="ethics-item"><div class="ethics-icon"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div class="ethics-text-block"><div class="ethics-name">Transparencia <span class="priority-badge pri-high">Alta</span></div><div class="ethics-desc">Opacidad en métricas y modelos</div></div></div>
+      <div class="ethics-item"><div class="ethics-icon"><svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M3 20h18"/><line x1="8" y1="6" x2="8" y2="20"/><line x1="16" y1="6" x2="16" y2="20"/></svg></div><div class="ethics-text-block"><div class="ethics-name">Justicia <span class="priority-badge pri-high">Alta</span></div><div class="ethics-desc">Sesgos algorítmicos y brecha de acceso</div></div></div>
+      <div class="ethics-item"><div class="ethics-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M17 11l2 2 4-4"/></svg></div><div class="ethics-text-block"><div class="ethics-name">Control humano <span class="priority-badge pri-med">Media</span></div><div class="ethics-desc">Mitigado, pero automation bias residual</div></div></div>
+      <div class="ethics-item"><div class="ethics-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="ethics-text-block"><div class="ethics-name">Resp. profesional <span class="priority-badge pri-high">Alta</span></div><div class="ethics-desc">Deslizamiento descriptivo → evaluativo</div></div></div>
+      <div class="ethics-item"><div class="ethics-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div class="ethics-text-block"><div class="ethics-name">Valores humanos <span class="priority-badge pri-med">Media</span></div><div class="ethics-desc">Instrumentalización del residente</div></div></div>
+    </div>
+
+    <!-- Justicia transversal -->
+    <div class="justicia-card">
+      <div class="ethics-col-title">Eje transversal · Justicia</div>
+      <div class="justicia-icon-big">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M6 6v14"/><path d="M18 6v14"/><line x1="3" y1="20" x2="21" y2="20"/></svg>
+      </div>
+      <p class="justicia-text">Mayor promesa y mayor riesgo del sistema. Cinco fuentes de sesgo exigen mitigación: <strong>histórico</strong> (escuelas de élite dominan los datasets), <strong>representación</strong> (biotipos sub-representados), <strong>etiquetado</strong>, <strong>antropométrico</strong> y <strong>brecha de acceso</strong>.</p>
+      <p class="justicia-text" style="border-top:1px solid rgba(255,255,255,0.2); padding-top:14px; font-style:italic; color:var(--gold-light); font-family:'EB Garamond',serif; font-size:14.5px;">
+        "Las tecnologías deben ayudar a eliminar relaciones de dominación basadas en diferencias de poder, riqueza o conocimiento."
+      </p>
+      <p class="justicia-text" style="font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold); margin-top:8px;">— Declaración de Montréal</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 4. EVALUACIÓN DE RIESGOS (FMEA + matriz) ===================== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <div class="section-title">Evaluación de riesgos · Matriz e impactos</div>
+    <div class="section-sub">FMEA por principios de Fjeld · RPN = Severidad × Ocurrencia × Detección</div>
+  </div>
+
+  <div class="risks-grid">
+    <!-- ===== MAPA DE RIESGOS · CUADRANTE PROBABILIDAD × SEVERIDAD ===== -->
+    <div class="risk-map-wrap">
+      <div class="risk-map-title">Mapa de riesgos · Probabilidad × Severidad</div>
+      <div style="height:520px; display:flex; justify-content:center; align-items:center; overflow:hidden;">
+      <svg viewBox="-30 0 800 510" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" style="display:block;" xmlns="http://www.w3.org/2000/svg">
+        <!-- Fondo de cuadrantes (zonas) -->
+        <defs>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#EEEAE0" stroke-width="0.8"/>
+          </pattern>
+        </defs>
+        <rect x="80" y="30" width="640" height="400" fill="url(#grid)"/>
+        <!-- Zonas sutiles por cuadrante -->
+        <rect x="400" y="30"  width="320" height="200" fill="#9B2C2C" fill-opacity="0.045"/>
+        <rect x="80"  y="30"  width="320" height="200" fill="#B8893C" fill-opacity="0.04"/>
+        <rect x="400" y="230" width="320" height="200" fill="#B8893C" fill-opacity="0.04"/>
+        <rect x="80"  y="230" width="320" height="200" fill="#2F6F4E" fill-opacity="0.04"/>
+
+        <!-- Etiquetas de zona -->
+        <text x="560" y="52" text-anchor="middle" font-family="Inter, sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="#9B2C2C" fill-opacity="0.7">ZONA CRÍTICA</text>
+        <text x="240" y="52" text-anchor="middle" font-family="Inter, sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="#B8893C" fill-opacity="0.7">ALTA SEVERIDAD</text>
+        <text x="560" y="422" text-anchor="middle" font-family="Inter, sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="#B8893C" fill-opacity="0.7">ALTA PROBABILIDAD</text>
+        <text x="240" y="422" text-anchor="middle" font-family="Inter, sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="#2F6F4E" fill-opacity="0.7">ZONA ACEPTABLE</text>
+
+        <!-- Ejes -->
+        <line x1="80"  y1="30"  x2="80"  y2="430" stroke="#0F2235" stroke-width="2"/>
+        <line x1="80"  y1="430" x2="720" y2="430" stroke="#0F2235" stroke-width="2"/>
+        <!-- divisores centrales -->
+        <line x1="400" y1="30"  x2="400" y2="430" stroke="#0F2235" stroke-width="1" stroke-dasharray="4,4" opacity="0.4"/>
+        <line x1="80"  y1="230" x2="720" y2="230" stroke="#0F2235" stroke-width="1" stroke-dasharray="4,4" opacity="0.4"/>
+
+        <!-- Etiquetas de eje Y (Severidad) -->
+        <text x="60" y="38"  text-anchor="end" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#0F2235">Crítica</text>
+        <text x="60" y="238" text-anchor="end" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#0F2235">Media</text>
+        <text x="60" y="434" text-anchor="end" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#0F2235">Baja</text>
+
+        <!-- Etiquetas de eje X (Probabilidad) -->
+        <text x="80"  y="452" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#0F2235">Baja</text>
+        <text x="400" y="452" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#0F2235">Media</text>
+        <text x="720" y="452" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#0F2235">Alta</text>
+
+        <!-- Títulos de ejes -->
+        <text transform="translate(-12 230) rotate(-90)" text-anchor="middle" font-family="Inter, sans-serif" font-weight="800" font-size="14" letter-spacing="3" fill="#0F2235">SEVERIDAD →</text>
+        <text x="400" y="488" text-anchor="middle" font-family="Inter, sans-serif" font-weight="800" font-size="14" letter-spacing="3" fill="#0F2235">PROBABILIDAD →</text>
+
+        <!-- ====== BURBUJAS DE RIESGOS ====== -->
+        <!-- R1: Indefinición responsabilidad (alta prob, alta sev, RPN 378) -->
+        <g>
+          <circle cx="600" cy="80" r="32" fill="#9B2C2C" fill-opacity="0.18" stroke="#9B2C2C" stroke-width="2"/>
+          <text x="600" y="86" text-anchor="middle" font-family="'EB Garamond', serif" font-weight="700" font-size="22" fill="#9B2C2C">1</text>
+        </g>
+        <!-- R2: Uso secundario métricas (RPN 324) -->
+        <g>
+          <circle cx="560" cy="135" r="28" fill="#9B2C2C" fill-opacity="0.18" stroke="#9B2C2C" stroke-width="2"/>
+          <text x="560" y="141" text-anchor="middle" font-family="'EB Garamond', serif" font-weight="700" font-size="20" fill="#9B2C2C">2</text>
+        </g>
+        <!-- R3: Deslizamiento descriptivo → evaluativo (RPN 324) -->
+        <g>
+          <circle cx="640" cy="170" r="28" fill="#9B2C2C" fill-opacity="0.18" stroke="#9B2C2C" stroke-width="2"/>
+          <text x="640" y="176" text-anchor="middle" font-family="'EB Garamond', serif" font-weight="700" font-size="20" fill="#9B2C2C">3</text>
+        </g>
+        <!-- R4: Drift no detectado (RPN 294, media) -->
+        <g>
+          <circle cx="430" cy="210" r="24" fill="#B8893C" fill-opacity="0.18" stroke="#B8893C" stroke-width="2"/>
+          <text x="430" y="216" text-anchor="middle" font-family="'EB Garamond', serif" font-weight="700" font-size="18" fill="#B8893C">4</text>
+        </g>
+        <!-- R5: Dependencia acompañamiento remoto (RPN 294) -->
+        <g>
+          <circle cx="490" cy="270" r="22" fill="#B8893C" fill-opacity="0.18" stroke="#B8893C" stroke-width="2"/>
+          <text x="490" y="276" text-anchor="middle" font-family="'EB Garamond', serif" font-weight="700" font-size="18" fill="#B8893C">5</text>
+        </g>
+        <!-- R6: Brecha de acceso (RPN 280) -->
+        <g>
+          <circle cx="370" cy="165" r="26" fill="#9B2C2C" fill-opacity="0.15" stroke="#9B2C2C" stroke-width="2"/>
+          <text x="370" y="171" text-anchor="middle" font-family="'EB Garamond', serif" font-weight="700" font-size="20" fill="#9B2C2C">6</text>
+        </g>
+        <!-- R7: Caída de transmisión -->
+        <g>
+          <circle cx="250" cy="100" r="24" fill="#9B2C2C" fill-opacity="0.15" stroke="#9B2C2C" stroke-width="2"/>
+          <text x="250" y="106" text-anchor="middle" font-family="'EB Garamond', serif" font-weight="700" font-size="18" fill="#9B2C2C">7</text>
+        </g>
+        <!-- R8: Fuga del video clínico -->
+        <g>
+          <circle cx="195" cy="155" r="22" fill="#9B2C2C" fill-opacity="0.15" stroke="#9B2C2C" stroke-width="2"/>
+          <text x="195" y="161" text-anchor="middle" font-family="'EB Garamond', serif" font-weight="700" font-size="18" fill="#9B2C2C">8</text>
+        </g>
+        <!-- R9: Sesgo por escuela quirúrgica -->
+        <g>
+          <circle cx="450" cy="130" r="26" fill="#9B2C2C" fill-opacity="0.18" stroke="#9B2C2C" stroke-width="2"/>
+          <text x="450" y="136" text-anchor="middle" font-family="'EB Garamond', serif" font-weight="700" font-size="20" fill="#9B2C2C">9</text>
+        </g>
+        <!-- R10: Automation bias del mentor -->
+        <g>
+          <circle cx="310" cy="290" r="20" fill="#B8893C" fill-opacity="0.18" stroke="#B8893C" stroke-width="2"/>
+          <text x="310" y="296" text-anchor="middle" font-family="'EB Garamond', serif" font-weight="700" font-size="16" fill="#B8893C">10</text>
+        </g>
+
+        <!-- ====== OPORTUNIDADES ====== -->
+        <g>
+          <circle cx="180" cy="350" r="28" fill="#2F6F4E" fill-opacity="0.15" stroke="#2F6F4E" stroke-width="2"/>
+          <text x="180" y="356" text-anchor="middle" font-family="'EB Garamond', serif" font-weight="700" font-style="italic" font-size="16" fill="#2F6F4E">O₁</text>
+        </g>
+        <g>
+          <circle cx="285" cy="380" r="24" fill="#2F6F4E" fill-opacity="0.15" stroke="#2F6F4E" stroke-width="2"/>
+          <text x="285" y="386" text-anchor="middle" font-family="'EB Garamond', serif" font-weight="700" font-style="italic" font-size="15" fill="#2F6F4E">O₂</text>
+        </g>
+        <g>
+          <circle cx="130" cy="390" r="20" fill="#2F6F4E" fill-opacity="0.15" stroke="#2F6F4E" stroke-width="2"/>
+          <text x="130" y="396" text-anchor="middle" font-family="'EB Garamond', serif" font-weight="700" font-style="italic" font-size="14" fill="#2F6F4E">O₃</text>
+        </g>
+      </svg>
+      </div>
+
+      <!-- Leyenda compacta -->
+      <div class="risk-legend">
+        <div class="legend-row">
+          <span class="legend-bullet" style="background:#9B2C2C"></span>
+          <span class="legend-text"><strong>Riesgo crítico</strong> · Mitigación obligatoria por diseño</span>
+        </div>
+        <div class="legend-row">
+          <span class="legend-bullet" style="background:#B8893C"></span>
+          <span class="legend-text"><strong>Riesgo medio</strong> · Vigilancia continua</span>
+        </div>
+        <div class="legend-row">
+          <span class="legend-bullet" style="background:#2F6F4E"></span>
+          <span class="legend-text"><strong>Oportunidad</strong> · Beneficio esperado</span>
+        </div>
+        <div class="legend-row" style="margin-top:6px">
+          <span class="legend-text" style="font-size:11px;color:var(--muted);font-style:italic">Tamaño de burbuja = alcance del impacto</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FMEA · BARRAS HORIZONTALES ===== -->
+    <div class="fmea-card">
+      <div class="fmea-title">FMEA · Top 6 modos de falla · RPN</div>
+
+      <!-- Cada fila: número + texto + barra proporcional + valor -->
+      <div class="fmea-bar-row">
+        <div class="fmea-bar-num">1</div>
+        <div class="fmea-bar-content">
+          <div class="fmea-bar-label">
+            <span class="fmea-bar-name">Indefinición de responsabilidad ante guía remota</span>
+            <span class="fmea-bar-value">378</span>
+          </div>
+          <div class="fmea-bar-track">
+            <div class="fmea-bar-fill" style="width:100%;background:#9B2C2C"></div>
+          </div>
+          <div class="fmea-bar-tag">P2 · Responsabilidad</div>
+        </div>
+      </div>
+
+      <div class="fmea-bar-row">
+        <div class="fmea-bar-num">2</div>
+        <div class="fmea-bar-content">
+          <div class="fmea-bar-label">
+            <span class="fmea-bar-name">Uso secundario de métricas <em>(vigilancia)</em></span>
+            <span class="fmea-bar-value">324</span>
+          </div>
+          <div class="fmea-bar-track">
+            <div class="fmea-bar-fill" style="width:85.7%;background:#9B2C2C"></div>
+          </div>
+          <div class="fmea-bar-tag">P1 · Privacidad</div>
+        </div>
+      </div>
+
+      <div class="fmea-bar-row">
+        <div class="fmea-bar-num">3</div>
+        <div class="fmea-bar-content">
+          <div class="fmea-bar-label">
+            <span class="fmea-bar-name">Deslizamiento descriptivo → evaluativo</span>
+            <span class="fmea-bar-value">324</span>
+          </div>
+          <div class="fmea-bar-track">
+            <div class="fmea-bar-fill" style="width:85.7%;background:#9B2C2C"></div>
+          </div>
+          <div class="fmea-bar-tag">P7 · Responsabilidad profesional</div>
+        </div>
+      </div>
+
+      <div class="fmea-bar-row">
+        <div class="fmea-bar-num">4</div>
+        <div class="fmea-bar-content">
+          <div class="fmea-bar-label">
+            <span class="fmea-bar-name">Drift no detectado en modelos de fase</span>
+            <span class="fmea-bar-value">294</span>
+          </div>
+          <div class="fmea-bar-track">
+            <div class="fmea-bar-fill" style="width:77.8%;background:#B8893C"></div>
+          </div>
+          <div class="fmea-bar-tag">P3 · Seguridad</div>
+        </div>
+      </div>
+
+      <div class="fmea-bar-row">
+        <div class="fmea-bar-num">5</div>
+        <div class="fmea-bar-content">
+          <div class="fmea-bar-label">
+            <span class="fmea-bar-name">Dependencia del acompañamiento remoto</span>
+            <span class="fmea-bar-value">294</span>
+          </div>
+          <div class="fmea-bar-track">
+            <div class="fmea-bar-fill" style="width:77.8%;background:#B8893C"></div>
+          </div>
+          <div class="fmea-bar-tag">P6 · Control humano</div>
+        </div>
+      </div>
+
+      <div class="fmea-bar-row">
+        <div class="fmea-bar-num">6</div>
+        <div class="fmea-bar-content">
+          <div class="fmea-bar-label">
+            <span class="fmea-bar-name">Brecha de acceso por conectividad</span>
+            <span class="fmea-bar-value">280</span>
+          </div>
+          <div class="fmea-bar-track">
+            <div class="fmea-bar-fill" style="width:74.1%;background:#B8893C"></div>
+          </div>
+          <div class="fmea-bar-tag">P5 · Justicia</div>
+        </div>
+      </div>
+
+      <div class="fmea-formula">RPN = Severidad × Ocurrencia × Detección · Escala 1–1000</div>
+    </div>
+  </div>
+
+  <!-- ===== ÍNDICE DE RIESGOS Y OPORTUNIDADES (debajo del cuadrante) ===== -->
+  <div class="risk-index">
+    <div class="risk-index-col">
+      <div class="risk-index-h">Riesgos</div>
+      <div class="risk-index-grid">
+        <div class="ri-chip"><span class="ri-n" style="background:#9B2C2C">1</span>Indefinición de responsabilidad</div>
+        <div class="ri-chip"><span class="ri-n" style="background:#9B2C2C">2</span>Vigilancia del residente</div>
+        <div class="ri-chip"><span class="ri-n" style="background:#9B2C2C">3</span>Deslizamiento evaluativo</div>
+        <div class="ri-chip"><span class="ri-n" style="background:#B8893C">4</span>Drift no detectado</div>
+        <div class="ri-chip"><span class="ri-n" style="background:#B8893C">5</span>Dependencia del mentor</div>
+        <div class="ri-chip"><span class="ri-n" style="background:#9B2C2C">6</span>Brecha de acceso</div>
+        <div class="ri-chip"><span class="ri-n" style="background:#9B2C2C">7</span>Caída de transmisión</div>
+        <div class="ri-chip"><span class="ri-n" style="background:#9B2C2C">8</span>Fuga de video clínico</div>
+        <div class="ri-chip"><span class="ri-n" style="background:#9B2C2C">9</span>Sesgo por escuela quirúrgica</div>
+        <div class="ri-chip"><span class="ri-n" style="background:#B8893C">10</span>Automation bias del mentor</div>
+      </div>
+    </div>
+    <div class="risk-index-col">
+      <div class="risk-index-h" style="color:#2F6F4E">Oportunidades</div>
+      <div class="risk-index-grid">
+        <div class="ri-chip"><span class="ri-n" style="background:#2F6F4E;font-style:italic">O₁</span>Acceso democratizado a expertise</div>
+        <div class="ri-chip"><span class="ri-n" style="background:#2F6F4E;font-style:italic">O₂</span>Mejora de outcomes del paciente</div>
+        <div class="ri-chip"><span class="ri-n" style="background:#2F6F4E;font-style:italic">O₃</span>Trazabilidad pedagógica</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===================== 5. PLANES DE REMEDIACIÓN ===================== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <div class="section-title">Planes de remediación · Mitigación por eje</div>
+    <div class="section-sub">Cinco ejes complementarios — ninguno suficiente por sí solo</div>
+  </div>
+
+  <div class="mitigation-grid">
+    <div class="mit-card">
+      <div class="mit-icon-wrap"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <div class="mit-num">01</div>
+      <div class="mit-title">Diseño técnico</div>
+      <div class="mit-text">Métricas descriptivas por arquitectura · Latencia acotada · Cifrado E2E · Segregación de datos del residente respecto de RR.HH.</div>
+    </div>
+    <div class="mit-card">
+      <div class="mit-icon-wrap"><svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M6 6v14"/><path d="M18 6v14"/><line x1="3" y1="20" x2="21" y2="20"/></svg></div>
+      <div class="mit-num">02</div>
+      <div class="mit-title">Gobernanza</div>
+      <div class="mit-text">Contrato tripartito · Salvaguarda formal contra uso evaluativo · Comités de ética activos · Sunset clauses obligatorias en expansión</div>
+    </div>
+    <div class="mit-card">
+      <div class="mit-icon-wrap"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg></div>
+      <div class="mit-num">03</div>
+      <div class="mit-title">Datos &amp; modelos</div>
+      <div class="mit-text">Diversidad activa de escuelas y plataformas · Auditoría de equidad por subgrupo · Datasheets &amp; model cards públicas · Re-validación trimestral</div>
+    </div>
+    <div class="mit-card">
+      <div class="mit-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M17 11l2 2 4-4"/></svg></div>
+      <div class="mit-num">04</div>
+      <div class="mit-title">Operación clínica</div>
+      <div class="mit-text">Capacitación obligatoria · "Guía remota es recomendación, no orden" · Mentoría presencial coexistente · Sesiones autónomas programadas</div>
+    </div>
+    <div class="mit-card">
+      <div class="mit-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+      <div class="mit-num">05</div>
+      <div class="mit-title">Vigilancia continua</div>
+      <div class="mit-text">Reporte anual público de equidad · Canal anónimo para residentes · Despliegue progresivo en periféricos · Auditoría externa anual</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 6. PRIMEROS RESULTADOS ===================== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <div class="section-title">Primeros resultados · Datasheet y Model Card</div>
+    <div class="section-sub">Validación inicial del modelo de segmentación de fases · v1.0 · Q1 2026</div>
+  </div>
+
+  <div class="results-grid">
+    <div class="result-card">
+      <div class="result-num">2,500</div>
+      <div class="result-unit">procedimientos</div>
+      <div class="result-label">Dataset principal</div>
+      <div class="result-desc">Robóticos anonimizados de laparoscopia. Procedencia: EE.UU. 60% · Europa 25% · LatAm 10% · Asia 5%</div>
+    </div>
+    <div class="result-card">
+      <div class="result-num">0.91</div>
+      <div class="result-unit">accuracy de fase</div>
+      <div class="result-label">Segmentación</div>
+      <div class="result-desc">F1 macro: <strong>0.87</strong> · IoU: <strong>0.82</strong> · Latencia media: <strong>1.6 s</strong>. Modelo transformer-based de visión por computadora.</div>
+    </div>
+    <div class="result-card">
+      <div class="result-num">400</div>
+      <div class="result-unit">casos de evaluación</div>
+      <div class="result-label">Validación externa</div>
+      <div class="result-desc">Conjunto independiente no usado en entrenamiento, con estratificación por subgrupo y reporte con IC al 95%.</div>
+    </div>
+    <div class="result-card">
+      <div class="result-num">&lt;150<span style="font-size:24px;color:var(--teal)">ms</span></div>
+      <div class="result-unit">latencia objetivo</div>
+      <div class="result-label">SLA Técnico</div>
+      <div class="result-desc">Video &lt;150 ms · Audio &lt;50 ms · Disponibilidad 99.9% · Cifrado E2E · Conectividad mínima 50 Mbps simétricos.</div>
+    </div>
+  </div>
+
+  <!-- Usos previstos y contraindicados -->
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:18px">
+    <div style="background:var(--green-light); border-left:5px solid var(--green); padding:16px 22px; border-radius:0 8px 8px 0">
+      <div style="font-size:15px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:var(--green); margin-bottom:8px">✓ Usos previstos</div>
+      <p style="font-size:14px; line-height:1.55; color:var(--ink)"><strong>Entrenamiento de modelos de segmentación de fase</strong> · Derivación de métricas descriptivas · Apoyo a mentoría · Analítica descriptiva · Biblioteca de casos referenciales para preparación.</p>
+    </div>
+    <div style="background:var(--crimson-light); border-left:5px solid var(--crimson); padding:16px 22px; border-radius:0 8px 8px 0">
+      <div style="font-size:15px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:var(--crimson); margin-bottom:8px">✗ Usos contraindicados</div>
+      <p style="font-size:14px; line-height:1.55; color:var(--ink)"><strong>Evaluación individual o comparación inter-residentes</strong> · Predicción de outcomes clínicos del paciente · Decisiones quirúrgicas automáticas · Determinación de competencia · Cualquier uso no formativo.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 7. CONCLUSIONES ===================== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">7</div>
+    <div class="section-title">Conclusiones</div>
+    <div class="section-sub">La ética como propiedad de diseño, no como aditamento</div>
+  </div>
+
+  <div class="conclusion">
+    <div class="conc-quote">
+      "Una herramienta formativa legítima frente a un sistema de vigilancia con buena presentación: la diferencia es de diseño."
+      <span class="conc-quote-attr">Principio rector del proyecto</span>
+    </div>
+
+    <div class="conc-block">
+      <div class="conc-h"><div class="conc-h-num">i</div>Primacía del juicio humano</div>
+      <p>El principio <em>asistir, no decidir</em> es estructural: la IA mide y estructura el procedimiento, pero la interpretación, el juicio clínico y la responsabilidad permanecen siempre en el cirujano local y en el mentor humano. La autoridad ejecutiva nunca es algorítmica.</p>
+    </div>
+    <div class="conc-block">
+      <div class="conc-h"><div class="conc-h-num">ii</div>Salvaguardas contra <em>function creep</em></div>
+      <p>El riesgo más relevante es el deslizamiento de uso descriptivo a evaluativo. La mitigación exige salvaguarda contractual, segregación arquitectónica de datos, debido proceso para cualquier cambio de alcance y un canal de reporte anónimo independiente del programa.</p>
+    </div>
+    <div class="conc-block">
+      <div class="conc-h"><div class="conc-h-num">iii</div>Justicia como criterio de diseño</div>
+      <p>La equidad se entiende en tres dimensiones —derecho, acceso y oportunidad— y se traduce en despliegue priorizado en centros periféricos, auditoría de equidad por subgrupo y diversidad activa del dataset. La ética emerge de la combinación de diseño, gobernanza, datos y vigilancia continua.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 8. REFERENCIAS ===================== -->
+<div class="section" style="margin-bottom:0">
+  <div class="section-header">
+    <div class="section-num">8</div>
+    <div class="section-title">Referencias clave</div>
+    <div class="section-sub">APA 7.ª edición · Marco ético, técnico, regulatorio y caso de uso</div>
+  </div>
+
+  <div class="refs-grid">
+    <div class="ref-card">
+      <div class="ref-num">1</div>
+      <div class="ref-text"><strong>Beauchamp &amp; Childress</strong> (2019). <em>Principles of Biomedical Ethics</em> (8.ª ed.). Oxford University Press.</div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-num">2</div>
+      <div class="ref-text"><strong>Fjeld, J. et al.</strong> (2020). Principled Artificial Intelligence. <em>Berkman Klein Center</em>, 2020-1.</div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-num">3</div>
+      <div class="ref-text"><strong>Floridi, L. et al.</strong> (2018). AI4People — An Ethical Framework. <em>Minds and Machines</em>, 28(4), 689–707.</div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-num">4</div>
+      <div class="ref-text"><strong>Gebru, T. et al.</strong> (2021). Datasheets for Datasets. <em>Communications of the ACM</em>, 64(12), 86–92.</div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-num">5</div>
+      <div class="ref-text"><strong>Mitchell, M. et al.</strong> (2019). Model Cards for Model Reporting. <em>FAT* '19</em>, 220–229.</div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-num">6</div>
+      <div class="ref-text"><strong>Raji, I. D. et al.</strong> (2020). Closing the AI Accountability Gap (SMACTR). <em>FAccT '20</em>, 33–44.</div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-num">7</div>
+      <div class="ref-text"><strong>Soomro, N. A. et al.</strong> (2019). Systematic Review of Learning Curves in Robot-Assisted Surgery. <em>BJS Open</em>, 4(1), 27–44.</div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-num">8</div>
+      <div class="ref-text"><strong>Pfennig, M. et al.</strong> (2022). How Does Telementoring Impact Medical Education? <em>Am J Surg</em>, 224(3), 869–880.</div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-num">9</div>
+      <div class="ref-text"><strong>J&amp;J MedTech</strong> (2024). Polyphonic Digital Ecosystem. Connected surgery platform.</div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-num">10</div>
+      <div class="ref-text"><strong>NIST</strong> (2023). Artificial Intelligence Risk Management Framework (AI RMF 1.0). NIST AI 100-1.</div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-num">11</div>
+      <div class="ref-text"><strong>Parlamento Europeo</strong> (2024). Reglamento (UE) 2024/1689 — Ley de Inteligencia Artificial.</div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-num">12</div>
+      <div class="ref-text"><strong>FDA</strong> (2023). Predetermined Change Control Plan for AI/ML-Enabled Device Software (PCCP).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== FOOTER ===================== -->
+<div class="footer">
+  <div class="footer-pill"><svg viewBox="0 0 24 24" class="ic-stroke"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><div class="footer-pill-text">Seguridad y<br>privacidad</div></div>
+  <div class="footer-pill"><svg viewBox="0 0 24 24" class="ic-stroke"><circle cx="12" cy="8" r="4"/><path d="M4 22v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"/></svg><div class="footer-pill-text">Control humano<br>siempre</div></div>
+  <div class="footer-pill"><svg viewBox="0 0 24 24" class="ic-stroke"><path d="M3 6h18"/><path d="M6 6v14"/><path d="M18 6v14"/></svg><div class="footer-pill-text">Equidad y no<br>discriminación</div></div>
+  <div class="footer-pill"><svg viewBox="0 0 24 24" class="ic-stroke"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg><div class="footer-pill-text">Propósito<br>educativo</div></div>
+  <div class="footer-pill"><svg viewBox="0 0 24 24" class="ic-stroke"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><div class="footer-pill-text">Tecnología al<br>servicio del humano</div></div>
+  <div class="footer-pill"><svg viewBox="0 0 24 24" class="ic-stroke"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><div class="footer-pill-text">Diseño ético<br>por diseño</div></div>
+  <div class="footer-univ">
+    <div class="footer-univ-name">Universidad Panamericana · Campus Aguascalientes</div>
+    <div class="footer-univ-sub">Maestría en IA y Ciencia de Datos</div>
+  </div>
+</div>
+
+</body>
+</html>

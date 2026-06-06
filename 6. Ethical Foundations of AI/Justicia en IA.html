@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Infografía COMPAS</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #FFFFFF; }
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: #1A1A1A;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    width: 1080px;
+    margin: 0 auto;
+    padding: 64px 72px 56px;
+    background: #FFFFFF;
+  }
+
+  /* HEADER */
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #6B6B6B;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  .h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 56px;
+    font-weight: normal;
+    color: #1A1A1A;
+    line-height: 1.1;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+  }
+  .sub {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 22px;
+    color: #1F3864;
+    font-style: italic;
+    margin-bottom: 24px;
+  }
+  .accent-line {
+    width: 64px;
+    height: 3px;
+    background: #1F3864;
+    margin-bottom: 22px;
+    border-radius: 2px;
+  }
+  .team {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 48px;
+    letter-spacing: 0.2px;
+  }
+
+  /* SECTION */
+  .section { margin-bottom: 44px; }
+  .section-tag {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #1F3864;
+    font-weight: bold;
+    padding: 5px 14px;
+    border: 1.5px solid #1F3864;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 30px;
+    font-weight: normal;
+    color: #1A1A1A;
+    margin-bottom: 22px;
+    letter-spacing: -0.2px;
+  }
+
+  /* FLOW */
+  .flow {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .flow-step {
+    flex: 1;
+    background: #F4F6FA;
+    border-radius: 12px;
+    padding: 18px 12px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1A1A1A;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .flow-step svg { color: #1F3864; }
+  .flow-arr {
+    display: flex;
+    align-items: center;
+    color: #C0C7D4;
+  }
+  .lead {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.65;
+  }
+
+  /* PROBLEM CARDS */
+  .card {
+    background: #F4F6FA;
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 17px;
+    font-weight: bold;
+    color: #1A1A1A;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .card-title svg { color: #1F3864; flex-shrink: 0; }
+  .card-body {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.65;
+    margin-left: 38px;
+  }
+
+  /* STATS */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 18px 0;
+  }
+  .stat {
+    background: #FFFFFF;
+    border: 1px solid #E5E8EE;
+    border-radius: 12px;
+    padding: 22px 16px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 46px;
+    font-weight: bold;
+    color: #1F3864;
+    line-height: 1;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+  }
+  .stat-num.muted { color: #1A1A1A; }
+  .stat-lbl {
+    font-size: 12px;
+    color: #6B6B6B;
+    line-height: 1.4;
+  }
+
+  /* REMEDIES */
+  .grid3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .remedy {
+    background: #FFFFFF;
+    border: 1px solid #E5E8EE;
+    border-radius: 12px;
+    padding: 22px 20px;
+  }
+  .remedy svg {
+    color: #1F3864;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .remedy-title {
+    font-size: 15px;
+    font-weight: bold;
+    color: #1A1A1A;
+    margin-bottom: 6px;
+  }
+  .remedy-desc {
+    font-size: 12.5px;
+    color: #6B6B6B;
+    line-height: 1.5;
+  }
+
+  /* QUOTE */
+  .quote {
+    background: #1F3864;
+    border-radius: 16px;
+    padding: 36px 40px;
+    text-align: center;
+    margin: 36px 0 32px;
+  }
+  .quote-mark {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 72px;
+    color: rgba(255,255,255,0.35);
+    line-height: 0.5;
+    margin-bottom: 18px;
+    font-weight: bold;
+  }
+  .quote-text {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: #FFFFFF;
+    line-height: 1.5;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  /* REFS */
+  .refs {
+    border-top: 1px solid #E5E8EE;
+    padding-top: 22px;
+    font-size: 12px;
+    color: #6B6B6B;
+    line-height: 1.65;
+  }
+  .refs strong { font-weight: bold; color: #1A1A1A; }
+  .refs p { margin-bottom: 8px; }
+  .refs .url { color: #1F3864; font-family: monospace; font-size: 11.5px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="eyebrow">Ética para la ciencia de datos</div>
+  <h1 class="h1">El caso COMPAS</h1>
+  <div class="sub">Cuando un algoritmo decide tu libertad</div>
+  <div class="accent-line"></div>
+  <div class="team">Santiago Valdés Uriarte · Manuel Alejandro Serrano · Lino Tonatiuh Garcia · Mario Antonio Hernández · Alfredo Valdez Peralta</div>
+
+  <div class="section">
+    <div class="section-tag">Qué es</div>
+    <h2 class="h2">Un algoritmo que predice la reincidencia</h2>
+    <div class="flow">
+      <div class="flow-step">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="3" width="8" height="3" rx="1"/><path d="M9 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>
+        <span>137 preguntas</span>
+      </div>
+      <div class="flow-arr">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+      <div class="flow-step">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="1"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="2" x2="9" y2="5"/><line x1="15" y1="2" x2="15" y2="5"/><line x1="9" y1="19" x2="9" y2="22"/><line x1="15" y1="19" x2="15" y2="22"/><line x1="19" y1="9" x2="22" y2="9"/><line x1="19" y1="15" x2="22" y2="15"/><line x1="2" y1="9" x2="5" y2="9"/><line x1="2" y1="15" x2="5" y2="15"/></svg>
+        <span>Modelo COMPAS</span>
+      </div>
+      <div class="flow-arr">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+      <div class="flow-step">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+        <span>Puntaje 1–10</span>
+      </div>
+      <div class="flow-arr">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+      <div class="flow-step">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 13l-7.5 7.5a2.12 2.12 0 0 1-3-3L11 10"/><path d="M16 16l6-6"/><path d="M8 8l6-6"/><path d="M9 7l8 8"/><path d="M21 11l-8-8"/></svg>
+        <span>Decisión judicial</span>
+      </div>
+    </div>
+    <p class="lead">Desarrollado por la empresa Northpointe, COMPAS estima el riesgo de que una persona vuelva a delinquir. El puntaje se usó en EE. UU. para decidir libertad bajo fianza, sentencia y libertad condicional.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-tag">El problema</div>
+    <h2 class="h2">Dos fallas que vulneran derechos humanos</h2>
+
+    <div class="card">
+      <div class="card-title">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20l10 0"/><path d="M12 4v16"/><path d="M7 4l10 0"/><path d="M5 12l-2 -5h6l-2 5a3 3 0 0 1 -2 0z"/><path d="M19 12l-2 -5l-6 0l-2 5"/><line x1="3" y1="3" x2="21" y2="21"/></svg>
+        <span>Sesgo y discriminación racial</span>
+      </div>
+      <div class="card-body">El algoritmo reproducía sesgos históricos. Clasificaba erróneamente a personas afroamericanas como “alto riesgo” con mucha más frecuencia que a personas blancas, violando los derechos a la igualdad procesal y a la no discriminación.</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num">44.9%</div>
+        <div class="stat-lbl">Falsos positivos en acusados afroamericanos</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num muted">23.5%</div>
+        <div class="stat-lbl">Falsos positivos en acusados blancos</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">2×</div>
+        <div class="stat-lbl">Más probabilidad de ser marcados de riesgo violento</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        <span>Falta de transparencia · caja negra</span>
+      </div>
+      <div class="card-body">COMPAS es software privado protegido por propiedad intelectual. Ni el acusado, ni sus abogados, ni el juez podían saber cómo se calculaba el puntaje. Esto afecta el derecho a la defensa: nadie puede refutar una prueba matemática cuya lógica está oculta.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-tag">La solución</div>
+    <h2 class="h2">Seis acciones para remediarlo</h2>
+
+    <div class="grid3" style="margin-bottom: 14px;">
+      <div class="remedy">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <div class="remedy-title">Transparencia algorítmica</div>
+        <div class="remedy-desc">Abrir la caja negra y publicar variables, pesos y datos de entrenamiento.</div>
+      </div>
+      <div class="remedy">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5"/><line x1="12" y1="16" x2="12" y2="16.01"/></svg>
+        <div class="remedy-title">Explicabilidad</div>
+        <div class="remedy-desc">Que cada predicción pueda justificarse en lenguaje comprensible para la defensa.</div>
+      </div>
+      <div class="remedy">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+        <div class="remedy-title">Supervisión humana</div>
+        <div class="remedy-desc">El puntaje es un insumo, nunca el fundamento único de una sentencia.</div>
+      </div>
+    </div>
+    <div class="grid3">
+      <div class="remedy">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <div class="remedy-title">Auditoría del sistema</div>
+        <div class="remedy-desc">Pruebas externas y métricas de justicia por grupo a lo largo del ciclo de vida.</div>
+      </div>
+      <div class="remedy">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 13l-7.5 7.5a2.12 2.12 0 0 1-3-3L11 10"/><path d="M16 16l6-6"/><path d="M8 8l6-6"/><path d="M9 7l8 8"/><path d="M21 11l-8-8"/></svg>
+        <div class="remedy-title">Regulación jurídica</div>
+        <div class="remedy-desc">Marcos legales claros para el uso de IA en decisiones que afectan derechos.</div>
+      </div>
+      <div class="remedy">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        <div class="remedy-title">Derechos fundamentales</div>
+        <div class="remedy-desc">Debido proceso, presunción de inocencia, igualdad y dignidad por encima de la métrica.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote">
+    <div class="quote-mark">“</div>
+    <div class="quote-text">Un sistema técnicamente sofisticado puede vulnerar derechos humanos fundamentales cuando se construye sobre datos sesgados, opera como caja negra y se despliega sin supervisión adecuada.</div>
+  </div>
+
+  <div class="refs">
+    <p><strong>Roa Avella, Sanabria-Moyano &amp; Dinas-Hurtado (2022).</strong> Uso del algoritmo COMPAS en el proceso penal y los riesgos a los derechos humanos. <span class="url">redalyc.org/journal/6739/673971913008/html/</span></p>
+    <p><strong>BBC Mundo.</strong> ¿Cómo en Estados Unidos las matemáticas te pueden meter en prisión? <span class="url">bbc.com/mundo/noticias-37679463</span></p>
+  </div>
+
+</div>
+</body>
+</html>

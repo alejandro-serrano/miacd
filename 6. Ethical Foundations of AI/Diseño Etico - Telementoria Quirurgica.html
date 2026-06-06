@@ -1,0 +1,2148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Plataforma de Telementoría Intraoperatoria · Diseño Ético</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============================================
+     POSTER 36" x 48" (91cm x 122cm)
+     150 DPI → 5400 x 7200 px
+     ============================================ */
+  :root{
+    /* === COLORES PRINCIPALES (mantenidos) === */
+    --ink:#0E1A2B;          /* navy profundo */
+    --ink-2:#1F2D40;        /* navy intermedio */
+    --ink-3:#3D4A5C;        /* gris navy */
+    --paper:#FFFFFF;        /* BLANCO PURO */
+    --line:#1F2D40;
+    --rule:#0E1A2B;
+    --accent:#B0894A;       /* dorado tabaco, sobrio */
+    --accent-2:#8C2F2F;     /* rojo veneciano (riesgos) */
+    --green:#2E5D4A;        /* verde profundo (mitigaciones) */
+    --soft:#EFEAE0;         /* arena */
+    --soft-2:#E6DFD0;
+    --gold-tint:#F4ECDA;
+    --muted:#6B7180;
+
+    /* === COLORES SECUNDARIOS NUEVOS (armonizados) === */
+    --primary-blue:#2C4A6E;       /* azul navy editorial */
+    --primary-blue-dark:#1A3050;
+    --secondary-blue:#5A7DA3;     /* azul medio */
+    --purple-deep:#5B4B8C;        /* violeta editorial para XAI */
+    --rose-deep:#A04050;          /* rosa profundo */
+    --teal-deep:#3F7A6E;          /* teal */
+
+    /* === TINTES ULTRA-SUAVES PARA CARDS === */
+    --tint-blue:#EEF3F9;
+    --tint-blue-border:#C8D7E8;
+    --tint-green:#E9F2EE;
+    --tint-green-border:#C5DBD3;
+    --tint-amber:#FBF1E1;
+    --tint-amber-border:#ECD9B0;
+    --tint-rose:#F8E8EB;
+    --tint-rose-border:#E5C2C8;
+    --tint-purple:#F0EAF6;
+    --tint-purple-border:#CFC4E2;
+    --tint-sand:#FAF6EE;
+    --tint-sand-border:#E8DEC7;
+    --tint-gray:#F4F4F2;
+    --tint-gray-border:#E0E0DC;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:#3a3a3a;}
+  body{
+    font-family:'Inter Tight', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:geometricPrecision;
+    color:var(--ink);
+  }
+  .poster{
+    width:5400px;
+    height:7200px;
+    background:var(--paper);
+    position:relative;
+    overflow:hidden;
+    padding:60px 170px 60px 170px;
+  }
+
+  /* (sin textura — fondo blanco puro elegante) */
+
+  /* ===== HEADER ===== */
+  .top-strip{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:3px solid var(--ink);
+    padding-bottom:14px;
+    margin-bottom:22px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:22px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--ink-2);
+  }
+  .top-strip .right{text-align:right;}
+  .top-strip .dot{
+    display:inline-block;width:14px;height:14px;border-radius:50%;
+    background:var(--accent);margin:0 22px;vertical-align:middle;
+  }
+
+  .header{
+    display:grid;
+    grid-template-columns: 3fr 2fr;
+    gap:70px;
+    align-items:end;
+    margin-bottom:18px;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:26px;
+    letter-spacing:0.32em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:28px;
+    display:flex;align-items:center;gap:32px;
+  }
+  .eyebrow::after{
+    content:"";flex:1;height:2px;background:var(--accent);max-width:300px;opacity:.5;
+  }
+  h1.title{
+    font-family:'Fraunces', serif;
+    font-weight:400;
+    font-size:150px;
+    line-height:0.92;
+    letter-spacing:-0.025em;
+    color:var(--ink);
+  }
+  h1.title em{
+    font-style:italic;
+    font-weight:300;
+    color:var(--accent);
+  }
+  h1.title .lead{
+    font-weight:600;
+    display:block;
+  }
+  .subtitle{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:300;
+    font-size:38px;
+    line-height:1.25;
+    color:var(--ink-3);
+    margin-top:24px;
+    max-width:2400px;
+  }
+
+  .header-meta{
+    border-left:3px solid var(--ink);
+    padding-left:50px;
+  }
+  .header-meta .row{
+    margin-bottom:22px;
+  }
+  .header-meta .row:last-child{margin-bottom:0;}
+  .meta-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:20px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:8px;
+  }
+  .meta-value{
+    font-family:'Fraunces', serif;
+    font-size:32px;
+    font-weight:500;
+    line-height:1.2;
+    color:var(--ink);
+  }
+  .meta-value .small{
+    display:block;font-family:'Inter Tight', sans-serif;
+    font-weight:400;font-size:22px;color:var(--ink-3);margin-top:4px;
+  }
+
+  /* Banda principio rector */
+  .principle-band{
+    display:flex;align-items:center;gap:42px;
+    background:var(--ink);
+    color:var(--paper);
+    padding:18px 60px;
+    margin:14px 0 22px 0;
+    border-radius:0;
+  }
+  .principle-band .label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:22px;letter-spacing:0.28em;text-transform:uppercase;
+    color:var(--accent);
+    white-space:nowrap;
+  }
+  .principle-band .vline{
+    width:2px;height:75px;background:var(--accent);opacity:.6;
+  }
+  .principle-band .stmt{
+    font-family:'Fraunces', serif;
+    font-size:52px;
+    font-weight:500;
+    letter-spacing:-0.015em;
+    line-height:1.05;
+  }
+  .principle-band .stmt em{
+    font-style:italic;font-weight:300;color:var(--accent);
+  }
+  .principle-band .sub{
+    font-family:'Inter Tight', sans-serif;
+    font-size:26px;color:#C8C0AF;margin-top:12px;
+    font-style:normal;font-weight:400;
+  }
+
+  /* ===== SECCIONES (grid principal) ===== */
+  .grid-2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:48px;
+    margin-bottom:14px;
+  }
+  .grid-3{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:38px;
+    margin-bottom:14px;
+  }
+
+  .section-title{
+    display:flex;align-items:baseline;gap:26px;
+    margin-bottom:18px;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:12px;
+  }
+  .section-title .num{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:300;
+    font-size:68px;
+    color:var(--accent);
+    line-height:1;
+  }
+  .section-title h2{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:44px;
+    letter-spacing:-0.015em;
+    line-height:1;
+    color:var(--ink);
+  }
+  .section-title .kicker{
+    margin-left:auto;
+    font-family:'JetBrains Mono', monospace;
+    font-size:18px;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+
+  p.body{
+    font-size:25px;line-height:1.4;color:var(--ink-2);font-weight:400;
+    margin-bottom:14px;
+  }
+  p.lead{
+    font-family:'Fraunces', serif;
+    font-weight:400;
+    font-size:30px;
+    line-height:1.3;
+    color:var(--ink);
+    margin-bottom:14px;
+  }
+
+  /* ===== Listas elegantes ===== */
+  ul.clean{list-style:none;}
+  ul.clean li{
+    font-size:23px;line-height:1.42;color:var(--ink-2);
+    padding:11px 0 11px 38px;
+    border-bottom:1px solid rgba(14,26,43,0.1);
+    position:relative;
+  }
+  ul.clean li:last-child{border-bottom:none;}
+  ul.clean li::before{
+    content:"";
+    position:absolute;left:0;top:24px;
+    width:22px;height:2px;background:var(--accent);
+  }
+  ul.clean li strong{
+    color:var(--ink);font-weight:600;
+  }
+
+  /* ===== Stat block ===== */
+  .stat-row{
+    display:grid;grid-template-columns:repeat(3, 1fr);
+    gap:28px;margin:18px 0;
+  }
+  .stat{
+    text-align:left;
+    border-top:3px solid var(--ink);
+    padding-top:16px;
+  }
+  .stat .num{
+    font-family:'Fraunces', serif;
+    font-size:68px;font-weight:500;line-height:1;
+    color:var(--ink);
+    letter-spacing:-0.03em;
+  }
+  .stat .num span{color:var(--accent);}
+  .stat .lbl{
+    font-size:19px;color:var(--ink-3);margin-top:10px;line-height:1.3;
+  }
+
+  /* ===== Process steps ===== */
+  .steps{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;margin-top:18px;
+  }
+  .step{
+    border-top:3px solid var(--ink);
+    padding:14px 10px 0 0;
+  }
+  .step .n{
+    font-family:'JetBrains Mono', monospace;
+    font-size:18px;color:var(--accent);letter-spacing:.18em;
+    margin-bottom:8px;
+  }
+  .step .t{
+    font-family:'Fraunces', serif;
+    font-weight:500;font-size:22px;line-height:1.2;color:var(--ink);
+    margin-bottom:6px;
+  }
+  .step .d{font-size:17px;color:var(--ink-3);line-height:1.35;}
+
+  /* ===== Architecture diagram (SVG) ===== */
+  .arch-wrap{
+    background:var(--tint-blue);
+    padding:32px 32px;margin-top:18px;
+    border:1px solid var(--tint-blue-border);
+    border-radius:14px;
+  }
+  .arch-title{
+    font-family:'JetBrains Mono', monospace;
+    font-size:18px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--primary-blue);margin-bottom:18px;
+  }
+
+  /* ===== Pull quote ===== */
+  .pullquote{
+    border-left:6px solid var(--accent);
+    padding:18px 0 18px 32px;
+    margin:28px 0;
+  }
+  .pullquote p{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:300;
+    font-size:32px;
+    line-height:1.3;
+    color:var(--ink);
+  }
+  .pullquote .src{
+    font-family:'JetBrains Mono', monospace;
+    font-size:18px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--muted);
+    margin-top:10px;
+  }
+
+  /* ===== Concerns grid ===== */
+  .concerns{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:16px;margin-top:14px;
+  }
+  .concern{
+    background:var(--tint-blue);
+    border:1px solid var(--tint-blue-border);
+    border-radius:12px;
+    padding:24px 22px;
+    position:relative;
+  }
+  .concern.alta{background:var(--tint-rose);border-color:var(--tint-rose-border);}
+  .concern.media{background:var(--tint-amber);border-color:var(--tint-amber-border);}
+  .concern .ico-wrap{
+    width:46px;height:46px;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--paper);border-radius:10px;
+    margin-bottom:14px;
+    border:1px solid rgba(14,26,43,0.08);
+  }
+  .concern.alta .ico-wrap svg{color:var(--accent-2);}
+  .concern.media .ico-wrap svg{color:var(--accent);}
+  .concern .ico-wrap svg{
+    width:26px;height:26px;
+    color:var(--primary-blue);
+    stroke-width:1.6;fill:none;stroke:currentColor;
+  }
+  .concern .badge{
+    position:absolute;top:-11px;right:16px;
+    background:var(--paper);
+    padding:3px 9px;border-radius:6px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:14px;letter-spacing:.22em;
+    color:var(--accent-2);
+    border:1px solid var(--tint-rose-border);
+  }
+  .concern.media .badge{color:var(--accent);border-color:var(--tint-amber-border);}
+  .concern .n{
+    font-family:'Fraunces', serif;font-style:italic;font-weight:300;
+    font-size:30px;color:var(--accent);line-height:1;margin-bottom:6px;
+  }
+  .concern .t{
+    font-family:'Fraunces', serif;
+    font-weight:600;font-size:22px;line-height:1.15;color:var(--ink);
+    margin-bottom:8px;
+  }
+  .concern .d{
+    font-size:17px;line-height:1.4;color:var(--ink-3);
+  }
+
+  /* ===== FMEA table ===== */
+  table.fmea{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:18px;
+    font-size:20px;
+  }
+  table.fmea th{
+    text-align:left;
+    font-family:'JetBrains Mono', monospace;
+    font-size:16px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--muted);
+    padding:11px 12px;
+    border-bottom:2px solid var(--ink);
+    font-weight:500;
+  }
+  table.fmea td{
+    padding:14px 12px;
+    border-bottom:1px solid rgba(14,26,43,0.12);
+    vertical-align:top;
+    line-height:1.32;
+    color:var(--ink-2);
+  }
+  table.fmea td.principle{
+    font-family:'JetBrains Mono', monospace;
+    font-size:17px;color:var(--accent);font-weight:500;
+    white-space:nowrap;
+  }
+  table.fmea td.fail{font-weight:600;color:var(--ink);}
+  table.fmea td.rpn{
+    font-family:'Fraunces', serif;
+    font-size:28px;font-weight:600;color:var(--ink);
+    text-align:right;
+    width:100px;
+  }
+  table.fmea tr.high td.rpn{color:var(--accent-2);}
+
+  /* ===== Risk Heatmap ===== */
+  .heatmap-wrap{
+    margin-top:18px;
+  }
+
+  /* ===== Mitigaciones - cards ===== */
+  .mitig{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:16px;
+    margin-top:14px;
+  }
+  .mitig-card{
+    border-top:4px solid var(--green);
+    padding-top:12px;
+  }
+  .mitig-card .n{
+    font-family:'JetBrains Mono', monospace;
+    font-size:17px;color:var(--green);letter-spacing:.18em;
+    margin-bottom:8px;
+  }
+  .mitig-card .t{
+    font-family:'Fraunces', serif;
+    font-weight:600;font-size:21px;color:var(--ink);
+    line-height:1.18;margin-bottom:10px;
+  }
+  .mitig-card .d{
+    font-size:16px;line-height:1.4;color:var(--ink-3);
+  }
+
+  /* ===== Resultados ===== */
+  .results{
+    display:grid;
+    grid-template-columns:1.2fr 1fr;
+    gap:50px;
+    margin-top:10px;
+  }
+  .res-stats{
+    display:grid;grid-template-columns:1fr 1fr;gap:18px;
+  }
+  .res-stat{
+    border-top:3px solid var(--ink);
+    padding-top:10px;
+  }
+  .res-stat .lbl{
+    font-family:'JetBrains Mono', monospace;
+    font-size:14px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:6px;
+  }
+  .res-stat .v{
+    font-family:'Fraunces', serif;
+    font-size:42px;font-weight:600;line-height:1;
+    color:var(--ink);
+  }
+  .res-stat .v small{
+    font-size:20px;color:var(--accent);font-weight:400;
+  }
+  .res-stat .d{font-size:15px;color:var(--ink-3);margin-top:4px;line-height:1.4;}
+
+  /* ===== Conclusiones ===== */
+  .conclusions{
+    background:var(--ink);
+    color:var(--paper);
+    padding:18px 80px 22px 80px;
+    margin:14px -170px 0 -170px;
+    position:relative;
+  }
+  .conclusions .section-title{border-bottom-color:var(--accent);}
+  .conclusions .section-title .num{color:var(--accent);}
+  .conclusions .section-title h2{color:var(--paper);}
+  .conclusions .section-title .kicker{color:#C8C0AF;}
+  .conclusions p.body{color:#D8D2C2;}
+  .conc-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:26px;
+    margin-top:10px;
+  }
+  .conc{
+    border-top:3px solid var(--accent);
+    padding-top:14px;
+  }
+  .conc .n{
+    font-family:'Fraunces', serif;
+    font-style:italic;font-weight:300;
+    font-size:38px;color:var(--accent);line-height:1;margin-bottom:10px;
+  }
+  .conc .t{
+    font-family:'Fraunces', serif;
+    font-weight:500;font-size:22px;line-height:1.2;color:var(--paper);
+    margin-bottom:10px;
+  }
+  .conc .d{font-size:18px;line-height:1.45;color:#C8C0AF;}
+
+  /* ===== Footer / referencias ===== */
+  .footer{
+    margin-top:14px;
+    border-top:3px solid var(--ink);
+    padding-top:16px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:50px;
+  }
+  .refs{
+    font-size:13px;line-height:1.4;color:var(--ink-3);
+  }
+  .refs h3{
+    font-family:'JetBrains Mono', monospace;
+    font-size:16px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--ink);margin-bottom:10px;font-weight:500;
+  }
+  .refs ol{padding-left:22px;}
+  .refs li{margin-bottom:4px;}
+  .refs li::marker{color:var(--accent);font-weight:600;}
+  .institutional{
+    text-align:right;
+  }
+  .institutional .uni{
+    font-family:'Fraunces', serif;
+    font-weight:600;font-size:28px;line-height:1.2;color:var(--ink);
+  }
+  .institutional .prog{
+    font-size:18px;color:var(--ink-3);margin-top:8px;line-height:1.4;
+  }
+  .institutional .date{
+    font-family:'JetBrains Mono', monospace;
+    font-size:18px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--accent);margin-top:18px;
+  }
+
+  /* ===== Marcas / sello ===== */
+  .seal{
+    position:absolute;
+    top:90px;right:170px;
+    width:170px;height:170px;
+    border:2px solid var(--ink);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    transform:rotate(-8deg);
+    color:var(--ink);
+  }
+  .seal-inner{
+    text-align:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;letter-spacing:.2em;text-transform:uppercase;
+    line-height:1.3;
+  }
+  .seal-inner .mark{
+    font-family:'Fraunces', serif;
+    font-style:italic;font-weight:300;
+    font-size:42px;color:var(--accent);
+    display:block;margin:4px 0;
+  }
+
+  /* ===== Big numbered marker ===== */
+  .corner-mark{
+    position:absolute;
+    top:60px;left:170px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:18px;letter-spacing:.32em;
+    color:var(--muted);
+    text-transform:uppercase;
+  }
+
+  /* ===== Legal table ===== */
+  .legal{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+    margin-top:18px;
+    border-top:2px solid var(--ink);
+    border-bottom:2px solid var(--ink);
+  }
+  .legal .col{
+    padding:18px 18px;
+    border-right:1px solid rgba(14,26,43,0.15);
+  }
+  .legal .col:last-child{border-right:none;}
+  .legal .col h4{
+    font-family:'JetBrains Mono', monospace;
+    font-size:18px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:12px;font-weight:500;
+  }
+  .legal .col ul{list-style:none;}
+  .legal .col li{
+    font-size:17px;line-height:1.35;color:var(--ink-2);
+    padding:6px 0 6px 18px;
+    position:relative;
+    border-bottom:1px solid rgba(14,26,43,0.08);
+  }
+  .legal .col li:last-child{border-bottom:none;}
+  .legal .col li::before{
+    content:"";position:absolute;left:0;top:14px;
+    width:10px;height:1px;background:var(--accent);
+  }
+  .legal .col li strong{color:var(--ink);font-weight:600;}
+
+  /* ===== Stakeholder map mini ===== */
+  .stakeholders{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;margin-top:18px;
+  }
+  .stk{
+    text-align:center;
+    padding:14px 10px;
+    border:1px solid rgba(14,26,43,0.15);
+    background:var(--paper);
+  }
+  .stk.center{
+    background:var(--ink);color:var(--paper);
+    border-color:var(--ink);
+  }
+  .stk .role{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:6px;
+  }
+  .stk .name{
+    font-family:'Fraunces', serif;
+    font-size:17px;font-weight:500;line-height:1.2;color:var(--ink);
+  }
+  .stk.center .name{color:var(--paper);}
+  .stk.center .role{color:var(--accent);}
+
+  /* ===== Iconografía minimal con SVG inline (clases utility) ===== */
+  .ico{
+    width:42px;height:42px;
+    display:inline-block;vertical-align:middle;margin-right:14px;
+    stroke:var(--ink);stroke-width:1.5;fill:none;
+  }
+
+  /* ============================================
+     NUEVOS COMPONENTES VISUALES
+  ============================================= */
+
+  .card{
+    background:var(--paper);
+    border:1.5px solid var(--tint-gray-border);
+    border-radius:22px;
+    padding:18px 22px;
+    position:relative;
+  }
+  .card.blue{background:var(--tint-blue);border-color:var(--tint-blue-border);}
+  .card.green{background:var(--tint-green);border-color:var(--tint-green-border);}
+  .card.amber{background:var(--tint-amber);border-color:var(--tint-amber-border);}
+  .card.rose{background:var(--tint-rose);border-color:var(--tint-rose-border);}
+  .card.purple{background:var(--tint-purple);border-color:var(--tint-purple-border);}
+  .card.sand{background:var(--tint-sand);border-color:var(--tint-sand-border);}
+  .card.gray{background:var(--tint-gray);border-color:var(--tint-gray-border);}
+  .card.dark{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+
+  /* === Card header con icono y título === */
+  .card-head{
+    display:flex;align-items:center;gap:12px;
+    margin-bottom:8px;
+  }
+  .card-icon{
+    width:50px;height:50px;
+    border-radius:14px;
+    background:var(--paper);
+    border:1.5px solid var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .card.blue .card-icon{background:var(--paper);border-color:var(--primary-blue);}
+  .card.green .card-icon{background:var(--paper);border-color:var(--green);}
+  .card.amber .card-icon{background:var(--paper);border-color:var(--accent);}
+  .card.rose .card-icon{background:var(--paper);border-color:var(--accent-2);}
+  .card.purple .card-icon{background:var(--paper);border-color:var(--purple-deep);}
+  .card.sand .card-icon{background:var(--paper);border-color:var(--accent);}
+  .card.dark .card-icon{background:var(--ink);border-color:var(--accent);}
+  .card-icon svg{
+    width:34px;height:34px;
+    stroke:var(--ink);stroke-width:1.4;fill:none;
+    stroke-linecap:round;stroke-linejoin:round;
+  }
+  .card.blue .card-icon svg{stroke:var(--primary-blue);}
+  .card.green .card-icon svg{stroke:var(--green);}
+  .card.amber .card-icon svg{stroke:var(--accent);}
+  .card.rose .card-icon svg{stroke:var(--accent-2);}
+  .card.purple .card-icon svg{stroke:var(--purple-deep);}
+  .card.sand .card-icon svg{stroke:var(--accent);}
+  .card.dark .card-icon svg{stroke:var(--accent);}
+  .card-title{
+    font-family:'Fraunces', serif;
+    font-weight:600;font-size:23px;line-height:1.15;color:var(--ink);
+  }
+  .card.dark .card-title{color:var(--paper);}
+  .card-body{
+    font-size:18px;line-height:1.42;color:var(--ink-3);
+  }
+  .card.dark .card-body{color:#D8D2C2;}
+  .card-body strong{color:var(--ink);font-weight:600;}
+  .card.dark .card-body strong{color:var(--paper);}
+
+  /* === Mini tag pill === */
+  .pill{
+    display:inline-block;
+    padding:4px 12px;
+    border-radius:20px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    font-weight:500;
+  }
+  .pill.alta{background:var(--accent-2);color:var(--paper);}
+  .pill.media{background:var(--accent);color:var(--paper);}
+  .pill.baja{background:var(--green);color:var(--paper);}
+  .pill.info{background:var(--primary-blue);color:var(--paper);}
+
+  /* === Bloque de concepto con icono grande circular === */
+  .concept-row{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:18px;
+    margin-top:18px;
+  }
+  .concept{
+    text-align:center;
+    padding:8px 6px;
+  }
+  .concept-ico{
+    width:60px;height:60px;
+    margin:0 auto 8px;
+    border-radius:16px;
+    background:var(--tint-blue);
+    border:1.5px solid var(--primary-blue);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .concept-ico svg{
+    width:32px;height:32px;
+    stroke:var(--primary-blue);stroke-width:1.5;fill:none;
+    stroke-linecap:round;stroke-linejoin:round;
+  }
+  .concept.green .concept-ico{background:var(--tint-green);border-color:var(--green);}
+  .concept.green .concept-ico svg{stroke:var(--green);}
+  .concept.amber .concept-ico{background:var(--tint-amber);border-color:var(--accent);}
+  .concept.amber .concept-ico svg{stroke:var(--accent);}
+  .concept.rose .concept-ico{background:var(--tint-rose);border-color:var(--accent-2);}
+  .concept.rose .concept-ico svg{stroke:var(--accent-2);}
+  .concept.purple .concept-ico{background:var(--tint-purple);border-color:var(--purple-deep);}
+  .concept.purple .concept-ico svg{stroke:var(--purple-deep);}
+  .concept-title{
+    font-family:'Fraunces', serif;
+    font-weight:600;font-size:18px;line-height:1.18;color:var(--ink);
+    margin-bottom:3px;
+  }
+  .concept-desc{
+    font-size:13px;line-height:1.35;color:var(--ink-3);
+  }
+
+  /* === Flujo horizontal con flechas (3-4 pasos) === */
+  .flow{
+    display:flex;
+    align-items:stretch;
+    gap:0;
+    margin-top:14px;
+  }
+  .flow-step{
+    flex:1;
+    background:var(--tint-blue);
+    border:1.5px solid var(--tint-blue-border);
+    padding:12px 12px;
+    text-align:center;
+    position:relative;
+    border-radius:16px;
+  }
+  .flow-step.s2{background:var(--tint-amber);border-color:var(--tint-amber-border);}
+  .flow-step.s3{background:var(--tint-green);border-color:var(--tint-green-border);}
+  .flow-step.s4{background:var(--tint-purple);border-color:var(--tint-purple-border);}
+  .flow-arrow{
+    align-self:center;
+    width:28px;height:28px;
+    flex-shrink:0;
+    margin:0 -4px;
+    z-index:2;
+    background:var(--paper);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    border:1.5px solid var(--ink);
+  }
+  .flow-arrow::after{
+    content:"→";
+    font-family:'Fraunces', serif;
+    font-size:18px;color:var(--ink);font-weight:600;
+  }
+  .flow-step .step-num{
+    font-family:'JetBrains Mono', monospace;
+    font-size:14px;letter-spacing:.18em;color:var(--primary-blue);
+    margin-bottom:8px;font-weight:600;
+  }
+  .flow-step.s2 .step-num{color:var(--accent);}
+  .flow-step.s3 .step-num{color:var(--green);}
+  .flow-step.s4 .step-num{color:var(--purple-deep);}
+  .flow-step .step-ico{
+    width:50px;height:50px;margin:0 auto 8px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .flow-step .step-ico svg{
+    width:44px;height:44px;
+    stroke:var(--primary-blue);stroke-width:1.6;fill:none;
+    stroke-linecap:round;stroke-linejoin:round;
+  }
+  .flow-step.s2 .step-ico svg{stroke:var(--accent);}
+  .flow-step.s3 .step-ico svg{stroke:var(--green);}
+  .flow-step.s4 .step-ico svg{stroke:var(--purple-deep);}
+  .flow-step .step-t{
+    font-family:'Fraunces', serif;
+    font-weight:600;font-size:20px;line-height:1.2;color:var(--ink);
+    margin-bottom:5px;
+  }
+  .flow-step .step-d{
+    font-size:15px;line-height:1.35;color:var(--ink-3);
+  }
+
+  /* === Bloque de número grande tipo "stat hero" === */
+  .stat-hero{
+    background:var(--tint-sand);
+    border:1.5px solid var(--tint-sand-border);
+    border-radius:20px;
+    padding:22px 22px;
+    text-align:center;
+  }
+  .stat-hero .v{
+    font-family:'Fraunces', serif;
+    font-size:64px;font-weight:600;line-height:1;
+    color:var(--accent);
+    letter-spacing:-0.02em;
+  }
+  .stat-hero .v small{
+    font-size:32px;color:var(--ink);font-weight:500;margin-left:2px;
+  }
+  .stat-hero .l{
+    font-family:'JetBrains Mono', monospace;
+    font-size:14px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--ink-3);margin-top:10px;
+  }
+
+  /* === Block quote / nota inline en banda === */
+  .note-band{
+    background:var(--tint-blue);
+    border:1.5px solid var(--tint-blue-border);
+    border-left:5px solid var(--primary-blue);
+    padding:16px 24px;
+    margin:16px 0;
+    border-radius:0 18px 18px 0;
+  }
+  .note-band .lbl{
+    font-family:'JetBrains Mono', monospace;
+    font-size:14px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--primary-blue);font-weight:600;margin-bottom:6px;
+  }
+  .note-band p{
+    font-size:21px;line-height:1.4;color:var(--ink);
+  }
+  .note-band.warn{background:var(--tint-rose);border-left-color:var(--accent-2);}
+  .note-band.warn .lbl{color:var(--accent-2);}
+  .note-band.ok{background:var(--tint-green);border-left-color:var(--green);}
+  .note-band.ok .lbl{color:var(--green);}
+
+  /* === Bloque "Cómo funciona" tipo diagrama vertical === */
+  .how-it-works{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+    margin-top:18px;
+  }
+  .how-block{
+    background:var(--tint-gray);
+    border:1.5px solid var(--tint-gray-border);
+    border-radius:10px;
+    padding:20px;
+  }
+  .how-block .hb-head{
+    display:flex;align-items:center;gap:12px;
+    margin-bottom:12px;
+  }
+  .how-block .hb-num{
+    width:36px;height:36px;
+    border-radius:50%;
+    background:var(--primary-blue);color:var(--paper);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces', serif;
+    font-weight:600;font-size:20px;
+    flex-shrink:0;
+  }
+  .how-block .hb-t{
+    font-family:'Fraunces', serif;
+    font-weight:600;font-size:21px;color:var(--ink);
+    line-height:1.2;
+  }
+  .how-block .hb-d{
+    font-size:17px;line-height:1.42;color:var(--ink-3);
+  }
+  .how-block.green .hb-num{background:var(--green);}
+  .how-block.amber .hb-num{background:var(--accent);}
+  .how-block.rose .hb-num{background:var(--accent-2);}
+  .how-block.purple .hb-num{background:var(--purple-deep);}
+
+  /* Spacers */
+  .mt-xl{margin-top:14px;}
+  .mt-lg{margin-top:10px;}
+
+  /* === Diagrama de ciclo de vida (6 etapas) === */
+  .lifecycle{
+    margin-top:8px;
+    background:var(--tint-gray);
+    border:1.5px solid var(--tint-gray-border);
+    border-radius:20px;
+    padding:12px 22px 14px 22px;
+  }
+  .lifecycle-title{
+    font-family:'JetBrains Mono', monospace;
+    font-size:14px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--ink-3);margin-bottom:10px;
+  }
+  .lifecycle-row{
+    display:grid;
+    grid-template-columns:repeat(6, 1fr);
+    gap:8px;
+    position:relative;
+  }
+  .lc-stage{
+    background:var(--paper);
+    border:1.5px solid var(--primary-blue);
+    border-radius:12px;
+    padding:10px 8px;
+    text-align:center;
+  }
+  .lc-stage .step{
+    width:24px;height:24px;
+    border-radius:50%;
+    background:var(--primary-blue);
+    color:var(--paper);
+    display:inline-flex;align-items:center;justify-content:center;
+    font-family:'Fraunces', serif;
+    font-weight:600;font-size:14px;
+    margin-bottom:4px;
+  }
+  .lc-stage .t{
+    font-family:'Fraunces', serif;
+    font-weight:600;font-size:15px;line-height:1.18;color:var(--ink);
+    margin-bottom:3px;
+  }
+  .lc-stage .eth{
+    background:var(--tint-green);
+    border:1px solid var(--green);
+    border-radius:6px;
+    padding:5px 4px;
+    font-size:11px;line-height:1.3;color:var(--green);
+    font-weight:500;
+    margin-top:4px;
+  }
+  .lc-arrow{
+    position:absolute;
+    top:50%;
+    width:14px;height:14px;
+    background:var(--paper);
+    border-right:2px solid var(--primary-blue);
+    border-top:2px solid var(--primary-blue);
+    transform:translateY(-50%) rotate(45deg);
+    z-index:3;
+  }
+
+  /* === Risk plot (probabilidad × impacto, estilo simple del documento) === */
+  .risk-plot{
+    background:var(--tint-sand);
+    border:1.5px solid var(--tint-sand-border);
+    border-radius:24px;
+    padding:24px;
+    margin-top:14px;
+  }
+  .risk-plot-title{
+    font-family:'JetBrains Mono', monospace;
+    font-size:16px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--ink-3);margin-bottom:14px;text-align:center;
+  }
+
+  /* === Tarjeta tipo "info chip" inline === */
+  .info-chip{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:10px 18px;
+    border-radius:24px;
+    background:var(--tint-blue);
+    border:1.5px solid var(--tint-blue-border);
+    font-size:18px;color:var(--ink);
+    font-weight:500;
+  }
+  .info-chip .dot-chip{
+    width:10px;height:10px;border-radius:50%;
+    background:var(--primary-blue);
+  }
+  .info-chip.green{background:var(--tint-green);border-color:var(--tint-green-border);}
+  .info-chip.green .dot-chip{background:var(--green);}
+  .info-chip.amber{background:var(--tint-amber);border-color:var(--tint-amber-border);}
+  .info-chip.amber .dot-chip{background:var(--accent);}
+  .info-chip.rose{background:var(--tint-rose);border-color:var(--tint-rose-border);}
+  .info-chip.rose .dot-chip{background:var(--accent-2);}
+
+  /* === SI/NO bloques claros para la sección 2 === */
+  .si-no-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    margin-top:16px;
+  }
+  .sn-card{
+    border-radius:22px;
+    padding:24px 28px;
+    border:1.5px solid;
+  }
+  .sn-card.si{
+    background:var(--tint-green);
+    border-color:var(--green);
+  }
+  .sn-card.no{
+    background:var(--tint-rose);
+    border-color:var(--accent-2);
+  }
+  .sn-card .sn-head{
+    display:flex;align-items:center;gap:14px;
+    margin-bottom:14px;
+  }
+  .sn-card .sn-mark{
+    width:54px;height:54px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces', serif;
+    font-weight:600;font-size:30px;
+    color:var(--paper);
+  }
+  .sn-card.si .sn-mark{background:var(--green);}
+  .sn-card.no .sn-mark{background:var(--accent-2);}
+  .sn-card .sn-title{
+    font-family:'Fraunces', serif;
+    font-weight:600;font-size:30px;color:var(--ink);
+    line-height:1.1;
+  }
+  .sn-card .sn-list{
+    list-style:none;font-size:22px;line-height:1.5;color:var(--ink-2);
+  }
+  .sn-card .sn-list li{
+    padding:7px 0;
+  }
+  .sn-card.si .sn-list li::before{content:"✓ ";color:var(--green);font-weight:700;font-size:24px;}
+  .sn-card.no .sn-list li::before{content:"× ";color:var(--accent-2);font-weight:700;font-size:24px;}
+
+  /* === Floridi panel (5 principios) === */
+  .floridi-panel{
+    background:var(--ink);
+    color:var(--paper);
+    border-radius:22px;
+    padding:20px 28px 22px 28px;
+    margin-top:14px;
+  }
+  .floridi-head{
+    display:grid;
+    grid-template-columns:1.2fr 1fr;
+    gap:30px;
+    align-items:end;
+    margin-bottom:16px;
+    padding-bottom:14px;
+    border-bottom:1.5px solid rgba(176,137,74,0.4);
+  }
+  .floridi-eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:14px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:6px;
+  }
+  .floridi-title{
+    font-family:'Fraunces', serif;
+    font-weight:500;font-size:30px;line-height:1.1;color:var(--paper);
+    letter-spacing:-0.01em;
+  }
+  .floridi-caption{
+    font-size:15px;line-height:1.4;color:#C8C0AF;
+  }
+  .floridi-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:12px;
+  }
+  .floridi-card{
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(176,137,74,0.4);
+    border-radius:16px;
+    padding:12px 10px;
+    text-align:center;
+  }
+  .floridi-ico{
+    width:50px;height:50px;
+    margin:0 auto 8px;
+    border-radius:14px;
+    background:var(--paper);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .floridi-ico svg{
+    width:28px;height:28px;
+    stroke:var(--ink);stroke-width:1.6;fill:none;
+    stroke-linecap:round;stroke-linejoin:round;
+  }
+  .floridi-card.f-bene .floridi-ico{background:#F4ECDA;}
+  .floridi-card.f-bene .floridi-ico svg{stroke:var(--accent);}
+  .floridi-card.f-nomal .floridi-ico{background:#E9F2EE;}
+  .floridi-card.f-nomal .floridi-ico svg{stroke:var(--green);}
+  .floridi-card.f-auto .floridi-ico{background:#EEF3F9;}
+  .floridi-card.f-auto .floridi-ico svg{stroke:var(--primary-blue);}
+  .floridi-card.f-just .floridi-ico{background:#F0EAF6;}
+  .floridi-card.f-just .floridi-ico svg{stroke:var(--purple-deep);}
+  .floridi-card.f-expl .floridi-ico{background:#F8E8EB;}
+  .floridi-card.f-expl .floridi-ico svg{stroke:var(--accent-2);}
+  .floridi-name{
+    font-family:'Fraunces', serif;
+    font-weight:600;font-size:20px;color:var(--paper);
+    line-height:1.15;margin-bottom:3px;
+  }
+  .floridi-tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:8px;
+  }
+  .floridi-app{
+    font-size:14px;line-height:1.35;color:#D8D2C2;
+  }
+
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <div class="corner-mark">UP · MIACD · 2026 / MAY</div>
+
+  <!-- ============================================
+       TOP STRIP
+  ============================================= -->
+  <div class="top-strip" style="margin-top:24px;">
+    <div>Fundamentos Antropológicos y Éticos de la IA <span class="dot"></span> Proyecto Final</div>
+    <div class="right">Diseño ético <span class="dot"></span> Análisis de impactos <span class="dot"></span> Mayo 2026</div>
+  </div>
+
+  <!-- ============================================
+       (a) AUTORES + (b) TÍTULO
+  ============================================= -->
+  <div class="header">
+    <div>
+      <div class="eyebrow">Diseño Ético · Cirugía Robótica Asistida</div>
+      <h1 class="title">
+        <span class="lead">Plataforma de Telementoría</span>
+        Intraoperatoria <em>y Analítica</em>
+      </h1>
+      <p class="subtitle">
+        Telementoría en tiempo real y métricas descriptivas de la consola robótica para apoyar la formación quirúrgica, bajo el principio rector <em>asistir, no decidir</em>.
+      </p>
+    </div>
+    <div class="header-meta">
+      <div class="row">
+        <div class="meta-label">Autores</div>
+        <div class="meta-value">
+          Daniel Ávila Ávila
+        </div>
+        <div class="meta-value">
+          Manuel Alejandro Serrano Macías
+        </div>
+      </div>
+      <div class="row">
+        <div class="meta-label">Sujeto medido</div>
+        <div class="meta-value">El cirujano residente <span class="small">No el paciente — el mayor reto ético</span></div>
+      </div>
+      <div class="row">
+        <div class="meta-label">Alcance / propósito</div>
+        <div class="meta-value">Comparativo internacional <span class="small">México · Estados Unidos · Unión Europea — uso exclusivamente educativo</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Principio rector -->
+  <div class="principle-band">
+    <div class="label">Principio<br>rector</div>
+    <div class="vline"></div>
+    <div class="stmt">
+      Asistir, <em>no decidir.</em>
+      <div class="sub">La IA mide y estructura el procedimiento. La interpretación, el juicio clínico y la responsabilidad permanecen en el cirujano local y el mentor humano.</div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       (c) INTRODUCCIÓN / PROBLEMA
+  ============================================= -->
+  <div class="section-title">
+    <div class="num">01</div>
+    <h2>Introducción: el problema</h2>
+    <div class="kicker">Antecedentes · Contexto</div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:18px;">
+    <div>
+      <p class="lead">La cirugía robótica creció más de <strong>15 % anual desde 2019</strong>, pero la formación depende aún de la presencia física del experto. El resultado: <em>inequidad formativa</em> entre centros y retroalimentación sin registro estructurado.</p>
+      <p class="body">La mentoría queda concentrada en pocos hospitales con consolas robóticas; los residentes de centros periféricos quedan excluidos del expertise de alto nivel.</p>
+
+      <div class="stat-row" style="grid-template-columns:repeat(3,1fr);gap:14px;">
+        <div class="stat-hero">
+          <div class="v">~<small>40</small></div>
+          <div class="l">Sistemas robóticos en México</div>
+        </div>
+        <div class="stat-hero" style="background:var(--tint-blue);border-color:var(--tint-blue-border);">
+          <div class="v" style="color:var(--primary-blue);">7K<small>+</small></div>
+          <div class="l">Sistemas en EE. UU.</div>
+        </div>
+        <div class="stat-hero" style="background:var(--tint-rose);border-color:var(--tint-rose-border);">
+          <div class="v" style="color:var(--accent-2);">25<small>×</small></div>
+          <div class="l">Datos vs TC alta resolución</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="arch-title">El proceso actual (4 pasos)</div>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="step-num">PASO 01</div>
+          <div class="step-ico">
+            <svg viewBox="0 0 24 24"><path d="M3 7l9 6 9-6"/><path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7"/><path d="M3 7l3-4h12l3 4"/></svg>
+          </div>
+          <div class="step-t">Traslado físico</div>
+          <div class="step-d">El mentor solo acompaña si puede viajar al quirófano.</div>
+        </div>
+        <div class="flow-arrow"></div>
+        <div class="flow-step s2">
+          <div class="step-num">PASO 02</div>
+          <div class="step-ico">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/></svg>
+          </div>
+          <div class="step-t">Observación in situ</div>
+          <div class="step-d">Sigue la ejecución desde el mismo sitio físico.</div>
+        </div>
+        <div class="flow-arrow"></div>
+        <div class="flow-step s3">
+          <div class="step-num">PASO 03</div>
+          <div class="step-ico">
+            <svg viewBox="0 0 24 24"><path d="M12 2v10"/><path d="M5 9a7 7 0 0 0 14 0"/><path d="M9 22h6"/><path d="M12 19v3"/></svg>
+          </div>
+          <div class="step-t">Guía de viva voz</div>
+          <div class="step-d">Corrige y orienta, sin registro estructurado.</div>
+        </div>
+        <div class="flow-arrow"></div>
+        <div class="flow-step s4">
+          <div class="step-num">PASO 04</div>
+          <div class="step-ico">
+            <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 10h8"/><path d="M8 14h6"/><path d="M16 4v4"/></svg>
+          </div>
+          <div class="step-t">Retroalim. de memoria</div>
+          <div class="step-d">Valoración con criterios no explícitos.</div>
+        </div>
+      </div>
+
+      <div class="note-band warn">
+        <div class="lbl">Pregunta ética rectora</div>
+        <p>¿Cómo asegurar que una plataforma que <em>mide al residente</em> apoye su aprendizaje sin convertirse en un sistema de vigilancia que erosione la confianza mentor-aprendiz?</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       (d) SOLUCIÓN PROPUESTA
+  ============================================= -->
+  <div class="section-title">
+    <div class="num">02</div>
+    <h2>Solución propuesta</h2>
+    <div class="kicker">Telementoría + IA descriptiva</div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:14px;">
+    <div>
+      <p class="lead">Una plataforma que combina <strong>conexión en tiempo real</strong> entre experto remoto y cirujano local con una capa de <strong>IA que instrumenta el procedimiento</strong>: segmentación de fases y métricas descriptivas de la consola.</p>
+      <p class="body">El propósito es <em>exclusivamente educativo</em>: apoyar la mentoría en vivo, la revisión asincrónica de grabaciones y la preparación estructurada de casos.</p>
+
+      <div class="si-no-grid">
+        <div class="sn-card si">
+          <div class="sn-head">
+            <div class="sn-mark">✓</div>
+            <div class="sn-title">Lo que SÍ hace</div>
+          </div>
+          <ul class="sn-list">
+            <li>Segmenta video en fases quirúrgicas</li>
+            <li>Mide ejecución con métricas descriptivas</li>
+            <li>Estructura caso para revisión</li>
+            <li>Da contexto al mentor remoto</li>
+          </ul>
+        </div>
+        <div class="sn-card no">
+          <div class="sn-head">
+            <div class="sn-mark">×</div>
+            <div class="sn-title">Lo que NO hace</div>
+          </div>
+          <ul class="sn-list">
+            <li>Juzgar o calificar al residente</li>
+            <li>Evaluar, acreditar ni promover</li>
+            <li>Operar la consola robótica</li>
+            <li>Sustituir el juicio del mentor</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;">
+        <div class="info-chip green"><span class="dot-chip"></span>Doble consentimiento</div>
+        <div class="info-chip"><span class="dot-chip"></span>Transmisión cifrada E2E</div>
+        <div class="info-chip amber"><span class="dot-chip"></span>Datos anonimizados</div>
+        <div class="info-chip rose"><span class="dot-chip"></span>Autoridad del cirujano local</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="arch-wrap">
+        <div class="arch-title">Arquitectura general del sistema</div>
+        <svg viewBox="0 0 1100 540" width="100%" style="display:block;">
+          <!-- Quirófano local -->
+          <g>
+            <rect x="20" y="40" width="320" height="450" rx="14" fill="#FBFAF7" stroke="#0E1A2B" stroke-width="2"/>
+            <text x="180" y="78" text-anchor="middle" font-family="JetBrains Mono" font-size="20" letter-spacing="3" fill="#B0894A">QUIRÓFANO LOCAL</text>
+            <line x1="60" y1="96" x2="300" y2="96" stroke="#0E1A2B" stroke-width="1"/>
+            <!-- icon: console -->
+            <g transform="translate(60 125)" stroke="#0E1A2B" stroke-width="1.8" fill="none">
+              <rect x="0" y="0" width="44" height="36" rx="2"/>
+              <line x1="10" y1="36" x2="10" y2="50"/>
+              <line x1="34" y1="36" x2="34" y2="50"/>
+              <line x1="0" y1="50" x2="44" y2="50"/>
+            </g>
+            <text x="120" y="150" font-family="Fraunces" font-size="20" fill="#0E1A2B">Consola robótica</text>
+
+            <g transform="translate(60 195)" stroke="#0E1A2B" stroke-width="1.8" fill="none">
+              <rect x="0" y="0" width="44" height="32" rx="2"/>
+              <polygon points="16,8 16,24 30,16" fill="#0E1A2B"/>
+            </g>
+            <text x="120" y="218" font-family="Fraunces" font-size="20" fill="#0E1A2B">Video quirúrgico</text>
+
+            <g transform="translate(60 255)" stroke="#0E1A2B" stroke-width="1.8" fill="none">
+              <circle cx="22" cy="16" r="13"/>
+              <line x1="22" y1="5" x2="22" y2="16"/>
+              <line x1="22" y1="16" x2="29" y2="20"/>
+            </g>
+            <text x="120" y="280" font-family="Fraunces" font-size="20" fill="#0E1A2B">Telemetría consola</text>
+
+            <g transform="translate(60 315)" stroke="#0E1A2B" stroke-width="1.8" fill="none">
+              <circle cx="22" cy="11" r="9"/>
+              <path d="M5,36 Q22,20 40,36"/>
+            </g>
+            <text x="120" y="338" font-family="Fraunces" font-size="20" fill="#0E1A2B">Cirujano residente</text>
+
+            <text x="180" y="408" text-anchor="middle" font-family="Inter Tight" font-size="16" fill="#6B7180">El cirujano local conserva</text>
+            <text x="180" y="430" text-anchor="middle" font-family="Inter Tight" font-size="16" fill="#6B7180">siempre la autoridad última</text>
+          </g>
+
+          <!-- Plataforma IA -->
+          <g>
+            <rect x="390" y="40" width="320" height="450" rx="14" fill="#0E1A2B" stroke="#0E1A2B" stroke-width="2"/>
+            <text x="550" y="78" text-anchor="middle" font-family="JetBrains Mono" font-size="20" letter-spacing="3" fill="#B0894A">PLATAFORMA IA</text>
+            <line x1="430" y1="96" x2="670" y2="96" stroke="#B0894A" stroke-width="1"/>
+
+            <g transform="translate(430 125)" stroke="#FBFAF7" stroke-width="1.8" fill="none">
+              <path d="M5,18 L20,3 L35,18 L20,33 Z"/>
+              <line x1="20" y1="3" x2="20" y2="33"/>
+              <line x1="5" y1="18" x2="35" y2="18"/>
+            </g>
+            <text x="490" y="150" font-family="Fraunces" font-size="18" fill="#FBFAF7">Segmentación de fases</text>
+
+            <g transform="translate(430 195)" stroke="#FBFAF7" stroke-width="1.8" fill="none">
+              <polyline points="0,28 12,16 22,22 34,6 44,14"/>
+            </g>
+            <text x="490" y="218" font-family="Fraunces" font-size="18" fill="#FBFAF7">Métricas descriptivas</text>
+
+            <g transform="translate(430 255)" stroke="#FBFAF7" stroke-width="1.8" fill="none">
+              <circle cx="20" cy="16" r="10"/>
+              <line x1="27" y1="23" x2="40" y2="36"/>
+            </g>
+            <text x="490" y="280" font-family="Fraunces" font-size="18" fill="#FBFAF7">Visualización tiempo real</text>
+
+            <g transform="translate(430 315)" stroke="#FBFAF7" stroke-width="1.8" fill="none">
+              <rect x="2" y="2" width="36" height="24" rx="2"/>
+              <rect x="8" y="8" width="22" height="10" fill="#FBFAF7"/>
+              <line x1="20" y1="26" x2="20" y2="34"/>
+            </g>
+            <text x="490" y="338" font-family="Fraunces" font-size="18" fill="#FBFAF7">Almacenamiento cifrado</text>
+
+            <rect x="430" y="385" width="240" height="80" rx="8" fill="none" stroke="#B0894A" stroke-width="1.5"/>
+            <text x="550" y="412" text-anchor="middle" font-family="JetBrains Mono" font-size="13" letter-spacing="2" fill="#B0894A">USO DESCRIPTIVO</text>
+            <text x="550" y="436" text-anchor="middle" font-family="Inter Tight" font-size="15" fill="#FBFAF7">El sistema muestra datos;</text>
+            <text x="550" y="456" text-anchor="middle" font-family="Inter Tight" font-size="15" fill="#FBFAF7">la interpretación es del mentor.</text>
+          </g>
+
+          <!-- Mentor remoto -->
+          <g>
+            <rect x="760" y="40" width="320" height="450" rx="14" fill="#FBFAF7" stroke="#0E1A2B" stroke-width="2"/>
+            <text x="920" y="78" text-anchor="middle" font-family="JetBrains Mono" font-size="20" letter-spacing="3" fill="#B0894A">MENTOR REMOTO</text>
+            <line x1="800" y1="96" x2="1040" y2="96" stroke="#0E1A2B" stroke-width="1"/>
+
+            <g transform="translate(800 125)" stroke="#0E1A2B" stroke-width="1.8" fill="none">
+              <circle cx="22" cy="12" r="10"/>
+              <path d="M5,36 Q22,20 40,36"/>
+            </g>
+            <text x="860" y="150" font-family="Fraunces" font-size="20" fill="#0E1A2B">Guía en tiempo real</text>
+
+            <g transform="translate(800 195)" stroke="#0E1A2B" stroke-width="1.8" fill="none">
+              <path d="M3,3 L36,3 L36,26 L22,26 L16,32 L16,26 L3,26 Z"/>
+              <line x1="9" y1="12" x2="30" y2="12"/>
+              <line x1="9" y1="19" x2="25" y2="19"/>
+            </g>
+            <text x="860" y="218" font-family="Fraunces" font-size="20" fill="#0E1A2B">Anotación sobre video</text>
+
+            <g transform="translate(800 255)" stroke="#0E1A2B" stroke-width="1.8" fill="none">
+              <path d="M3,3 L33,3 L38,11 L33,18 L3,18 Z"/>
+              <line x1="3" y1="26" x2="38" y2="26"/>
+              <line x1="3" y1="34" x2="38" y2="34"/>
+            </g>
+            <text x="860" y="280" font-family="Fraunces" font-size="20" fill="#0E1A2B">Retroalimentación</text>
+
+            <g transform="translate(800 315)" stroke="#0E1A2B" stroke-width="1.8" fill="none">
+              <circle cx="22" cy="22" r="13"/>
+              <path d="M22,12 L22,22 L29,28" />
+            </g>
+            <text x="860" y="338" font-family="Fraunces" font-size="20" fill="#0E1A2B">Sesión trazable</text>
+
+            <text x="920" y="408" text-anchor="middle" font-family="Inter Tight" font-size="16" fill="#6B7180">Expertise sin desplazamiento.</text>
+            <text x="920" y="442" text-anchor="middle" font-family="JetBrains Mono" font-size="12" letter-spacing="2" fill="#B0894A">EXCLUSIVAMENTE EDUCATIVO</text>
+          </g>
+
+          <!-- Flujo flechas -->
+          <g stroke="#B0894A" stroke-width="2" fill="#B0894A">
+            <line x1="345" y1="265" x2="385" y2="265"/>
+            <polygon points="385,265 378,259 378,271"/>
+            <line x1="715" y1="265" x2="755" y2="265"/>
+            <polygon points="755,265 748,259 748,271"/>
+          </g>
+
+          <!-- Pie -->
+          <text x="550" y="520" text-anchor="middle" font-family="Inter Tight" font-size="15" fill="#0E1A2B">
+            Transmisión cifrada · Datos anonimizados · Control del cirujano local · Propósito exclusivamente educativo
+          </text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Diagrama: Diseño ético en todo el ciclo de vida (Figura 4 del documento) -->
+  <div class="lifecycle">
+    <div class="lifecycle-title">Diseño ético en todo el ciclo de vida · Figura 4 del marco SMACTR</div>
+    <div class="lifecycle-row">
+      <div class="lc-stage">
+        <div class="step">1</div>
+        <div class="t">Concepción y scoping</div>
+        <div class="eth">Doble consentimiento · scoping ético</div>
+      </div>
+      <div class="lc-stage">
+        <div class="step">2</div>
+        <div class="t">Datos y preparación</div>
+        <div class="eth">Datasheet · diversidad activa · auditoría de representatividad</div>
+      </div>
+      <div class="lc-stage">
+        <div class="step">3</div>
+        <div class="t">Modelado y entrenamiento</div>
+        <div class="eth">Model card · fairness por subgrupo · adversarial debiasing</div>
+      </div>
+      <div class="lc-stage">
+        <div class="step">4</div>
+        <div class="t">Validación clínica</div>
+        <div class="eth">Pruebas adversariales · FMEA · ensayo multicéntrico</div>
+      </div>
+      <div class="lc-stage">
+        <div class="step">5</div>
+        <div class="t">Despliegue y operación</div>
+        <div class="eth">Despliegue priorizado en periferia · capacitación clínica</div>
+      </div>
+      <div class="lc-stage">
+        <div class="step">6</div>
+        <div class="t">Monitoreo continuo</div>
+        <div class="eth">Auditoría anual · canal de reporte · monitoreo de drift</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);">
+      ↻ Monitoreo continuo retroalimenta el scoping inicial
+    </div>
+  </div>
+
+  <!-- ============================================
+       (e) PREOCUPACIONES Y RIESGOS
+  ============================================= -->
+  <div class="section-title">
+    <div class="num">03</div>
+    <h2>Preocupaciones y riesgos éticos</h2>
+    <div class="kicker">Marcos de Floridi & Fjeld</div>
+  </div>
+
+  <p class="lead" style="max-width:3600px;">Cruzamos los <strong>5 principios de Floridi (2018)</strong> y los <strong>8 temas de Fjeld (2020)</strong> con la pregunta rectora: ¿estamos enseñando o vigilando?</p>
+
+  <div class="concerns" style="grid-template-columns:repeat(4, 1fr);">
+    <div class="card rose">
+      <div class="card-head">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div>
+          <span class="pill alta">Alta</span>
+          <div class="card-title" style="margin-top:4px;">01 · Privacidad</div>
+        </div>
+      </div>
+      <div class="card-body">Doble sujeto: paciente (video clínico) y residente (métricas de desempeño). Riesgo de re-identificación y fuga de PHI.</div>
+    </div>
+
+    <div class="card rose">
+      <div class="card-head">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M5 8h14"/><path d="M5 8l-2 8h6l-2-8"/><path d="M19 8l-2 8h6l-2-8"/></svg>
+        </div>
+        <div>
+          <span class="pill alta">Alta</span>
+          <div class="card-title" style="margin-top:4px;">02 · Responsabilidad</div>
+        </div>
+      </div>
+      <div class="card-body">¿Quién responde ante un error guiado por IA? Triángulo cirujano local · mentor remoto · fabricante.</div>
+    </div>
+
+    <div class="card rose">
+      <div class="card-head">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L4 7v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V7l-8-5z"/></svg>
+        </div>
+        <div>
+          <span class="pill alta">Alta</span>
+          <div class="card-title" style="margin-top:4px;">03 · Seguridad</div>
+        </div>
+      </div>
+      <div class="card-body">Latencia &gt; 300 ms o caída de transmisión en momento crítico de la cirugía. Vidas en juego.</div>
+    </div>
+
+    <div class="card rose">
+      <div class="card-head">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>
+        </div>
+        <div>
+          <span class="pill alta">Alta</span>
+          <div class="card-title" style="margin-top:4px;">04 · Transparencia</div>
+        </div>
+      </div>
+      <div class="card-body">Las métricas tienen apariencia de objetividad: deben acompañarse de definición, cálculo y límites.</div>
+    </div>
+
+    <div class="card rose">
+      <div class="card-head">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5 7l7-4 7 4"/><path d="M5 7l-2 7h14"/><path d="M19 7l2 7h-14"/></svg>
+        </div>
+        <div>
+          <span class="pill alta">Alta</span>
+          <div class="card-title" style="margin-top:4px;">05 · Justicia</div>
+        </div>
+      </div>
+      <div class="card-body">Sesgos por escuela quirúrgica en métricas; brecha digital entre centros con y sin conectividad suficiente.</div>
+    </div>
+
+    <div class="card amber">
+      <div class="card-head">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 11a3 3 0 1 1 6 0v6a3 3 0 0 1-6 0z"/><path d="M12 4v3"/><path d="M5 5l2 2"/><path d="M19 5l-2 2"/></svg>
+        </div>
+        <div>
+          <span class="pill media">Media</span>
+          <div class="card-title" style="margin-top:4px;">06 · Control humano</div>
+        </div>
+      </div>
+      <div class="card-body">Riesgo de automation bias: el cirujano podría delegar excesivamente en sugerencias algorítmicas.</div>
+    </div>
+
+    <div class="card rose">
+      <div class="card-head">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6"/><path d="M9 13h6"/><path d="M9 17h4"/></svg>
+        </div>
+        <div>
+          <span class="pill alta">Alta</span>
+          <div class="card-title" style="margin-top:4px;">07 · Resp. profesional</div>
+        </div>
+      </div>
+      <div class="card-body">Deslizamiento de uso descriptivo a evaluativo. Una métrica formativa se convierte en instrumento de acreditación.</div>
+    </div>
+
+    <div class="card amber">
+      <div class="card-head">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div>
+          <span class="pill media">Media</span>
+          <div class="card-title" style="margin-top:4px;">08 · Valores humanos</div>
+        </div>
+      </div>
+      <div class="card-body">Instrumentalización del residente como dato. Dignidad del paciente y del aprendiz en el centro del diseño.</div>
+    </div>
+  </div>
+
+  <!-- Diagrama: 5 Principios de Floridi - Brújula ética -->
+  <div class="floridi-panel">
+    <div class="floridi-head">
+      <div>
+        <div class="floridi-eyebrow">Brújula ética · Marco normativo</div>
+        <div class="floridi-title">Los <span style="color:var(--accent);">5 principios de Floridi</span> aplicados al sistema</div>
+      </div>
+      <div class="floridi-caption">
+        Cuatro principios clásicos de bioética + uno propio de la IA. Cada decisión de diseño se evalúa contra estos cinco ejes.
+      </div>
+    </div>
+    <div class="floridi-grid">
+      <div class="floridi-card f-bene">
+        <div class="floridi-ico">
+          <svg viewBox="0 0 28 28"><path d="M14 25s-9-5.5-9-13a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 7.5-9 13-9 13z"/></svg>
+        </div>
+        <div class="floridi-name">Beneficencia</div>
+        <div class="floridi-tag">Hacer el bien</div>
+        <div class="floridi-app">Acceso democrático a mentoría experta para residentes en periferia.</div>
+      </div>
+      <div class="floridi-card f-nomal">
+        <div class="floridi-ico">
+          <svg viewBox="0 0 28 28"><path d="M14 4l9 5v6c0 5-4 9-9 10-5-1-9-5-9-10V9z"/><path d="M9 14l3 3 7-7"/></svg>
+        </div>
+        <div class="floridi-name">No maleficencia</div>
+        <div class="floridi-tag">No dañar</div>
+        <div class="floridi-app">Latencia &lt; 300 ms, cifrado E2E y protocolo de fallback documentado.</div>
+      </div>
+      <div class="floridi-card f-auto">
+        <div class="floridi-ico">
+          <svg viewBox="0 0 28 28"><circle cx="14" cy="10" r="4"/><path d="M5 24c2-4 5-6 9-6s7 2 9 6"/><path d="M18 6l4-2"/></svg>
+        </div>
+        <div class="floridi-name">Autonomía</div>
+        <div class="floridi-tag">Control humano</div>
+        <div class="floridi-app">Cirujano local conserva autoridad última; doble consentimiento revocable.</div>
+      </div>
+      <div class="floridi-card f-just">
+        <div class="floridi-ico">
+          <svg viewBox="0 0 28 28"><path d="M14 4v20"/><path d="M6 9h16"/><path d="M6 9l-2 8h6l-2-8"/><path d="M22 9l-2 8h6l-2-8"/></svg>
+        </div>
+        <div class="floridi-name">Justicia</div>
+        <div class="floridi-tag">Equidad</div>
+        <div class="floridi-app">Despliegue priorizado en centros periféricos; auditoría de equidad por subgrupo.</div>
+      </div>
+      <div class="floridi-card f-expl">
+        <div class="floridi-ico">
+          <svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="10"/><path d="M14 9v6"/><circle cx="14" cy="19" r="0.8" fill="currentColor"/></svg>
+        </div>
+        <div class="floridi-name">Explicabilidad</div>
+        <div class="floridi-tag">Específico de IA</div>
+        <div class="floridi-app">Métricas con definición pública; datasheet, model card y límites declarados.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Stakeholders + Marco legal ===== -->
+  <div class="grid-2 mt-xl">
+    <div>
+      <h3 style="font-family:'Fraunces',serif;font-weight:500;font-size:36px;margin-bottom:18px;border-bottom:2px solid var(--ink);padding-bottom:14px;">Mapa de stakeholders</h3>
+      <p class="body" style="margin-bottom:18px;">Cada actor carga un interés legítimo y un riesgo. El sujeto medido es el residente.</p>
+      <div class="concept-row" style="grid-template-columns:repeat(4,1fr);gap:14px;">
+        <div class="concept rose">
+          <div class="concept-ico">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <div class="concept-title">Paciente</div>
+          <div class="concept-desc">Centro ético · consentimiento informado</div>
+        </div>
+        <div class="concept">
+          <div class="concept-ico">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>
+          </div>
+          <div class="concept-title">Residente</div>
+          <div class="concept-desc">Sujeto medido · riesgo de dependencia</div>
+        </div>
+        <div class="concept green">
+          <div class="concept-ico">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/><path d="M19 5l2 2-4 4"/></svg>
+          </div>
+          <div class="concept-title">Mentor remoto</div>
+          <div class="concept-desc">Guía experta · deber de cuidado</div>
+        </div>
+        <div class="concept amber">
+          <div class="concept-ico">
+            <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="concept-title">Equipo local</div>
+          <div class="concept-desc">Procedimiento y aprendizaje</div>
+        </div>
+        <div class="concept purple">
+          <div class="concept-ico">
+            <svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21V12h6v9"/></svg>
+          </div>
+          <div class="concept-title">Programa</div>
+          <div class="concept-desc">Define reglas · responsable de la gobernanza</div>
+        </div>
+        <div class="concept">
+          <div class="concept-ico">
+            <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V4h8v3"/><circle cx="12" cy="13" r="3"/></svg>
+          </div>
+          <div class="concept-title">Fabricante</div>
+          <div class="concept-desc">Diseña el sistema · transparencia y soporte</div>
+        </div>
+        <div class="concept amber">
+          <div class="concept-ico">
+            <svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V10"/><path d="M19 21V10"/><path d="M3 10l9-7 9 7"/><path d="M9 21v-7h6v7"/></svg>
+          </div>
+          <div class="concept-title">Reguladores</div>
+          <div class="concept-desc">COFEPRIS · FDA · EMA</div>
+        </div>
+        <div class="concept rose">
+          <div class="concept-ico">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>
+          </div>
+          <div class="concept-title">Sociedad</div>
+          <div class="concept-desc">Acceso equitativo · estándar de calidad</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-family:'Fraunces',serif;font-weight:500;font-size:36px;margin-bottom:18px;border-bottom:2px solid var(--ink);padding-bottom:14px;">Marco legal y regulatorio</h3>
+      <p class="body" style="margin-bottom:18px;">Tres jurisdicciones, cuatro capas: IA, dispositivo médico, datos de salud, telemedicina.</p>
+      <div class="legal">
+        <div class="col">
+          <h4>🇲🇽 México</h4>
+          <ul>
+            <li>Sin ley específica de IA · normativa sectorial</li>
+            <li><strong>COFEPRIS:</strong> registro sanitario del software</li>
+            <li><strong>LFPDPPP:</strong> datos sensibles, consentimiento expreso</li>
+            <li>Lineamientos de telemedicina (Sec. Salud, 2021)</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h4>🇺🇸 Estados Unidos</h4>
+          <ul>
+            <li><strong>FDA SaMD</strong> + guía PCCP (2023)</li>
+            <li>21 CFR Part 820 + ciberseguridad pre-mercado</li>
+            <li><strong>HIPAA:</strong> PHI · autorización separada para uso secundario</li>
+            <li>Licenciamiento médico estatal del mentor remoto</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h4>🇪🇺 Unión Europea</h4>
+          <ul>
+            <li><strong>AI Act 2024/1689:</strong> sistema de alto riesgo</li>
+            <li>MDR 2017/745 · regla 11, marcado CE</li>
+            <li><strong>GDPR Art. 9:</strong> DPIA obligatoria</li>
+            <li>Directiva 2011/24/UE — asistencia transfronteriza</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       (f) EVALUACIÓN DE RIESGOS - FMEA + HEATMAP
+  ============================================= -->
+  <div class="section-title mt-xl">
+    <div class="num">04</div>
+    <h2>Evaluación de riesgos · FMEA</h2>
+    <div class="kicker">RPN = Severidad × Ocurrencia × Detección</div>
+  </div>
+
+  <p class="lead" style="max-width:3600px;">Se analizaron los <strong>8 principios</strong> con tabla FMEA completa. Se presentan los <strong>seis modos de falla con mayor RPN</strong>.</p>
+
+  <div class="grid-2" style="grid-template-columns:1.4fr 1fr; gap:60px; margin-top:14px;">
+    <div>
+      <table class="fmea">
+        <thead>
+          <tr>
+            <th style="width:90px;">#</th>
+            <th style="width:160px;">Principio</th>
+            <th>Modo de falla</th>
+            <th style="width:130px; text-align:right;">RPN</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="high">
+            <td><strong>01</strong></td>
+            <td class="principle">P2 · Resp.</td>
+            <td class="fail">Indefinición de responsabilidad ante guía remota inadecuada</td>
+            <td class="rpn">378</td>
+          </tr>
+          <tr class="high">
+            <td><strong>02</strong></td>
+            <td class="principle">P1 · Privac.</td>
+            <td class="fail">Uso secundario de métricas del residente (vigilancia laboral encubierta)</td>
+            <td class="rpn">324</td>
+          </tr>
+          <tr class="high">
+            <td><strong>03</strong></td>
+            <td class="principle">P7 · R. Prof.</td>
+            <td class="fail">Deslizamiento de uso descriptivo a evaluativo (function creep)</td>
+            <td class="rpn">324</td>
+          </tr>
+          <tr>
+            <td><strong>04</strong></td>
+            <td class="principle">P3 · Segur.</td>
+            <td class="fail">Drift no detectado en modelos de fase y telemetría</td>
+            <td class="rpn">294</td>
+          </tr>
+          <tr>
+            <td><strong>05</strong></td>
+            <td class="principle">P6 · Ctrl. H.</td>
+            <td class="fail">Dependencia excesiva del acompañamiento remoto</td>
+            <td class="rpn">294</td>
+          </tr>
+          <tr>
+            <td><strong>06</strong></td>
+            <td class="principle">P5 · Justicia</td>
+            <td class="fail">Brecha de acceso por requisitos de conectividad</td>
+            <td class="rpn">280</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:22px;color:var(--muted);margin-top:24px;line-height:1.5;">
+        P1 Privacidad · P2 Responsabilidad · P3 Seguridad · P5 Justicia · P6 Control humano · P7 Responsabilidad profesional.
+      </p>
+    </div>
+
+    <div>
+      <div class="arch-title">Matriz de impacto residual</div>
+      <svg viewBox="-30 0 730 560" width="100%" style="display:block;">
+        <!-- Ejes -->
+        <text x="350" y="28" text-anchor="middle" font-family="JetBrains Mono" font-size="20" letter-spacing="3" fill="#0E1A2B">PROBABILIDAD →</text>
+        <text x="-15" y="280" text-anchor="middle" font-family="JetBrains Mono" font-size="20" letter-spacing="3" fill="#0E1A2B" transform="rotate(-90 -15 280)">← IMPACTO</text>
+
+        <!-- Grid 5x5 -->
+        <g stroke="#0E1A2B" stroke-width="1.2">
+          <rect x="80" y="50"  width="110" height="90" fill="#EFEAE0"/>
+          <rect x="190" y="50" width="110" height="90" fill="#F4E2C5"/>
+          <rect x="300" y="50" width="110" height="90" fill="#E8B86A"/>
+          <rect x="410" y="50" width="110" height="90" fill="#C76A4F"/>
+          <rect x="520" y="50" width="110" height="90" fill="#8C2F2F"/>
+          <rect x="80" y="140" width="110" height="90" fill="#EFEAE0"/>
+          <rect x="190" y="140" width="110" height="90" fill="#F4E2C5"/>
+          <rect x="300" y="140" width="110" height="90" fill="#F4E2C5"/>
+          <rect x="410" y="140" width="110" height="90" fill="#E8B86A"/>
+          <rect x="520" y="140" width="110" height="90" fill="#C76A4F"/>
+          <rect x="80" y="230" width="110" height="90" fill="#EFEAE0"/>
+          <rect x="190" y="230" width="110" height="90" fill="#EFEAE0"/>
+          <rect x="300" y="230" width="110" height="90" fill="#F4E2C5"/>
+          <rect x="410" y="230" width="110" height="90" fill="#E8B86A"/>
+          <rect x="520" y="230" width="110" height="90" fill="#E8B86A"/>
+          <rect x="80" y="320" width="110" height="90" fill="#EFEAE0"/>
+          <rect x="190" y="320" width="110" height="90" fill="#EFEAE0"/>
+          <rect x="300" y="320" width="110" height="90" fill="#EFEAE0"/>
+          <rect x="410" y="320" width="110" height="90" fill="#F4E2C5"/>
+          <rect x="520" y="320" width="110" height="90" fill="#F4E2C5"/>
+          <rect x="80" y="410" width="110" height="90" fill="#EFEAE0"/>
+          <rect x="190" y="410" width="110" height="90" fill="#EFEAE0"/>
+          <rect x="300" y="410" width="110" height="90" fill="#EFEAE0"/>
+          <rect x="410" y="410" width="110" height="90" fill="#EFEAE0"/>
+          <rect x="520" y="410" width="110" height="90" fill="#EFEAE0"/>
+        </g>
+
+        <!-- Etiquetas filas -->
+        <g font-family="Inter Tight" font-size="16" fill="#0E1A2B" text-anchor="end">
+          <text x="75" y="100">Extremo</text>
+          <text x="75" y="190">Mayor</text>
+          <text x="75" y="280">Moderado</text>
+          <text x="75" y="370">Menor</text>
+          <text x="75" y="460">Incidental</text>
+        </g>
+        <!-- Etiquetas columnas -->
+        <g font-family="Inter Tight" font-size="16" fill="#0E1A2B" text-anchor="middle">
+          <text x="135" y="522">Rara</text>
+          <text x="245" y="522">Improbable</text>
+          <text x="355" y="522">Posible</text>
+          <text x="465" y="522">Probable</text>
+          <text x="575" y="522">Casi seguro</text>
+        </g>
+
+        <!-- Riesgos plotted -->
+        <circle cx="465" cy="95" r="20" fill="#FBFAF7" stroke="#0E1A2B" stroke-width="2.5"/>
+        <text x="465" y="101" text-anchor="middle" font-family="Fraunces" font-weight="700" font-size="20" fill="#0E1A2B">01</text>
+        <circle cx="465" cy="185" r="20" fill="#FBFAF7" stroke="#0E1A2B" stroke-width="2.5"/>
+        <text x="465" y="191" text-anchor="middle" font-family="Fraunces" font-weight="700" font-size="20" fill="#0E1A2B">02</text>
+        <circle cx="355" cy="95" r="20" fill="#FBFAF7" stroke="#0E1A2B" stroke-width="2.5"/>
+        <text x="355" y="101" text-anchor="middle" font-family="Fraunces" font-weight="700" font-size="20" fill="#0E1A2B">03</text>
+        <circle cx="355" cy="185" r="20" fill="#FBFAF7" stroke="#0E1A2B" stroke-width="2.5"/>
+        <text x="355" y="191" text-anchor="middle" font-family="Fraunces" font-weight="700" font-size="20" fill="#0E1A2B">04</text>
+        <circle cx="465" cy="275" r="20" fill="#FBFAF7" stroke="#0E1A2B" stroke-width="2.5"/>
+        <text x="465" y="281" text-anchor="middle" font-family="Fraunces" font-weight="700" font-size="20" fill="#0E1A2B">05</text>
+        <circle cx="245" cy="185" r="20" fill="#FBFAF7" stroke="#0E1A2B" stroke-width="2.5"/>
+        <text x="245" y="191" text-anchor="middle" font-family="Fraunces" font-weight="700" font-size="20" fill="#0E1A2B">06</text>
+
+        <!-- Leyenda residual -->
+        <g transform="translate(80 545)" font-family="JetBrains Mono" font-size="13" letter-spacing="2">
+          <rect x="0" y="0" width="20" height="14" fill="#EFEAE0" stroke="#0E1A2B" stroke-width=".8"/>
+          <text x="26" y="11" fill="#0E1A2B">BAJO</text>
+          <rect x="90" y="0" width="20" height="14" fill="#F4E2C5" stroke="#0E1A2B" stroke-width=".8"/>
+          <text x="116" y="11" fill="#0E1A2B">MEDIO</text>
+          <rect x="190" y="0" width="20" height="14" fill="#E8B86A" stroke="#0E1A2B" stroke-width=".8"/>
+          <text x="216" y="11" fill="#0E1A2B">ALTO</text>
+          <rect x="285" y="0" width="20" height="14" fill="#C76A4F" stroke="#0E1A2B" stroke-width=".8"/>
+          <text x="311" y="11" fill="#0E1A2B">MUY ALTO</text>
+          <rect x="405" y="0" width="20" height="14" fill="#8C2F2F" stroke="#0E1A2B" stroke-width=".8"/>
+          <text x="431" y="11" fill="#0E1A2B">CRÍTICO</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ============================================
+       (g) PLANES DE REMEDIACIÓN
+  ============================================= -->
+  <div class="section-title mt-xl">
+    <div class="num">05</div>
+    <h2>Planes de remediación</h2>
+    <div class="kicker">Cinco ejes de mitigación · ciclo de vida</div>
+  </div>
+
+  <p class="lead" style="max-width:3600px;">La ética como <em>propiedad de diseño</em>, no aditamento. Cinco ejes que operan en paralelo durante todo el ciclo de vida.</p>
+
+  <div class="mitig" style="grid-template-columns:repeat(5,1fr);gap:18px;">
+    <div class="card green">
+      <div class="card-head">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1.5"/></svg>
+        </div>
+        <div>
+          <span class="pill baja">Eje 01</span>
+        </div>
+      </div>
+      <div class="card-title" style="margin-bottom:6px;">Diseño técnico</div>
+      <div class="card-body" style="font-size:16px;">Latencia &lt; 300 ms; cifrado E2E; segmentación revisable; alta disponibilidad 99.9 %; DICOM.</div>
+    </div>
+
+    <div class="card green">
+      <div class="card-head">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 3l8 4v6c0 4-3 7-8 8-5-1-8-4-8-8V7l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <div>
+          <span class="pill baja">Eje 02</span>
+        </div>
+      </div>
+      <div class="card-title" style="margin-bottom:6px;">Gobernanza</div>
+      <div class="card-body" style="font-size:16px;">Contratos con roles claros; cirujano local conserva autoridad; comités de ética activos; debido proceso.</div>
+    </div>
+
+    <div class="card green">
+      <div class="card-head">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>
+        </div>
+        <div>
+          <span class="pill baja">Eje 03</span>
+        </div>
+      </div>
+      <div class="card-title" style="margin-bottom:6px;">Datos y modelos</div>
+      <div class="card-body" style="font-size:16px;">Diversidad de escuelas; datasheet y model card; monitoreo de drift; re-validación trimestral.</div>
+    </div>
+
+    <div class="card green">
+      <div class="card-head">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/><path d="M16 4l3 3-7 7"/></svg>
+        </div>
+        <div>
+          <span class="pill baja">Eje 04</span>
+        </div>
+      </div>
+      <div class="card-title" style="margin-bottom:6px;">Operación</div>
+      <div class="card-body" style="font-size:16px;">Capacitación en lectura de métricas; guía remota como recomendación; mentoría presencial coexistente.</div>
+    </div>
+
+    <div class="card green">
+      <div class="card-head">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.5-4.5"/><path d="M8 11h6"/><path d="M11 8v6"/></svg>
+        </div>
+        <div>
+          <span class="pill baja">Eje 05</span>
+        </div>
+      </div>
+      <div class="card-title" style="margin-bottom:6px;">Vigilancia</div>
+      <div class="card-body" style="font-size:16px;">Reporte anual de acceso y equidad; canal anónimo; despliegue progresivo en centros periféricos.</div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       (h) PRIMEROS RESULTADOS
+  ============================================= -->
+  <div class="section-title mt-xl">
+    <div class="num">06</div>
+    <h2>Primeros resultados</h2>
+    <div class="kicker">Evaluación piloto · 2.500 procedimientos</div>
+  </div>
+
+  <div class="results">
+    <div>
+      <p class="lead">Piloto evaluado sobre <strong>~2.500 procedimientos robóticos anonimizados</strong> de cuatro regiones (EE. UU. 60 %, Europa 25 %, LatAm 10 %, Asia 5 %).</p>
+      <p class="body">Los modelos transformer entregan métricas descriptivas estables por fase y patología. La mentoría se completó <strong>sin caída de transmisión en momento crítico</strong> en el 100 % de las sesiones, bajo el umbral clínico de latencia.</p>
+      <ul class="clean" style="margin-top:18px;">
+        <li><strong>Uso previsto cumplido:</strong> métricas descriptivas y biblioteca de casos.</li>
+        <li><strong>Uso contraindicado bloqueado:</strong> evaluación individual y comparación inter-residentes.</li>
+        <li><strong>Doble consentimiento activado</strong> en el 100 % del piloto.</li>
+        <li><strong>Brechas detectadas:</strong> biotipos no caucásicos (~18 %), obesidad mórbida (~7 %), embarazadas (&lt;2 %).</li>
+      </ul>
+    </div>
+    <div>
+      <div class="arch-title">Métricas clave del piloto</div>
+      <div class="res-stats">
+        <div class="res-stat">
+          <div class="lbl">F1-macro · modelo de fases</div>
+          <div class="v">0.87 <small>± .02</small></div>
+          <div class="d">Promedio en 7 fases quirúrgicas estándar.</div>
+        </div>
+        <div class="res-stat">
+          <div class="lbl">IoU promedio · segmentación</div>
+          <div class="v">0.82</div>
+          <div class="d">Variantes por técnica y patología documentadas.</div>
+        </div>
+        <div class="res-stat">
+          <div class="lbl">Latencia transmisión</div>
+          <div class="v">217<small> ms</small></div>
+          <div class="d">Mediana global, percentil 95 = 286 ms.</div>
+        </div>
+        <div class="res-stat">
+          <div class="lbl">Disponibilidad del servicio</div>
+          <div class="v">99.94<small>%</small></div>
+          <div class="d">12 meses · objetivo SLA contractual 99.9 %.</div>
+        </div>
+        <div class="res-stat">
+          <div class="lbl">Acceso desde centros periféricos</div>
+          <div class="v">+38<small>%</small></div>
+          <div class="d">Sesiones a residentes fuera de CDMX, MTY, GDL.</div>
+        </div>
+        <div class="res-stat">
+          <div class="lbl">Incidentes éticos reportados</div>
+          <div class="v">0</div>
+          <div class="d">Canal anónimo · comité de ética · 12 meses.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       (i) CONCLUSIONES (banda oscura)
+  ============================================= -->
+  <div class="conclusions">
+    <div class="section-title">
+      <div class="num">07</div>
+      <h2>Conclusiones</h2>
+      <div class="kicker">Asistir, no decidir.</div>
+    </div>
+    <p class="body" style="font-size:32px;max-width:3800px;color:#D8D2C2;line-height:1.4;">
+      Una herramienta formativa legítima se distingue de un sistema de vigilancia con buena presentación
+      por cómo se diseña, no por cómo se presenta. <strong style="color:#FFFFFF;">La ética no es capa cosmética: es la arquitectura misma del sistema.</strong>
+    </p>
+
+    <div class="conc-grid">
+      <div class="conc">
+        <div class="n">i.</div>
+        <div class="t">El sujeto medido es el residente</div>
+        <div class="d">La IA mide a una persona identificable en formación. La prohibición contractual del uso evaluativo es la condición de legitimidad del sistema.</div>
+      </div>
+      <div class="conc">
+        <div class="n">ii.</div>
+        <div class="t">La métrica describe, el humano juzga</div>
+        <div class="d">El cirujano local conserva la autoridad última y el mentor interpreta. No se delega el juicio clínico al algoritmo.</div>
+      </div>
+      <div class="conc">
+        <div class="n">iii.</div>
+        <div class="t">La equidad es propiedad de despliegue</div>
+        <div class="d">Sin despliegue prioritario a centros periféricos y auditoría por subgrupo, la plataforma amplifica la brecha en vez de cerrarla.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       (j) REFERENCIAS + INSTITUCIONAL
+  ============================================= -->
+  <div class="footer">
+    <div class="refs">
+      <h3>Referencias clave</h3>
+      <ol>
+        <li>Floridi, L., Cowls, J., Beltrametti, M., et al. (2018). <em>AI4People — An ethical framework for a good AI society.</em> Minds and Machines, 28(4), 689–707.</li>
+        <li>Fjeld, J., Achten, N., Hilligoss, H., Nagy, A., & Srikumar, M. (2020). <em>Principled artificial intelligence: Mapping consensus in ethical and rights-based approaches.</em> Berkman Klein Center.</li>
+        <li>Beauchamp, T. L., & Childress, J. F. (2019). <em>Principles of biomedical ethics</em> (8.ª ed.). Oxford University Press.</li>
+        <li>Gebru, T., Morgenstern, J., Vecchione, B., et al. (2021). <em>Datasheets for datasets.</em> Communications of the ACM, 64(12), 86–92.</li>
+        <li>Mitchell, M., Wu, S., Zaldivar, A., et al. (2019). <em>Model cards for model reporting.</em> Proceedings of FAccT, 220–229.</li>
+        <li>Johnson & Johnson MedTech (2024). <em>Polyphonic Digital Ecosystem.</em></li>
+        <li>NIST (2023). <em>AI Risk Management Framework (AI RMF 1.0).</em></li>
+        <li>Comisión Europea (2024). Reglamento (UE) 2024/1689 — <em>Ley de Inteligencia Artificial.</em></li>
+        <li>Parlamento Europeo y Consejo (2016). Reglamento (UE) 2016/679 — <em>RGPD.</em></li>
+        <li>Secretaría de Salud, México (2021). <em>Lineamientos para la prestación de servicios de salud a distancia.</em></li>
+      </ol>
+    </div>
+    <div class="institutional">
+      <div class="uni">Universidad Panamericana<br>Campus Aguascalientes</div>
+      <div class="prog">Maestría en Inteligencia Artificial y Ciencia de Datos<br>Fundamentos Antropológicos y Éticos de la Inteligencia Artificial</div>
+      <div class="date">Mayo 2026 · Proyecto Final</div>
+
+      <div style="margin-top:60px;border-top:2px solid var(--ink);padding-top:30px;display:flex;justify-content:flex-end;gap:40px;flex-wrap:wrap;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:20px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);">Privacidad por diseño</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:20px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);">Control humano</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:20px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);">Equidad</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:20px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);">Asistir, no decidir</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
