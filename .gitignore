@@ -211,3 +211,6 @@ __marimo__/
 .Rproj.user
 
 .vscode/
+
+# Deep Learning Datasets Deep Learning
+9. Deep Learning/**/data/
