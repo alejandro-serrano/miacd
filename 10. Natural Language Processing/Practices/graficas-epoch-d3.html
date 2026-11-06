@@ -1,0 +1,336 @@
+<title>Gráficas de Epoch en D3</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: página de estudio; encabezado corto, dos gráficas lado a lado (una columna en móvil), pasos y código abajo. */
+/* Fondo blanco fijo (sin tema oscuro), como las diapositivas. */
+:root { color-scheme: light;
+  --bg: #FFFFFF; --surface: #FFFFFF; --fg: #1B2430; --muted: #5A6675; --line: #D9E0E8; --accent: #2E6DB4;
+  --chart-bg: #FFFFFF; --chart-text: #333333; --chart-grid: #E3E3E3; --chart-frame: #333333; --chart-ref: #2F4550;
+  --chart-curve: #D9534F; --chart-pt: #A9C2E4; --chart-bar: #C9D8EE; --chart-blue: #2E6DB4; --chart-red: #C62828;
+  --chart-lab: #1F2D3D; --chart-lab-red: #A61B1B; --chart-lab-distill: #0B3D91;
+  --code-bg: #F0F3F7;
+  --bar-4o: #4285F4; --bar-v3: #DB4437; --bar-o1: #F4B400; --bar-r1: #0F9D58; --bar-arrow: #C62828;
+  --font-body: 'Public Sans', Arial, sans-serif; --font-code: 'JetBrains Mono', 'Courier New', monospace;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.55; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-block: 40px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 32px; }
+header { display: flex; flex-direction: column; gap: 10px; max-width: 72ch; }
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+h1 { font-size: clamp(28px, 4vw, 40px); line-height: 1.15; margin: 0; text-wrap: balance; }
+h2 { font-size: 22px; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+a { color: var(--accent); }
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr)); gap: 20px; }
+figure { margin: 0; background: var(--chart-bg); border: 1px solid var(--line); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 12px; min-width: 0; position: relative; }
+.fig-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.fig-title { font-family: Arial, Helvetica, sans-serif; font-size: 26px; color: var(--chart-text); }
+figure svg { width: 100%; height: auto; display: block; }
+figcaption { font-size: 14px; color: var(--muted); }
+button { font: 600 14px/1 var(--font-body); color: var(--accent); background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); color: var(--fg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 13px; line-height: 1.4; box-shadow: 0 4px 16px rgba(0,0,0,.12); max-width: 240px; }
+.tip b { display: block; }
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 16px; list-style: none; padding: 0; margin: 0; counter-reset: s; }
+.steps li { counter-increment: s; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.steps li::before { content: "Paso " counter(s); font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.steps code, p code { overflow-wrap: anywhere; font-family: var(--font-code); font-size: 13px; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+section { display: flex; flex-direction: column; gap: 14px; }
+.code-box { background: var(--code-bg); border: 1px solid var(--line); border-radius: 10px; overflow-x: auto; max-height: 560px; overflow-y: auto; }
+pre { margin: 0; padding: 18px; font-family: var(--font-code); font-size: 13px; line-height: 1.6; color: var(--fg); tab-size: 2; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.status { font-size: 13px; color: var(--muted); }
+</style>
+
+<div class="wrap">
+  <header>
+        <h1>GPQA Diamond y MATH Level 5</h1>
+  </header>
+
+  <div class="charts">
+    <figure id="fig-gpqa">
+      <div class="fig-head"><span class="fig-title">GPQA Diamond</span><button type="button" id="copy-gpqa">Copiar SVG</button></div>
+      <div id="chart-gpqa"></div>
+      <figcaption>Preguntas de nivel doctorado. Línea punteada superior: nivel humano experto (70 %); inferior: azar (25 %).</figcaption>
+    </figure>
+    <figure id="fig-math">
+      <div class="fig-head"><span class="fig-title">MATH Level 5:</span><button type="button" id="copy-math">Copiar SVG</button></div>
+      <div id="chart-math"></div>
+      <figcaption>Problemas de matemáticas de competencia, nivel más difícil.</figcaption>
+    </figure>
+  </div>
+  <p class="status" id="status" aria-live="polite">Datos: Epoch AI, “AI Benchmarking Hub”, epoch.ai/benchmarks (CC BY 4.0).</p>
+
+  <section>
+    <h2>Fotografías Dic 2024 y Ene 2025</h2>
+    <div class="charts">
+      <figure id="fig-dic">
+        <div class="fig-head"><span class="fig-title">Fotografía Dic 2024</span><button type="button" id="copy-dic">Copiar SVG</button></div>
+        <div id="chart-dic"></div>
+        <figcaption>Deepseek V3: 671B parámetros, contexto de 128k tokens, MoE, entrenado 55 días en más de 2000 H800 (no H100). BERT (2019) era de .11B y .34B, entre 2000 y 6000 veces más pequeño.</figcaption>
+      </figure>
+      <figure id="fig-ene">
+        <div class="fig-head"><span class="fig-title">Fotografía Ene 2025</span><button type="button" id="copy-ene">Copiar SVG</button></div>
+        <div id="chart-ene"></div>
+        <figcaption>Llega DeepSeek R1, gratis, y empata con ChatGPT-o1. NVIDIA cae 17 % en bolsa.</figcaption>
+      </figure>
+    </div>
+      </section>
+
+  <section>
+    <h2>Cómo está hecho</h2>
+    <ol class="steps">
+      <li><b>Cargar los datos</b><span class="muted">Se lee el CSV de Epoch (aquí viene embebido como JSON) y se convierte la fecha con <code>d3.timeParse</code>.</span></li>
+      <li><b>Definir escalas</b><span class="muted"><code>d3.scaleTime</code> pasa fechas a píxeles en X y <code>d3.scaleLinear</code> pasa porcentajes a píxeles en Y.</span></li>
+      <li><b>Ejes y rejilla</b><span class="muted">Líneas horizontales en cada marca de Y, el marco y las etiquetas de los meses.</span></li>
+      <li><b>Puntos y errores</b><span class="muted">Con <code>selection.data().join()</code> cada fila se vuelve un círculo y una línea de ± error estándar.</span></li>
+      <li><b>Etiquetas</b><span class="muted">Solo los modelos que etiquetó el ponente, con un desplazamiento fijo respecto a su punto para que no se encimen.</span></li>
+      <li><b>Barras agrupadas</b><span class="muted"><code>d3.scaleBand</code> reparte los tres benchmarks; dentro de cada grupo las barras usan el ancho y la separación de la diapositiva.</span></li>
+    </ol>
+  </section>
+
+  <section>
+    <div class="row"><h2>Código</h2><button type="button" id="copy-code">Copiar código</button></div>
+    <p class="muted">Es el mismo script que dibuja las gráficas de esta página. Para usarlo en tu propio HTML, carga D3 (<code>&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"&gt;</code>), pon cuatro <code>&lt;div&gt;</code> con los id <code>chart-gpqa</code>, <code>chart-math</code>, <code>chart-dic</code> y <code>chart-ene</code>, y define <code>DATA</code> con las filas del CSV.</p>
+    <div class="code-box"><pre id="code-view"></pre></div>
+  </section>
+</div>
+
+<script id="epoch-data" type="application/json">{"gpqa":{"rows":[["Qwen3-32B_none","2025-04-29",54.1,2.8],["Qwen3-30B-A3B_none","2025-04-29",50.4,2.8],["Qwen3-30B-A3B","2025-04-29",61.7,3.0],["qwen2.5-7b-instruct","2024-09-19",35.5,2.3],["mistral-small-3.1-2503","2025-03-17",41.9,2.3],["mistral-small-3-2501","2025-01-30",47.3,2.8],["Llama-3.2-1B-Instruct","2024-09-24",23.9,1.6],["qwen3-4b_none","2025-04-29",43.6,2.7],["qwen3-4b","2025-04-29",52.3,3.0],["Qwen3-32B","2025-04-29",65.7,2.8],["qwen3-14b_none","2025-04-29",53.4,2.8],["qwen3-14b","2025-04-29",63.8,2.9],["qwen3-1.7b_none","2025-04-29",30.6,2.3],["qwen3-1.7b","2025-04-29",38.0,2.7],["gemma-3-4b-it","2025-03-12",23.2,1.9],["gemma-3-1b-it","2025-03-12",19.9,1.5],["gemma-3-12b-it","2025-03-12",39.5,2.5],["DeepSeek-R1-Distill-Qwen-32B","2025-01-20",64.1,2.8],["DeepSeek-R1-Distill-Qwen-1.5B","2025-01-20",33.6,2.1],["QwQ-32B","2025-03-05",65.3,2.8],["Llama-3.1-8B-Instruct","2024-07-23",27.0,1.9],["qwen3-8b_none","2025-04-28",47.5,2.6],["qwen3-8b","2025-04-28",56.8,2.9],["gemma-3-27b-it","2025-03-12",47.7,2.7],["o3-2025-04-16_medium","2025-04-16",80.8,2.8],["o4-mini-2025-04-16_medium","2025-04-16",77.8,3.0],["o1-2024-12-17_low","2024-12-17",74.2,3.1],["o3-mini-2025-01-31_low","2025-01-31",68.2,3.3],["o3-2025-04-16_low","2025-04-16",79.8,2.9],["o4-mini-2025-04-16_low","2025-04-16",75.3,3.1],["qwen3-235b-a22b","2025-04-29",70.7,2.7],["gemini-2.5-pro-preview-05-06","2025-05-06",66.7,3.4],["claude-3-7-sonnet-20250219_64K","2025-02-24",78.5,2.7],["grok-3-mini-beta_high","2025-04-09",74.6,2.8],["DeepSeek-R1","2025-01-20",69.2,3.1],["claude-sonnet-4-20250514_59K","2025-05-22",77.8,2.7],["grok-3-beta","2025-04-09",67.6,2.7],["claude-sonnet-4-20250514_32K","2025-05-22",78.3,2.9],["claude-opus-4-20250514_16K","2025-05-22",76.3,3.0],["claude-sonnet-4-20250514_16K","2025-05-22",75.8,3.1],["claude-sonnet-4-20250514","2025-05-22",66.7,3.4],["claude-opus-4-20250514","2025-05-22",69.2,3.3],["mistral-medium-2505","2025-05-07",59.5,2.8],["o4-mini-2025-04-16_high","2025-04-16",79.6,2.4],["o3-2025-04-16_high","2025-04-16",81.8,2.1],["gpt-4.1-mini-2025-04-14","2025-04-14",65.8,2.7],["gpt-4.1-nano-2025-04-14","2025-04-14",48.9,2.5],["gpt-4.1-2025-04-14","2025-04-14",66.9,2.8],["qwq-plus","2025-04-08",65.4,2.8],["grok-3-mini-beta_low","2025-04-09",76.3,3.0],["Llama-4-Scout-17B-16E-Instruct","2025-04-05",51.8,3.2],["Llama-4-Maverick-17B-128E-Instruct-FP8","2025-04-05",67.0,2.8],["qwen-turbo-2024-11-01","2024-11-01",41.8,2.6],["qwen-plus-2025-01-25","2025-01-25",48.1,2.7],["qwen-max-2025-01-25","2025-01-25",56.1,2.8],["DeepSeek-V3-0324","2025-03-24",67.6,2.7],["gemini-2.5-pro-exp-03-25","2025-03-25",83.8,2.6],["mistral-small-2503","2025-03-17",47.5,2.8],["claude-3-5-haiku-20241022","2024-10-22",38.1,2.6],["gemini-1.5-flash-8b-001","2024-10-03",33.0,2.4],["DeepSeek-R1-Distill-Qwen-14B","2025-01-20",44.7,2.9],["claude-3-7-sonnet-20250219_32K","2025-02-24",76.8,3.0],["DeepSeek-R1-Distill-Llama-70B","2025-01-20",55.7,3.0],["gpt-4.5-preview-2025-02-27","2025-02-27",68.7,3.3],["gpt-4-turbo-2024-04-09","2024-04-09",46.6,2.7],["claude-3-7-sonnet-20250219_16K","2025-02-24",76.8,3.0],["mistral-large-2411","2024-11-18",51.3,2.7],["claude-3-7-sonnet-20250219","2025-02-24",66.0,2.7],["o1-2024-12-17_high","2024-12-17",76.8,3.0],["o1-mini-2024-09-12_high","2024-09-12",62.4,2.7],["o3-mini-2025-01-31_high","2025-01-31",77.0,2.6],["gemini-2.0-pro-exp-02-05","2025-02-05",65.7,3.4],["gemini-2.0-flash-thinking-exp-01-21","2025-01-21",57.1,3.5],["gemini-2.0-flash-001","2025-02-05",64.1,2.7],["gpt-4o-2024-11-20","2024-11-20",47.9,2.6],["phi-4","2024-12-12",56.1,2.6],["Phi-3-medium-128k-instruct","2024-04-23",27.6,1.6],["o3-mini-2025-01-31_medium","2025-01-31",74.3,2.5],["mistral-small-2501","2025-01-25",45.3,2.5],["qwen2.5-32b-instruct","2024-09-17",46.1,2.6],["gemini-1.5-flash-001","2024-05-23",40.4,2.4],["claude-2.0","2023-07-11",34.7,2.5],["claude-3-opus-20240229","2024-02-29",47.2,2.6],["o1-mini-2024-09-12_medium","2024-09-12",59.5,2.8],["gpt-4o-2024-08-06","2024-08-06",49.2,2.6],["o1-preview-2024-09-12","2024-09-12",50.3,2.8],["claude-3-sonnet-20240229","2024-02-29",40.6,2.4],["claude-3-5-sonnet-20241022","2024-10-22",55.3,2.8],["gpt-4-0125-preview","2024-01-25",42.3,2.7],["claude-2.1","2023-11-21",33.0,2.3],["gemma-2-27b-it","2024-06-24",36.5,2.4],["claude-3-haiku-20240307","2024-03-07",36.3,2.4],["claude-3-5-sonnet-20240620","2024-06-20",54.0,2.8],["gpt-4o-2024-05-13","2024-05-13",48.9,2.6],["gemini-1.5-flash-002","2024-09-24",47.3,2.8],["gpt-4-0613","2023-06-13",30.7,2.3],["gemma-2-9b-it","2024-06-24",27.5,2.3],["gpt-3.5-turbo-1106","2023-11-06",28.0,1.9],["gemini-1.5-pro-001","2024-05-14",45.9,2.6],["gpt-4-1106-preview","2023-11-06",42.4,2.4],["gpt-4o-mini-2024-07-18","2024-07-18",37.7,2.4],["gemini-1.5-pro-002","2024-09-24",57.2,2.8],["gpt-3.5-turbo-0125","2024-01-25",27.2,2.0],["Llama-3.1-70B-Instruct","2024-07-23",44.2,2.5],["Llama-3.1-405B-Instruct","2024-07-23",50.9,2.6],["Yi-1.5-34B-Chat","2024-05-13",32.0,2.0],["Yi-34B-Chat","2023-11-22",14.7,1.1],["grok-2-1212","2024-12-12",53.8,2.7],["qwen2-72b-instruct","2024-06-07",40.8,2.6],["qwen1.5-72b-chat","2024-02-04",28.8,2.0],["qwen1.5-32b-chat","2024-04-03",30.7,2.0],["Hermes-2-Theta-Llama-3-70B","2024-06-20",37.5,2.5],["Llama-2-70b-chat-hf","2023-07-18",26.3,2.0],["Meta-Llama-3-70B-Instruct","2024-04-18",40.6,2.6],["Meta-Llama-3-8B-Instruct","2024-04-18",26.1,1.7],["Mistral-7B-Instruct-v0.3","2024-05-27",15.2,1.0],["deepseek-llm-67b-chat","2023-11-29",24.6,1.4],["Mixtral-8x7B-Instruct-v0.1","2023-12-11",30.6,1.9],["qwen2.5-72b-instruct","2024-09-19",49.1,2.7],["WizardLM-2-8x22B","2024-04-15",43.4,2.3],["dbrx-instruct","2024-03-27",32.9,3.3],["gemini-1.0-pro-001","2023-12-13",34.0,2.0],["ministral-3b-2410","2024-10-16",25.3,1.9],["mistral-large-2402","2024-02-26",38.8,2.5],["open-mixtral-8x22b","2024-04-17",34.1,2.1],["ministral-8b-2410","2024-10-16",27.1,2.1],["mistral-large-2407","2024-07-24",49.0,2.6],["open-mixtral-8x7b","2023-12-11",29.8,1.9],["open-mistral-7b","2023-09-27",13.2,1.0],["open-mistral-nemo-2407","2024-07-18",29.9,2.1],["Llama-3.2-90B-Vision-Instruct","2024-09-24",41.0,2.3],["Llama-3.1-Tulu-3-70B-DPO","2024-11-21",46.3,2.4],["Eurus-2-7B-PRIME","2024-12-31",33.9,2.1],["Llama-3.3-70B-Instruct","2024-12-06",47.4,2.9],["o1-2024-12-17_medium","2024-12-17",75.8,3.1],["DeepSeek-V3","2024-12-26",56.5,2.8]],"labels":[{"m":"gpt-4-0613","t":["GPT-4 (Jun 2023)"],"k":"b","dx":-7,"dy":36,"a":"start"},{"m":"claude-2.0","t":["Claude 2"],"k":"b","dx":17,"dy":9,"a":"start"},{"m":"gpt-4-1106-preview","t":["GPT-4 Preview"],"k":"b","dx":-92,"dy":-21,"a":"start"},{"m":"gpt-4o-2024-05-13","t":["GPT-4o"],"k":"b","dx":-96,"dy":-21,"a":"start"},{"m":"claude-3-5-sonnet-20240620","t":["Claude 3.5 Sonnet"],"k":"b","dx":-204,"dy":-39,"a":"start"},{"m":"o1-mini-2024-09-12_high","t":["o1-mini"],"k":"b","dx":-50,"dy":-21,"a":"start"},{"m":"qwen2.5-72b-instruct","t":["Qwen 72B"],"k":"b","dx":18,"dy":5,"a":"start"},{"m":"qwen2.5-32b-instruct","t":["Qwen 32B"],"k":"b","dx":18,"dy":11,"a":"start"},{"m":"DeepSeek-V3","t":["Deepseek","V3"],"k":"r","dx":-18,"dy":-5,"a":"end"},{"m":"DeepSeek-R1-Distill-Llama-70B","t":["R1-Distill","70B"],"k":"d","dx":19,"dy":9,"a":"start"},{"m":"DeepSeek-R1","t":["DeepSeek-R1"],"k":"r","dx":-18,"dy":-21,"a":"end"},{"m":"claude-3-7-sonnet-20250219_64K","t":["Claude 3.7 Sonnet"],"k":"b","dx":-259,"dy":-21,"a":"start"},{"m":"gemini-2.5-pro-exp-03-25","t":["Gemini 2.5 Pro"],"k":"b","dx":-159,"dy":-21,"a":"start"},{"m":"qwen3-235b-a22b","t":["Qwen 235B"],"k":"b","dx":30,"dy":-17,"a":"end"}]},"math":{"rows":[["qwen3-235b-a22b","2025-04-29",68.9,0.9],["claude-sonnet-4-20250514","2025-05-22",84.4,1.0],["claude-opus-4-20250514","2025-05-22",85.0,1.0],["gemini-2.5-pro-preview-05-06","2025-05-06",95.9,0.4],["gemini-2.5-pro-preview-03-25","2025-03-31",95.6,0.4],["mistral-medium-2505","2025-05-07",81.6,0.9],["o4-mini-2025-04-16_high","2025-04-16",97.8,0.3],["o3-2025-04-16_high","2025-04-16",97.8,0.3],["gpt-4.1-mini-2025-04-14","2025-04-14",87.3,0.7],["gpt-4.1-nano-2025-04-14","2025-04-14",70.0,1.0],["gpt-4.1-2025-04-14","2025-04-14",83.0,0.8],["grok-3-mini-beta_low","2025-04-09",90.9,0.8],["grok-3-mini-beta_high","2025-04-09",88.1,0.9],["grok-3-beta","2025-04-09",88.7,0.9],["Llama-4-Maverick-17B-128E-Instruct-FP8","2025-04-05",73.0,1.1],["Llama-4-Scout-17B-16E-Instruct","2025-04-05",62.3,1.2],["qwen-turbo-2024-11-01","2024-11-01",56.2,1.1],["qwen-plus-2025-01-25","2025-01-25",65.3,1.1],["qwen-max-2025-01-25","2025-01-25",67.2,1.1],["DeepSeek-V3-0324","2025-03-24",75.5,0.9],["mistral-small-2503","2025-03-17",46.8,1.2],["claude-3-7-sonnet-20250219_64K","2025-02-24",91.2,0.8],["gemma-3-27b-it","2025-03-12",74.0,1.1],["claude-3-5-haiku-20241022","2024-10-22",46.4,1.2],["claude-3-7-sonnet-20250219_32K","2025-02-24",90.0,0.8],["DeepSeek-R1-Distill-Qwen-14B","2025-01-20",87.1,0.7],["DeepSeek-R1-Distill-Llama-70B","2025-01-20",89.9,0.7],["gpt-4.5-preview-2025-02-27","2025-02-27",78.6,1.1],["gpt-4-turbo-2024-04-09","2024-04-09",46.7,1.1],["claude-3-7-sonnet-20250219_16K","2025-02-24",86.3,0.9],["mistral-large-2411","2024-11-18",50.3,1.1],["claude-3-7-sonnet-20250219","2025-02-24",68.2,1.1],["grok-2-1212","2024-12-12",63.5,1.3],["o1-2024-12-17_high","2024-12-17",94.7,0.6],["o1-mini-2024-09-12_high","2024-09-12",89.2,0.7],["o3-mini-2025-01-31_high","2025-01-31",96.5,0.4],["gemini-2.0-pro-exp-02-05","2025-02-05",83.5,1.0],["gemini-2.0-flash-001","2025-02-05",82.2,0.9],["gpt-4o-2024-11-20","2024-11-20",49.8,1.1],["Phi-3-medium-128k-instruct","2024-04-23",17.6,0.7],["DeepSeek-R1","2025-01-20",93.1,0.7],["phi-4","2024-12-12",64.9,1.1],["o3-mini-2025-01-31_medium","2025-01-31",95.2,0.5],["qwen2.5-32b-instruct","2024-09-17",56.1,1.1],["mistral-small-2501","2025-01-25",44.8,1.1],["gpt-4-0613","2023-06-13",23.0,0.8],["gemini-1.5-flash-001","2024-05-23",25.1,0.9],["gemini-1.5-pro-002","2024-09-24",70.4,1.0],["gpt-3.5-turbo-0125","2024-01-25",11.6,0.6],["gemini-1.5-pro-001","2024-05-14",40.7,1.1],["gpt-4-1106-preview","2023-11-06",40.0,1.1],["gpt-3.5-turbo-1106","2023-11-06",15.9,0.7],["gemini-1.5-flash-002","2024-09-24",61.9,1.1],["claude-2.0","2023-07-11",11.7,0.7],["claude-3-5-sonnet-20241022","2024-10-22",56.9,1.1],["claude-3-5-sonnet-20240620","2024-06-20",51.7,1.2],["claude-3-opus-20240229","2024-02-29",37.5,1.1],["claude-3-haiku-20240307","2024-03-07",14.9,0.7],["claude-3-sonnet-20240229","2024-02-29",18.2,0.8],["Llama-3.1-8B-Instruct","2024-07-23",22.9,0.9],["Llama-3.1-405B-Instruct","2024-07-23",49.8,1.2],["Llama-3.1-70B-Instruct","2024-07-23",36.7,1.0],["gpt-4o-2024-05-13","2024-05-13",51.0,1.1],["gpt-4o-mini-2024-07-18","2024-07-18",52.6,1.1],["gpt-4o-2024-08-06","2024-08-06",53.3,1.1],["o1-mini-2024-09-12_medium","2024-09-12",84.3,0.8],["Hermes-2-Theta-Llama-3-70B","2024-06-20",22.7,0.8],["Meta-Llama-3-8B-Instruct","2024-04-18",6.1,0.4],["Meta-Llama-3-70B-Instruct","2024-04-18",22.6,0.8],["Llama-2-70b-chat-hf","2023-07-18",3.3,0.3],["Yi-1.5-34B-Chat","2024-05-13",25.5,0.9],["Yi-34B-Chat","2023-11-22",5.1,0.3],["gpt-4-0125-preview","2024-01-25",35.4,1.1],["gemma-2-9b-it","2024-06-24",21.0,0.9],["gemma-2-27b-it","2024-06-24",27.9,1.0],["qwen2-72b-instruct","2024-06-07",39.1,1.0],["Mistral-7B-Instruct-v0.3","2024-05-27",3.6,0.3],["Mixtral-8x7B-Instruct-v0.1","2023-12-11",9.3,0.5],["deepseek-llm-67b-chat","2023-11-29",6.4,0.4],["WizardLM-2-8x22B","2024-04-15",25.7,0.9],["dbrx-instruct","2024-03-27",11.7,0.7],["gemini-1.0-pro-001","2023-12-13",11.2,0.6],["ministral-3b-2410","2024-10-16",14.4,0.7],["open-mistral-7b","2023-09-27",3.7,0.3],["ministral-8b-2410","2024-10-16",14.9,0.7],["mistral-large-2407","2024-07-24",44.8,1.1],["open-mistral-nemo-2407","2024-07-18",10.8,0.6],["open-mixtral-8x7b","2023-12-11",10.0,0.5],["open-mixtral-8x22b","2024-04-17",24.2,0.8],["mistral-large-2402","2024-02-26",24.5,0.9],["Llama-3.2-90B-Vision-Instruct","2024-09-24",39.4,1.0],["Llama-3.1-Tulu-3-70B-DPO","2024-11-21",42.7,1.0],["Llama-3.3-70B-Instruct","2024-12-06",41.6,1.2],["qwen2.5-72b-instruct","2024-09-19",63.2,1.1],["o1-preview-2024-09-12","2024-09-12",81.6,1.1],["o1-2024-12-17_medium","2024-12-17",94.4,0.6],["DeepSeek-V3","2024-12-26",64.9,1.0]],"labels":[{"m":"gpt-4-0613","t":["GPT-4 (Jun 2023)"],"k":"b","dx":17,"dy":44,"a":"start"},{"m":"gpt-4-1106-preview","t":["GPT-4 Preview"],"k":"b","dx":-92,"dy":-21,"a":"start"},{"m":"gpt-4-turbo-2024-04-09","t":["GPT-4 Turbo"],"k":"b","dx":-138,"dy":-21,"a":"start"},{"m":"gpt-4o-2024-08-06","t":["GPT-4o"],"k":"b","dx":-42,"dy":55,"a":"start"},{"m":"o1-mini-2024-09-12_high","t":["o1-mini"],"k":"b","dx":18,"dy":9,"a":"start"},{"m":"DeepSeek-R1","t":["DeepSeek-R1"],"k":"r","dx":-18,"dy":9,"a":"end"},{"m":"o4-mini-2025-04-16_high","t":["o4-mini"],"k":"b","dx":-18,"dy":10,"a":"end"}]}}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script id="chart-code">
+// ===== Gráficas de Epoch AI con D3.js =====
+// DATA: { gpqa: { rows: [[modelo, fecha, puntaje %, error estándar %], ...], labels: [...] }, math: {...} }
+const DATA = JSON.parse(document.getElementById('epoch-data').textContent);
+
+// Tamaño del lienzo (viewBox) y área del gráfico, en píxeles
+const W = 816, H = 712;
+const PLOT = { left: 70, right: 800, top: 16, bottom: 680 };
+
+// Configuración de cada benchmark
+const CHARTS = {
+  gpqa: { el: '#chart-gpqa', yMin: 10, yMax: 90, yTicks: [10, 30, 50, 70, 90],
+          refs: [{ v: 70, text: 'Expert human level', x: 80, dy: -12, anchor: 'start' },
+                 { v: 25, text: 'Random guessing', x: 792, dy: 26, anchor: 'end' }],
+          // Curva roja "a mano": Bézier cúbica con 4 puntos (fecha decimal, %)
+          curve: [[2023.42, 29], [2024.25, 31], [2024.9, 52], [2025.33, 83]] },
+  math: { el: '#chart-math', yMin: 0, yMax: 100, yTicks: [0, 20, 40, 60, 80, 100], refs: [],
+          curve: [[2023.42, 18], [2024.3, 30], [2024.6, 78], [2025.36, 97]] }
+};
+
+// Colores: se leen de las variables CSS definidas en :root
+function palette() {
+  const cs = getComputedStyle(document.documentElement);
+  const v = n => cs.getPropertyValue(n).trim();
+  return { text: v('--chart-text'), grid: v('--chart-grid'), frame: v('--chart-frame'), ref: v('--chart-ref'),
+           curve: v('--chart-curve'), pt: v('--chart-pt'), bar: v('--chart-bar'), b: v('--chart-blue'),
+           r: v('--chart-red'), d: v('--chart-red'), lab: { b: v('--chart-lab'), r: v('--chart-lab-red'), d: v('--chart-lab-distill') },
+           bg: v('--chart-bg') };
+}
+
+const parseDate = d3.timeParse('%Y-%m-%d');
+// Fecha decimal (2024.5) -> Date, para los puntos de la curva
+const fromDecimal = y => new Date(Math.floor(y), 0, 1 + Math.round((y % 1) * 365));
+
+function draw(key) {
+  const cfg = CHARTS[key], C = palette();
+  const rows = DATA[key].rows.map(([model, date, score, se]) => ({ model, date: parseDate(date), score, se }));
+  const labeled = new Map(DATA[key].labels.map(l => [l.m, l]));
+
+  // 1) Escalas
+  const x = d3.scaleTime().domain([parseDate('2023-05-27'), parseDate('2025-05-27')]).range([PLOT.left, PLOT.right]);
+  const y = d3.scaleLinear().domain([cfg.yMin, cfg.yMax]).range([PLOT.bottom, PLOT.top]);
+  const clampY = v => y(Math.max(cfg.yMin, Math.min(cfg.yMax, v)));
+
+  // 2) Lienzo SVG (se limpia en cada redibujo)
+  const host = d3.select(cfg.el); host.selectAll('*').remove();
+  const svg = host.append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('xmlns', 'http://www.w3.org/2000/svg')
+    .attr('font-family', 'Arial, Helvetica, sans-serif').attr('role', 'img')
+    .attr('aria-label', key === 'gpqa' ? 'GPQA Diamond: puntaje de cada modelo por fecha' : 'MATH Level 5: puntaje de cada modelo por fecha');
+  svg.append('rect').attr('width', W).attr('height', H).attr('fill', C.bg);
+
+  // 3) Rejilla horizontal y etiquetas del eje Y
+  svg.append('g').selectAll('line').data(cfg.yTicks).join('line')
+    .attr('x1', PLOT.left).attr('x2', PLOT.right).attr('y1', y).attr('y2', y)
+    .attr('stroke', C.grid).attr('stroke-width', 2);
+  svg.append('g').selectAll('text').data(cfg.yTicks).join('text')
+    .attr('x', PLOT.left - 6).attr('y', d => y(d) + 8).attr('text-anchor', 'end')
+    .attr('font-size', 24).attr('fill', C.text).text(d => d + '%');
+
+  // 4) Líneas de referencia (solo GPQA)
+  cfg.refs.forEach(r => {
+    svg.append('line').attr('x1', PLOT.left).attr('x2', PLOT.right).attr('y1', y(r.v)).attr('y2', y(r.v))
+      .attr('stroke', C.ref).attr('stroke-width', 3).attr('stroke-dasharray', '12 8');
+    svg.append('text').attr('x', r.x).attr('y', y(r.v) + r.dy).attr('text-anchor', r.anchor)
+      .attr('font-size', 24).attr('fill', C.ref).text(r.text);
+  });
+
+  // 5) Curva roja dibujada a mano por el ponente (Bézier cúbica)
+  const P = cfg.curve.map(([t, v]) => [x(fromDecimal(t)), y(v)]);
+  svg.append('path').attr('d', `M${P[0]} C${P[1]} ${P[2]} ${P[3]}`)
+    .attr('fill', 'none').attr('stroke', C.curve).attr('stroke-width', 5).attr('stroke-linecap', 'round').attr('opacity', 0.85);
+
+  // 6) Todos los modelos: barra de error estándar + punto
+  const others = rows.filter(d => !labeled.has(d.model));
+  svg.append('g').selectAll('line').data(others).join('line')
+    .attr('x1', d => x(d.date)).attr('x2', d => x(d.date))
+    .attr('y1', d => clampY(d.score - d.se)).attr('y2', d => clampY(d.score + d.se))
+    .attr('stroke', C.bar).attr('stroke-width', 2);
+  const dots = svg.append('g').selectAll('circle').data(others).join('circle')
+    .attr('cx', d => x(d.date)).attr('cy', d => y(d.score)).attr('r', 5).attr('fill', C.pt);
+
+  // 7) Marco y marcas del eje X
+  svg.append('rect').attr('x', PLOT.left).attr('y', PLOT.top).attr('width', PLOT.right - PLOT.left).attr('height', PLOT.bottom - PLOT.top)
+    .attr('fill', 'none').attr('stroke', C.frame).attr('stroke-width', 2);
+  const xTicks = [['2023-07-01', 'July 2023'], ['2024-01-01', 'Jan. 2024'], ['2024-07-01', 'July 2024'], ['2025-01-01', 'Jan. 2025']];
+  const xt = svg.append('g').selectAll('g').data(xTicks).join('g').attr('transform', d => `translate(${x(parseDate(d[0]))},0)`);
+  xt.append('line').attr('y1', PLOT.bottom).attr('y2', PLOT.bottom + 10).attr('stroke', C.frame).attr('stroke-width', 2);
+  xt.append('text').attr('y', PLOT.bottom + 32).attr('text-anchor', 'middle').attr('font-size', 24).attr('fill', C.text).text(d => d[1]);
+
+  // 8) Modelos etiquetados por el ponente: barra, punto grande y texto
+  const hl = rows.filter(d => labeled.has(d.model));
+  const color = d => C[labeled.get(d.model).k];
+  svg.append('g').selectAll('line').data(hl).join('line')
+    .attr('x1', d => x(d.date)).attr('x2', d => x(d.date))
+    .attr('y1', d => clampY(d.score - d.se)).attr('y2', d => clampY(d.score + d.se))
+    .attr('stroke', color).attr('stroke-width', 3);
+  const big = svg.append('g').selectAll('circle').data(hl).join('circle')
+    .attr('cx', d => x(d.date)).attr('cy', d => y(d.score)).attr('r', 9)
+    .attr('fill', color).attr('stroke', C.bg).attr('stroke-width', 2);
+  const labels = svg.append('g').selectAll('text').data(hl).join('text')
+    .attr('x', d => x(d.date) + labeled.get(d.model).dx)
+    .attr('y', d => y(d.score) + labeled.get(d.model).dy)
+    .attr('text-anchor', d => labeled.get(d.model).a)
+    .attr('font-size', 24).attr('font-weight', 700).attr('fill', d => C.lab[labeled.get(d.model).k]);
+  // Etiquetas de dos renglones (ej. "R1-Distill / 70B") con <tspan>
+  labels.selectAll('tspan').data(d => labeled.get(d.model).t).join('tspan')
+    .attr('x', function () { return d3.select(this.parentNode).attr('x'); })
+    .attr('dy', (t, i) => i ? 28 : 0).text(t => t);
+
+  // 9) Tooltip al pasar el cursor
+  const fig = host.node().closest('figure');
+  let tip = fig.querySelector('.tip');
+  if (!tip) { tip = document.createElement('div'); tip.className = 'tip'; tip.hidden = true; fig.appendChild(tip); }
+  const fmt = d3.timeFormat('%d %b %Y');
+  [dots, big].forEach(sel => sel.style('cursor', 'pointer')
+    .on('pointerenter pointermove', (ev, d) => {
+      tip.innerHTML = `<b>${d.model}</b>${fmt(d.date)} · ${d.score.toFixed(1)} % ± ${d.se.toFixed(1)}`;
+      tip.hidden = false;
+      const box = fig.getBoundingClientRect();
+      const left = Math.min(ev.clientX - box.left + 12, box.width - 250);
+      tip.style.left = Math.max(8, left) + 'px'; tip.style.top = (ev.clientY - box.top + 12) + 'px';
+    })
+    .on('pointerleave', () => { tip.hidden = true; }));
+}
+
+// ===== Barras agrupadas: Fotografía Dic 2024 y Ene 2025 =====
+// Valores (%) leídos de la diapositiva del ponente: AIME, GPQA Diamond y Codeforces (percentil)
+const BENCHES = ['AIME', 'GPQA Diamond', 'Codeforces'];
+const MODELS = {
+  '4o': { name: 'GPT-4o (20usd)', short: 'GPT-4o (20usd)', color: '--bar-4o', values: [9, 50, 24] },
+  'v3': { name: 'Deepseek V3 (Gratis)', short: 'Deepseek V3', color: '--bar-v3', values: [39, 59, 52] },
+  'o1': { name: 'ChatGPT-o1 (200usd)', short: 'ChatGPT-o1', color: '--bar-o1', values: [80, 97, 97] },
+  'r1': { name: 'Deepseek R1 (Gratis)', short: 'Deepseek R1 (Gratis)', color: '--bar-r1', values: [80, 97, 97] }
+};
+const SNAPSHOTS = {
+  // barW y gap: ancho de cada barra y separación, en píxeles, iguales a la diapositiva
+  dic: { el: '#chart-dic', models: ['4o', 'v3', 'o1'], label: 'name', barW: 50, gap: 8, legendGap: 28, arrow: null },
+  ene: { el: '#chart-ene', models: ['4o', 'v3', 'o1', 'r1'], label: 'short', barW: 42, gap: 6, legendGap: 24, arrow: { model: 'r1', bench: 'AIME' } }
+};
+
+function drawBars(key) {
+  const cfg = SNAPSHOTS[key], C = palette();
+  const cs = getComputedStyle(document.documentElement);
+  // Medidas de la diapositiva: área de barras de 660 × 340 px (x 60–720, y 10–350), 3.4 px por punto porcentual.
+  // El lienzo es más ancho (880) solo para que la leyenda quepa en un renglón, como en la diapositiva.
+  const BW = 880, BH = 458, LEGEND_H = 48, OFFSET_X = (BW - 730) / 2;
+  const B = { left: 60, right: 720, top: 10, bottom: 350 };
+
+  // Filas planas: una por (benchmark, modelo)
+  const rows = BENCHES.flatMap((bench, i) => cfg.models.map((m, j) => ({ bench, m, j, v: MODELS[m].values[i] })));
+
+  // Escalas: cada benchmark ocupa un grupo de 220 px; dentro, las barras van centradas con ancho y separación fijos
+  const x0 = d3.scaleBand().domain(BENCHES).range([B.left, B.right]);
+  const groupW = cfg.models.length * cfg.barW + (cfg.models.length - 1) * cfg.gap;
+  const barX = d => x0(d.bench) + (x0.bandwidth() - groupW) / 2 + d.j * (cfg.barW + cfg.gap);
+  const y = d3.scaleLinear().domain([0, 100]).range([B.bottom, B.top]);
+  const col = m => cs.getPropertyValue(MODELS[m].color).trim();
+
+  const host = d3.select(cfg.el); host.selectAll('*').remove();
+  const svg = host.append('svg').attr('viewBox', `0 0 ${BW} ${BH}`).attr('xmlns', 'http://www.w3.org/2000/svg')
+    .attr('font-family', 'Arial, Helvetica, sans-serif').attr('role', 'img')
+    .attr('aria-label', key === 'dic' ? 'Diciembre 2024: GPT-4o abajo, DeepSeek V3 en medio y ChatGPT-o1 arriba en AIME, GPQA Diamond y Codeforces'
+                                      : 'Enero 2025: DeepSeek R1 iguala a ChatGPT-o1 en los tres benchmarks');
+  svg.append('rect').attr('width', BW).attr('height', BH).attr('fill', C.bg);
+
+  // Leyenda en un renglón, centrada: se mide cada texto y luego se centra el grupo completo
+  const legend = svg.append('g');
+  let lx = 0;
+  cfg.models.forEach(m => {
+    const g = legend.append('g').attr('transform', `translate(${lx},0)`);
+    g.append('rect').attr('y', 2).attr('width', 24).attr('height', 24).attr('fill', col(m));
+    const t = g.append('text').attr('x', 32).attr('y', 22).attr('font-size', 24).attr('fill', C.text).text(MODELS[m][cfg.label]);
+    lx += 32 + t.node().getComputedTextLength() + cfg.legendGap;
+  });
+  legend.attr('transform', `translate(${(BW - (lx - cfg.legendGap)) / 2},4)`);
+
+  // Todo el gráfico de barras va desplazado para quedar centrado bajo la leyenda
+  const chart = svg.append('g').attr('transform', `translate(${OFFSET_X},${LEGEND_H})`);
+
+  // Rejilla y eje Y (0, 25, 50, 75, 100)
+  const ticks = [0, 25, 50, 75, 100];
+  chart.append('g').selectAll('line').data(ticks.slice(1)).join('line')
+    .attr('x1', B.left).attr('x2', B.right).attr('y1', y).attr('y2', y).attr('stroke', C.grid).attr('stroke-width', 2);
+  chart.append('g').selectAll('text').data(ticks).join('text')
+    .attr('x', 50).attr('y', d => y(d) + 8).attr('text-anchor', 'end').attr('font-size', 24).attr('fill', C.text).text(d => d);
+
+  // Barras
+  chart.append('g').selectAll('rect').data(rows).join('rect')
+    .attr('x', barX).attr('width', cfg.barW)
+    .attr('y', d => y(d.v)).attr('height', d => y(0) - y(d.v)).attr('fill', d => col(d.m))
+    .append('title').text(d => `${MODELS[d.m].short} · ${d.bench}: ${d.v}`);
+
+  // Eje X: línea base y nombres de los benchmarks
+  chart.append('line').attr('x1', B.left).attr('x2', B.right).attr('y1', y(0)).attr('y2', y(0)).attr('stroke', C.frame).attr('stroke-width', 2);
+  chart.append('g').selectAll('text').data(BENCHES).join('text')
+    .attr('x', d => x0(d) + x0.bandwidth() / 2).attr('y', B.bottom + 38).attr('text-anchor', 'middle')
+    .attr('font-size', 24).attr('fill', C.text).text(d => d);
+
+  // Flecha roja sobre la barra de R1 en AIME (solo enero)
+  if (cfg.arrow) {
+    const a = cfg.arrow, i = BENCHES.indexOf(a.bench);
+    const ax = barX({ bench: a.bench, j: cfg.models.indexOf(a.model) }) + cfg.barW / 2, top = y(MODELS[a.model].values[i]);
+    const ac = cs.getPropertyValue('--bar-arrow').trim();
+    chart.append('line').attr('x1', ax).attr('x2', ax).attr('y1', top - 76).attr('y2', top - 22).attr('stroke', ac).attr('stroke-width', 5);
+    chart.append('polygon').attr('points', `${ax},${top - 6} ${ax - 11},${top - 24} ${ax + 11},${top - 24}`).attr('fill', ac);
+  }
+}
+
+function drawAll() { draw('gpqa'); draw('math'); drawBars('dic'); drawBars('ene'); }
+drawAll();
+
+</script>
+
+<script>
+// Utilidades de la página (no son parte de las gráficas): mostrar el código y copiar al portapapeles
+document.getElementById('code-view').textContent = document.getElementById('chart-code').textContent.trim();
+const status = document.getElementById('status');
+const baseStatus = status.textContent;
+async function copyText(text, label) {
+  try { await navigator.clipboard.writeText(text); status.textContent = label + ' copiado al portapapeles.'; }
+  catch (e) {
+    const r = document.createRange(); r.selectNodeContents(document.getElementById('code-view'));
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    status.textContent = 'No se pudo copiar automáticamente; selecciona y copia con Ctrl+C.';
+  }
+  setTimeout(() => { status.textContent = baseStatus; }, 4000);
+}
+const NAMES = { gpqa: 'GPQA Diamond', math: 'MATH Level 5', dic: 'Fotografía Dic 2024', ene: 'Fotografía Ene 2025' };
+Object.keys(NAMES).forEach(k => document.getElementById('copy-' + k).addEventListener('click', () => {
+  const svg = document.querySelector('#chart-' + k + ' svg');
+  copyText(new XMLSerializer().serializeToString(svg), 'SVG de ' + NAMES[k]);
+}));
+document.getElementById('copy-code').addEventListener('click', () => copyText(document.getElementById('chart-code').textContent.trim(), 'Código'));
+</script>
