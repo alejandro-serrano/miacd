@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="author" content="Manuel Alejandro Serrano Macias">
+  <meta name="description" content="MIACD 2025 – 2027 · Logo alineado a la marca institucional Universidad Panamericana">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Logo MIACD 2025 – 2027</title>
+
+  <!--
+    Tipografía institucional UP (https://www.up.edu.mx/marca-institucional/):
+      · Panamericana  → títulos y descriptores (Regular, Italic, SemiBold)
+      · Seravek       → texto complementario (aquí solo en la interfaz)
+    El logo usa Panamericana SemiBold ("MIACD") y Panamericana Regular ("2025 – 2027").
+    Esas dos líneas van incrustadas como CURVAS (TEXT_OUTLINES, más abajo): el logo se ve
+    igual en cualquier equipo y los SVG ya son aptos para imprenta. El archivo de fuente
+    no se incluye (licencia restringida). Si se desactivan las curvas, el texto usa
+    Panamericana instalada y, si no está, Source Serif 4 como sustituta.
+  -->
+  <style>
+    /* Alias explícitos por nombre PostScript: en algunas instalaciones la familia
+       "Panamericana" queda asignada solo a SemiBold por un error en los metadatos. */
+    @font-face { font-family: "Panamericana UP"; font-weight: 600; font-style: normal;
+                 src: local("Panamericana-SemiBold"), local("Panamericana SemiBold"); }
+    @font-face { font-family: "Panamericana UP"; font-weight: 400; font-style: normal;
+                 src: local("Panamericana-Regular"), local("Panamericana Regular"); }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <style>
+    :root {
+      --ink: #1D1D1B;
+      --muted: #6E6A62;
+      --rule: #E7E2D8;
+      --soft: #F7F5F0;
+      --paper: #FFFFFF;
+      --gold: #B9975B;
+      --green: #215347;
+      --serif: "Panamericana UP", Panamericana, "Source Serif 4", Georgia, serif;
+      --sans: Seravek, "Source Sans 3", "Gill Sans", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+    header {
+      padding: 28px 32px 8px;
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+    header h1 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 26px;
+      margin: 0;
+      letter-spacing: .01em;
+    }
+    header p { margin: 4px 0 0; color: var(--muted); }
+
+    main {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 16px 32px 48px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 420px;
+      gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 960px) {
+      main { grid-template-columns: 1fr; padding: 16px; }
+      header { padding: 20px 16px 0; }
+    }
+
+    /* ── Escenario ───────────────────────────── */
+    .stage { position: sticky; top: 16px; }
+    @media (max-width: 960px) { .stage { position: static; } }
+    .preview {
+      border: 1px solid var(--rule);
+      border-radius: 14px;
+      aspect-ratio: 16 / 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: background-color .25s;
+    }
+    /* Transparencia: cuadrícula sobre el color de fondo/prenda de la versión, para no perder contraste */
+    .preview.checker {
+      background-image:
+        conic-gradient(rgba(128,128,128,.16) 25%, transparent 0 50%, rgba(128,128,128,.16) 0 75%, transparent 0);
+      background-size: 20px 20px;
+    }
+    #logo-container { height: 88%; aspect-ratio: 1; max-width: 100%; }
+    #logo-container svg { display: block; width: 100%; height: 100%; }
+    #logo-container .node, #logo-container .c-dot { pointer-events: all; }
+
+    .controls { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
+    button {
+      font-family: var(--sans);
+      font-size: 14px;
+      padding: 8px 16px;
+      border: 1px solid var(--rule);
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover { border-color: var(--gold); }
+    button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+    button.primary {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+      font-weight: 600;
+    }
+    button.primary:hover { background: #1A4339; }
+    button:disabled { opacity: .5; cursor: progress; }
+
+    .status { margin: 12px 0 0; font-size: 13px; color: var(--muted); }
+    .status b { color: var(--ink); font-weight: 600; }
+
+    /* ── Panel ───────────────────────────────── */
+    .panel h2 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 19px;
+      margin: 0 0 4px;
+    }
+    .panel section + section { margin-top: 28px; }
+    .group-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      margin: 16px 0 8px;
+    }
+    .themes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .theme {
+      padding: 6px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      border-radius: 10px;
+      position: relative;
+    }
+    .theme[aria-pressed="true"] { border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+    .thumb {
+      display: block;
+      border-radius: 6px;
+      aspect-ratio: 1;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,.06);
+    }
+    .thumb svg { display: block; width: 100%; height: 100%; }
+    .t-name { font-weight: 600; font-size: 13px; line-height: 1.2; }
+    .t-desc { font-size: 11.5px; color: var(--muted); line-height: 1.25; }
+    .badge {
+      position: absolute;
+      top: 10px; left: 10px;
+      background: var(--gold);
+      color: #fff;
+      font-size: 10px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .note { font-size: 12.5px; color: var(--muted); margin: 8px 0 0; }
+
+    .export-grid { display: grid; gap: 12px; margin-top: 12px; }
+    label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 4px; }
+    select {
+      width: 100%;
+      font-family: var(--sans);
+      font-size: 14px;
+      padding: 8px 10px;
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      background: var(--paper);
+      color: var(--ink);
+    }
+    .check { display: flex; align-items: center; gap: 8px; color: var(--ink); font-size: 14px; margin: 0; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .row button.primary { flex: 1 1 100%; padding: 11px 16px; font-size: 15px; }
+    .row button:not(.primary) { flex: 1 1 0; }
+    .row button.wide { flex: 1 1 100%; }
+    code { font-size: 12.5px; background: var(--soft); padding: 1px 5px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>MIACD · 2025 – 2027</h1>
+  <p>Maestría en Inteligencia Artificial y Ciencia de Datos · Versiones alineadas a la marca institucional UP</p>
+</header>
+
+<main>
+  <div class="stage">
+    <div class="preview" id="preview"><div id="logo-container"></div></div>
+    <div class="controls">
+      <button onclick="animatePulse()">Pulsar red</button>
+      <button onclick="animateSigmoid()">Trazar sigmoide</button>
+      <button onclick="resetAnim()">Reiniciar</button>
+    </div>
+    <p class="status" id="font-status">Cargando tipografía…</p>
+  </div>
+
+  <aside class="panel">
+    <section>
+      <h2>Versión</h2>
+      <div id="theme-groups"></div>
+    </section>
+
+    <section>
+      <h2>Exportar</h2>
+      <div class="export-grid">
+        <div>
+          <label for="usage">Uso</label>
+          <select id="usage">
+            <option value="" selected>Pantalla / digital (con transparencias)</option>
+            <option value="flat">Merch · colores planos</option>
+            <option value="solid">Merch · tintas sólidas</option>
+          </select>
+          <p class="note" id="usage-note"></p>
+        </div>
+        <div>
+          <label for="size">Resolución</label>
+          <select id="size">
+            <option value="1920x1080" selected>Full HD · 1920 × 1080</option>
+            <option value="1280x720">HD · 1280 × 720</option>
+            <option value="2560x1440">QHD · 2560 × 1440</option>
+            <option value="3840x2160">4K · 3840 × 2160</option>
+            <option value="1080x1080">Cuadrado · 1080 × 1080</option>
+            <option value="2048x2048">Cuadrado · 2048 × 2048</option>
+            <option value="4096x4096">Cuadrado · 4096 × 4096</option>
+          </select>
+        </div>
+        <label class="check"><input type="checkbox" id="transparent"> Fondo transparente</label>
+        <div class="row">
+          <button class="primary" id="btn-png">Descargar PNG Full HD</button>
+          <button id="btn-svg">Descargar SVG</button>
+          <button id="btn-zip">Todas las versiones (ZIP)</button>
+          <button id="btn-all" class="wide">Todo: 12 versiones × 3 usos (ZIP)</button>
+        </div>
+        <p class="status" id="export-status"></p>
+        <p class="note">Desde la consola también puedes llamar <code>downloadFullHD()</code>, <code>downloadEverything()</code> o
+          <code>downloadLogo({ theme: 'neg-verde', width: 3840, height: 2160, transparent: true })</code>.</p>
+      </div>
+    </section>
+  </aside>
+</main>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   1. Marca institucional UP
+   ════════════════════════════════════════════════════════════════ */
+
+// Paleta oficial publicada en up.edu.mx/marca-institucional
+const UP = {
+  dorado: "#B9975B",   // PANTONE 465 CP · Institucional / Tradición
+  azul:   "#002D72",   // PANTONE 288 CP · Preparatoria / Prudencia
+  vino:   "#7A1A37",   // PANTONE 1955 CP · Universidad / Fortaleza
+  verde:  "#215347",   // PANTONE 329 CP · Posgrados / Esperanza
+  negro:  "#1D1D1B",   // Complementario
+  blanco: "#FFFFFF",   // Complementario
+};
+
+// Tipografía: institucional si está instalada, sustituta libre si no
+const FONT_TITLE = `"Panamericana UP", Panamericana, "Source Serif 4", Georgia, serif`;
+const FONT_SUB   = `"Panamericana UP", Panamericana, "Source Serif 4", Georgia, serif`;
+const TITLE_WEIGHT = 600;   // Panamericana SemiBold
+const SUB_WEIGHT   = 400;   // Panamericana Regular
+
+/* Texto del logo convertido a curvas con fontTools a partir de Panamericana-SemiBold.ttf
+   y Panamericana-Regular.ttf (mismo tamaño, posición y tracking que TITLE / SUB). */
+const TEXT_OUTLINES = {
+  "fuente": "Panamericana SemiBold (MIACD) · Panamericana Regular (2025 – 2027)",
+  "title": "M192.62 408V407.328L194.552 406.796Q194.636 406.768 194.734 406.684Q194.832 406.6 194.832 406.544V390.024Q194.832 389.856 194.552 389.744L192.62 389.212V388.54L197.884 388.512L207.656 404.752L216.28 388.54H221.656V389.212L219.724 389.744Q219.668 389.772 219.626 389.786Q219.584 389.8 219.528 389.828Q219.416 389.912 219.416 389.996V406.572Q219.416 406.628 219.528 406.712Q219.584 406.74 219.626 406.754Q219.668 406.768 219.724 406.796L221.656 407.328V408H213.984V407.328L215.916 406.796Q216.224 406.712 216.224 406.404V392.936Q216.224 392.852 216.21 392.754Q216.196 392.656 216.056 392.656Q215.944 392.656 215.86 392.74Q215.776 392.824 215.72 392.936L207.656 408H205.892L197.1 393.468Q197.044 393.356 196.988 393.328Q196.96 393.244 196.876 393.244Q196.792 393.244 196.736 393.384Q196.708 393.496 196.708 393.664V406.404Q196.708 406.712 196.988 406.796L198.92 407.328V408ZM231.448 408V407.328L233.352 406.796Q233.436 406.768 233.534 406.698Q233.632 406.628 233.632 406.572V389.996Q233.632 389.856 233.562 389.828Q233.492 389.8 233.352 389.744L231.448 389.212V388.54H239.064V389.212L237.104 389.744L236.936 389.828Q236.824 389.856 236.824 389.94V406.544Q236.824 406.712 237.104 406.796L239.064 407.328V408ZM255.1 399.572H260.28L257.844 392.656H257.732ZM248.324 408V407.3L250.368 406.712Q250.62 406.628 250.676 406.46L257.424 388.54H259.692L266.16 406.46Q266.272 406.684 266.468 406.712L268.54 407.3V408H260.336V407.3L262.436 406.712Q262.548 406.712 262.632 406.628Q262.744 406.6 262.744 406.516V406.488V406.46L260.924 401.364Q260.812 401 260.364 401H255.996Q255.716 401 255.45 401Q255.184 401 254.932 401.028Q254.568 401.028 254.456 401.308L252.468 406.544Q252.496 406.6 252.524 406.6Q252.552 406.6 252.58 406.628Q252.748 406.712 252.832 406.712L254.876 407.3V408ZM294.824 393.412V393.384Q294.684 392.908 294.6 392.474Q294.516 392.04 294.376 391.592Q294.264 391.172 293.648 390.878Q293.032 390.584 292.248 390.388Q291.464 390.192 290.68 390.094Q289.896 389.996 289.476 389.996Q287.572 389.996 286.214 390.668Q284.856 391.34 284.002 392.446Q283.148 393.552 282.742 394.98Q282.336 396.408 282.336 397.948Q282.336 399.32 282.714 400.846Q283.092 402.372 283.904 403.632Q284.716 404.892 286.004 405.718Q287.292 406.544 289.112 406.544Q290.176 406.544 291.142 406.264Q292.108 405.984 292.976 405.494Q293.844 405.004 294.586 404.332Q295.328 403.66 295.888 402.904Q295.944 402.792 296 402.736Q296.056 402.624 296.112 402.568Q296.308 402.428 296.476 402.428Q296.7 402.428 296.742 402.554Q296.784 402.68 296.784 402.792Q296.784 403.576 296.392 404.29Q296 405.004 295.342 405.606Q294.684 406.208 293.844 406.698Q293.004 407.188 292.094 407.524Q291.184 407.86 290.288 408.042Q289.392 408.224 288.636 408.224Q286.312 408.224 284.478 407.384Q282.644 406.544 281.384 405.144Q280.124 403.744 279.452 401.938Q278.78 400.132 278.78 398.172Q278.78 396.128 279.48 394.336Q280.18 392.544 281.482 391.2Q282.784 389.856 284.66 389.086Q286.536 388.316 288.916 388.316Q289.952 388.316 290.848 388.456Q291.744 388.596 292.584 388.848Q293.424 389.1 294.264 389.436Q295.104 389.772 296.028 390.192H296.056V393.468H296Q295.72 393.412 295.44 393.412Q295.16 393.412 294.88 393.412ZM312.792 406.264H312.848Q313.52 406.32 314.192 406.348Q314.864 406.376 315.536 406.376Q317.496 406.376 318.966 405.746Q320.436 405.116 321.43 404.038Q322.424 402.96 322.914 401.504Q323.404 400.048 323.404 398.424Q323.404 396.828 322.97 395.4Q322.536 393.972 321.472 392.684Q320.828 391.872 320.198 391.382Q319.568 390.892 318.882 390.626Q318.196 390.36 317.356 390.262Q316.516 390.164 315.452 390.164Q314.808 390.164 314.15 390.206Q313.492 390.248 312.848 390.304H312.792ZM307.416 408V407.328L309.32 406.684Q309.404 406.656 309.502 406.586Q309.6 406.516 309.6 406.46V390.052Q309.6 389.912 309.32 389.8L307.416 389.24V388.54H317.02Q319.26 388.54 321.066 389.352Q322.872 390.164 324.146 391.536Q325.42 392.908 326.12 394.658Q326.82 396.408 326.82 398.312Q326.82 400.412 326.022 402.176Q325.224 403.94 323.796 405.242Q322.368 406.544 320.408 407.272Q318.448 408 316.096 408Z",
+  "sub": "M207.45 427V426.832Q207.606 426.616 207.858 426.322Q208.11 426.028 208.41 425.632Q209.25 424.54 209.922 423.682Q210.594 422.824 211.002 422.158Q211.41 421.492 211.596 421.018Q211.782 420.544 211.782 420.196Q211.782 419.716 211.452 419.452Q211.122 419.188 210.462 419.188Q210.018 419.188 209.604 419.308Q209.19 419.428 208.836 419.656Q208.482 419.884 208.2 420.196Q207.918 420.508 207.75 420.904L207.642 420.832L207.69 419.8Q208.902 418.588 210.534 418.588Q211.59 418.588 212.172 419.05Q212.754 419.512 212.778 420.364Q212.778 420.4 212.778 420.436Q212.778 421.9 211.026 424.156L209.286 426.4H212.454Q212.574 426.4 212.61 426.256L212.838 425.476H213.054L212.946 427ZM224.002 422.836Q224.002 423.724 223.786 424.498Q223.57 425.272 223.192 425.848Q222.814 426.424 222.292 426.76Q221.77 427.096 221.146 427.096Q220.522 427.096 220 426.76Q219.478 426.424 219.106 425.848Q218.734 425.272 218.53 424.498Q218.326 423.724 218.326 422.848Q218.326 421.972 218.53 421.198Q218.734 420.424 219.112 419.848Q219.49 419.272 220.012 418.936Q220.534 418.6 221.158 418.6Q221.794 418.6 222.316 418.936Q222.838 419.272 223.216 419.848Q223.594 420.424 223.798 421.192Q224.002 421.96 224.002 422.836ZM222.838 422.86Q222.838 422.08 222.766 421.396Q222.694 420.712 222.508 420.202Q222.322 419.692 221.992 419.398Q221.662 419.104 221.146 419.104Q220.63 419.104 220.306 419.398Q219.982 419.692 219.802 420.202Q219.622 420.712 219.556 421.396Q219.49 422.08 219.49 422.86Q219.49 423.64 219.556 424.324Q219.622 425.008 219.802 425.512Q219.982 426.016 220.306 426.31Q220.63 426.604 221.146 426.604Q221.662 426.604 221.992 426.31Q222.322 426.016 222.508 425.512Q222.694 425.008 222.766 424.324Q222.838 423.64 222.838 422.86ZM229.13 427V426.832Q229.286 426.616 229.538 426.322Q229.79 426.028 230.09 425.632Q230.93 424.54 231.602 423.682Q232.274 422.824 232.682 422.158Q233.09 421.492 233.276 421.018Q233.462 420.544 233.462 420.196Q233.462 419.716 233.132 419.452Q232.802 419.188 232.142 419.188Q231.698 419.188 231.284 419.308Q230.87 419.428 230.516 419.656Q230.162 419.884 229.88 420.196Q229.598 420.508 229.43 420.904L229.322 420.832L229.37 419.8Q230.582 418.588 232.214 418.588Q233.27 418.588 233.852 419.05Q234.434 419.512 234.458 420.364Q234.458 420.4 234.458 420.436Q234.458 421.9 232.706 424.156L230.966 426.4H234.134Q234.254 426.4 234.29 426.256L234.518 425.476H234.734L234.626 427ZM240.078 425.092Q240.15 425.056 240.21 425.056Q240.318 425.056 240.438 425.164Q240.558 425.272 240.642 425.44Q240.69 425.524 240.762 425.728Q240.834 425.932 240.954 426.136Q241.074 426.34 241.308 426.508Q241.542 426.676 241.83 426.682Q242.118 426.688 242.142 426.688Q242.682 426.688 243.006 426.496Q243.342 426.316 243.576 425.986Q243.81 425.656 243.936 425.206Q244.062 424.756 244.062 424.24Q244.062 423.796 243.936 423.466Q243.81 423.136 243.414 422.92Q243.018 422.704 242.298 422.596Q241.722 422.524 240.846 422.512H240.318L240.234 422.428L240.522 418.672H245.022L244.794 419.296Q244.77 419.356 244.674 419.356H241.374Q241.218 419.356 241.134 419.464Q241.074 419.536 241.062 419.74L240.906 421.816Q241.242 421.804 241.542 421.804Q242.154 421.804 242.646 421.852Q243.57 421.96 244.152 422.248Q244.734 422.536 244.992 422.98Q245.25 423.424 245.25 424Q245.25 424.084 245.25 424.156Q245.214 424.852 244.98 425.41Q244.746 425.968 244.326 426.352Q243.906 426.736 243.36 426.934Q242.814 427.132 242.214 427.132Q241.698 427.132 241.218 426.964Q240.87 426.844 240.54 426.61Q240.21 426.376 240.03 426.1Q240.006 426.064 239.982 426.016Q239.874 425.8 239.874 425.596Q239.874 425.392 239.922 425.272Q239.97 425.152 240.078 425.092ZM258.266 423.076Q258.41 423.016 258.626 422.95Q258.842 422.884 259.322 422.884H260.654Q261.038 422.896 261.434 422.896V423.904H259.262Q259.106 423.904 258.962 423.922Q258.818 423.94 258.704 423.97Q258.59 424 258.53 424.06ZM274.786 427V426.832Q274.942 426.616 275.194 426.322Q275.446 426.028 275.746 425.632Q276.586 424.54 277.258 423.682Q277.93 422.824 278.338 422.158Q278.746 421.492 278.932 421.018Q279.118 420.544 279.118 420.196Q279.118 419.716 278.788 419.452Q278.458 419.188 277.798 419.188Q277.354 419.188 276.94 419.308Q276.526 419.428 276.172 419.656Q275.818 419.884 275.536 420.196Q275.254 420.508 275.086 420.904L274.978 420.832L275.026 419.8Q276.238 418.588 277.87 418.588Q278.926 418.588 279.508 419.05Q280.09 419.512 280.114 420.364Q280.114 420.4 280.114 420.436Q280.114 421.9 278.362 424.156L276.622 426.4H279.79Q279.91 426.4 279.946 426.256L280.174 425.476H280.39L280.282 427ZM291.338 422.836Q291.338 423.724 291.122 424.498Q290.906 425.272 290.528 425.848Q290.15 426.424 289.628 426.76Q289.106 427.096 288.482 427.096Q287.858 427.096 287.336 426.76Q286.814 426.424 286.442 425.848Q286.07 425.272 285.866 424.498Q285.662 423.724 285.662 422.848Q285.662 421.972 285.866 421.198Q286.07 420.424 286.448 419.848Q286.826 419.272 287.348 418.936Q287.87 418.6 288.494 418.6Q289.13 418.6 289.652 418.936Q290.174 419.272 290.552 419.848Q290.93 420.424 291.134 421.192Q291.338 421.96 291.338 422.836ZM290.174 422.86Q290.174 422.08 290.102 421.396Q290.03 420.712 289.844 420.202Q289.658 419.692 289.328 419.398Q288.998 419.104 288.482 419.104Q287.966 419.104 287.642 419.398Q287.318 419.692 287.138 420.202Q286.958 420.712 286.892 421.396Q286.826 422.08 286.826 422.86Q286.826 423.64 286.892 424.324Q286.958 425.008 287.138 425.512Q287.318 426.016 287.642 426.31Q287.966 426.604 288.482 426.604Q288.998 426.604 289.328 426.31Q289.658 426.016 289.844 425.512Q290.03 425.008 290.102 424.324Q290.174 423.64 290.174 422.86ZM296.466 427V426.832Q296.622 426.616 296.874 426.322Q297.126 426.028 297.426 425.632Q298.266 424.54 298.938 423.682Q299.61 422.824 300.018 422.158Q300.426 421.492 300.612 421.018Q300.798 420.544 300.798 420.196Q300.798 419.716 300.468 419.452Q300.138 419.188 299.478 419.188Q299.034 419.188 298.62 419.308Q298.206 419.428 297.852 419.656Q297.498 419.884 297.216 420.196Q296.934 420.508 296.766 420.904L296.658 420.832L296.706 419.8Q297.918 418.588 299.55 418.588Q300.606 418.588 301.188 419.05Q301.77 419.512 301.794 420.364Q301.794 420.4 301.794 420.436Q301.794 421.9 300.042 424.156L298.302 426.4H301.47Q301.59 426.4 301.626 426.256L301.854 425.476H302.07L301.962 427ZM308.998 426.952Q308.986 427 308.926 427L308.374 427.012Q308.314 427 308.314 426.952Q308.314 426.892 308.362 426.796L309.658 424.204L310.066 423.328Q310.474 422.464 310.852 421.606Q311.23 420.748 311.53 419.98Q311.602 419.8 311.662 419.632H307.57Q307.462 419.632 307.426 419.788L307.234 420.34H306.91L307.078 418.672H312.682Q312.766 418.672 312.766 418.768V419.14Q312.346 420.16 311.878 421.192Q311.41 422.224 310.918 423.22Q310.426 424.216 309.934 425.17Q309.442 426.124 308.998 426.952Z"
+};
+let USE_OUTLINES = !!TEXT_OUTLINES;   // false → texto vivo con las fuentes instaladas
+
+/*
+ * Roles de color de cada versión:
+ *   line   conexiones de la red      node    nodos de las capas A–D
+ *   accent capa de salida y nodo central
+ *   curve  sigmoide                  title   "MIACD"      sub  "2025 – 2027"
+ *   bg     fondo
+ */
+const mono = (id, nombre, desc, c, extra = {}) => ({
+  id, grupo: "mono", nombre, desc, bg: UP.blanco,
+  line: c, node: c, accent: c, curve: c, title: c, sub: c, subAlpha: 0.8, ...extra,
+});
+const white = (id, nombre, desc, bg, extra = {}) => ({
+  id, grupo: "neg", nombre, desc, bg,
+  line: UP.blanco, node: UP.blanco, accent: UP.blanco, curve: UP.blanco,
+  title: UP.blanco, sub: UP.blanco, lineAlpha: 0.32, ruleAlpha: 0.45, subAlpha: 0.85, ...extra,
+});
+
+const THEMES = [
+  // A color
+  { id: "posgrados", grupo: "color", nombre: "Posgrados", desc: "Verde 329 · Dorado 465", recomendada: true,
+    bg: UP.blanco, line: UP.verde, node: UP.verde, accent: UP.dorado, curve: UP.verde,
+    title: UP.verde, sub: UP.dorado },
+  { id: "tradicion", grupo: "color", nombre: "Tradición", desc: "Dorado 465 · Verde 329",
+    bg: UP.blanco, line: UP.dorado, node: UP.dorado, accent: UP.verde, curve: UP.verde,
+    title: UP.verde, sub: UP.dorado, lineAlpha: 0.38 },
+  { id: "institucional", grupo: "color", nombre: "Institucional", desc: "Negro · Dorado 465",
+    bg: UP.blanco, line: UP.negro, node: UP.negro, accent: UP.dorado, curve: UP.dorado,
+    title: UP.negro, sub: UP.dorado, lineAlpha: 0.2 },
+
+  // Una tinta
+  mono("mono-verde",  "Verde",  "Pantone 329 CP",  UP.verde),
+  mono("mono-dorado", "Dorado", "Pantone 465 CP",  UP.dorado, { lineAlpha: 0.38, subAlpha: 1 }),
+  mono("mono-negro",  "Negro",  "Una tinta",       UP.negro, { lineAlpha: 0.2 }),
+  mono("mono-vino",   "Vino",   "Pantone 1955 CP", UP.vino,  { otroNivel: "Universidad" }),
+  mono("mono-azul",   "Azul",   "Pantone 288 CP",  UP.azul,  { otroNivel: "Preparatoria" }),
+
+  // Negativo
+  white("neg-verde", "Verde + dorado", "Sobre verde 329", UP.verde, { accent: UP.dorado, sub: UP.dorado, subAlpha: 1 }),
+  white("neg-verde-blanco", "Blanco", "Sobre verde 329", UP.verde),
+  white("neg-dorado", "Blanco", "Sobre dorado 465", UP.dorado, { lineAlpha: 0.42 }),
+  white("neg-negro", "Blanco + dorado", "Sobre negro", UP.negro, { accent: UP.dorado, sub: UP.dorado, subAlpha: 1, lineAlpha: 0.3 }),
+
+  // Referencia
+  { id: "original", grupo: "ref", nombre: "Original", desc: "Paleta inicial (fuera de marca)",
+    bg: UP.blanco, line: "#4A7DB5", node: "#4A7DB5", accent: "#5DCAA5", curve: "#2A5A8C",
+    title: "#4A7DB5", sub: "#4A7DB5", subAlpha: 0.7 },
+];
+
+const GROUPS = [
+  { id: "color", label: "A color" },
+  { id: "mono",  label: "Una tinta",
+    note: "Vino (Universidad) y azul (Preparatoria) pertenecen a otros niveles; la guía UP asigna el verde a Posgrados y pide no mezclar colores entre niveles." },
+  { id: "neg",   label: "Negativo" },
+  { id: "ref",   label: "Referencia" },
+];
+
+function getTheme(t) {
+  if (t && typeof t === "object") return t;
+  return THEMES.find(x => x.id === t) || THEMES[0];
+}
+
+/* ════════════════════════════════════════════════════════════════
+   2. Geometría del logo (idéntica a la propuesta original)
+   ════════════════════════════════════════════════════════════════ */
+const CX = 260, CY = 240, R = 196;
+const DX = -80, DY = -60;
+const NODE_R = 5.5, CENTER_R = 10;
+
+const CONNS = [
+  [210,250, 290,230], [210,250, 290,280], [210,250, 290,330],
+  [210,300, 290,230], [210,300, 290,280], [210,300, 290,330], [210,300, 290,380],
+  [210,350, 290,280], [210,350, 290,330], [210,350, 290,380],
+  [290,230, 340,300], [290,280, 340,300], [290,330, 340,300], [290,380, 340,300],
+  [340,300, 390,220], [340,300, 390,270], [340,300, 390,330], [340,300, 390,380],
+  [390,220, 470,250], [390,220, 470,300],
+  [390,270, 470,250], [390,270, 470,300],
+  [390,330, 470,300], [390,330, 470,350],
+  [390,380, 470,300], [390,380, 470,350],
+].map(([a, b, c, d]) => [a + DX, b + DY, c + DX, d + DY]);
+
+const NODES = [
+  { pts: [[210,250],[210,300],[210,350]],           role: "node" },
+  { pts: [[290,230],[290,280],[290,330],[290,380]], role: "node" },
+  { pts: [[390,220],[390,270],[390,330],[390,380]], role: "node" },
+  { pts: [[470,250],[470,300],[470,350]],           role: "accent" },
+].flatMap(L => L.pts.map(([x, y]) => ({ x: x + DX, y: y + DY, role: L.role })));
+
+// Sigmoide σ(x) = 1 / (1 + e^-x), de x = CX-115 a CX+115, amplitud ±95 px
+const sigmoid = x => 1 / (1 + Math.exp(-x));
+const SIG_PTS = d3.range(-5.5, 5.55, 0.1).map(t => [
+  CX - 115 + (t + 5.5) / 11 * 230,
+  CY + 95 - sigmoid(t) * 190,
+]);
+const SIG_D = d3.line().curve(d3.curveCatmullRom.alpha(0.5))(SIG_PTS);
+
+const SEP_Y = CY + R - 52;   // línea separadora sobre el nombre
+const TITLE = { text: "MIACD", y: SEP_Y + 24, size: 28, tracking: 8 };
+const SUB   = { text: "2025 – 2027", y: SEP_Y + 43, size: 12, tracking: 4 };
+
+// Mesa de trabajo: el contenido ocupa ≈ x 124–396, y 146–431; se centra en un cuadrado de 300
+const ART = { x: 110, y: 138.5, w: 300, h: 300 };
+
+/* ─── Geometría para impresión (merch) ───────────────────────────
+   Sin máscaras ni opacidades: las conexiones se recortan en el borde
+   de cada nodo y la sigmoide se interrumpe dentro del nodo central. */
+const isCenter = (x, y) => x === CX && y === CY;
+const TRIM_CONNS = CONNS.map(([a, b, c, d]) => {
+  const r1 = isCenter(a, b) ? CENTER_R : NODE_R, r2 = isCenter(c, d) ? CENTER_R : NODE_R;
+  const L = Math.hypot(c - a, d - b), ux = (c - a) / L, uy = (d - b) / L;
+  return [a + ux * r1, b + uy * r1, c - ux * r2, d - uy * r2].map(v => Math.round(v * 100) / 100);
+});
+
+const sigAt = t => [CX - 115 + (t + 5.5) / 11 * 230, CY + 95 - sigmoid(t) * 190];
+function sigCut(r) {   // t donde la sigmoide entra al círculo de radio r (lado derecho; el izquierdo es simétrico)
+  let lo = 0, hi = 5.5;
+  for (let i = 0; i < 50; i++) {
+    const m = (lo + hi) / 2, [x, y] = sigAt(m);
+    (Math.hypot(x - CX, y - CY) < r) ? lo = m : hi = m;
+  }
+  return hi;
+}
+const SIG_SPLIT_D = (() => {
+  const tc = sigCut(CENTER_R), gen = d3.line().curve(d3.curveCatmullRom.alpha(0.5));
+  const ts = d3.range(-5.5, 5.55, 0.1).filter(t => Math.abs(t) > tc + 0.03);
+  const left = ts.filter(t => t < 0).concat([-tc]).map(sigAt);
+  const right = [tc].concat(ts.filter(t => t > 0)).map(sigAt);
+  return gen(left) + gen(right);
+})();
+
+const mix = (c, on, a) => {
+  const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const A = p(c), B = p(on);
+  return "#" + A.map((v, i) => Math.round(v * a + B[i] * (1 - a)).toString(16).padStart(2, "0")).join("").toUpperCase();
+};
+
+/*
+ * Colores efectivos de cada elemento según el uso:
+ *   null    pantalla: colores de la versión + opacidades
+ *   "flat"  colores planos: cada opacidad se convierte en un color sólido
+ *           mezclado con el color de la prenda (= fondo de la versión)
+ *   "solid" tintas sólidas: todo al 100 % de su tinta, sin tramas
+ */
+function resolveColors(th, print) {
+  const la = th.lineAlpha ?? 0.22, ra = th.ruleAlpha ?? 0.25, sa = th.subAlpha ?? 1;
+  const base = { curve: th.curve, accent: th.accent, title: th.title };
+  if (!print) return { ...base, line: th.line, lineA: la, node: th.node, accentNode: th.accent, nodeA: 0.85,
+                       halo: th.accent, haloA: 0.3, rule: th.title, ruleA: ra, sub: th.sub, subA: sa };
+  if (print === "flat") {
+    const on = th.bg;
+    return { ...base, line: mix(th.line, on, la), lineA: 1, node: mix(th.node, on, 0.85), accentNode: mix(th.accent, on, 0.85),
+             nodeA: 1, halo: mix(th.accent, on, 0.3), haloA: 1, rule: mix(th.title, on, ra), ruleA: 1,
+             sub: mix(th.sub, on, sa), subA: 1 };
+  }
+  return { ...base, line: th.line, lineA: 1, node: th.node, accentNode: th.accent, nodeA: 1,
+           halo: th.accent, haloA: 1, rule: th.title, ruleA: 1, sub: th.sub, subA: 1 };
+}
+// En tinta sólida las conexiones se adelgazan para no saturar la red, sin bajar de lo imprimible:
+// a 14 cm de ancho, 0.6 u ≈ 0.3 mm (mínimo seguro de serigrafía)
+const SOLID_LINE_W = 0.6;
+
+const PRINT_MODES = {
+  "":    { label: "Pantalla / digital", suffix: "",
+           note: "Usa opacidades: ideal para pantallas, video, presentaciones y documentos." },
+  flat:  { label: "Merch · colores planos", suffix: "_merch-plano",
+           note: "Sin transparencias. Cada tono claro se vuelve un color sólido calculado para una prenda del color de fondo de la versión (blanco, verde, negro o dorado). Para DTF, DTG, sublimación y vinil impreso." },
+  solid: { label: "Merch · tintas sólidas", suffix: "_merch-solido",
+           note: "Cada elemento al 100 % de su tinta, sin tramas ni medios tonos. Para serigrafía, vinil de corte, grabado láser y tampografía." },
+};
+
+/* ════════════════════════════════════════════════════════════════
+   3. Render SVG (vista previa, miniaturas y descarga vectorial)
+   ════════════════════════════════════════════════════════════════
+   Sin rellenos blancos: los nodos "perforan" las conexiones con una
+   máscara, así el logo funciona sobre cualquier fondo o transparente. */
+const n2 = v => Math.round(v * 100) / 100;
+const attrFont = f => f.replace(/"/g, "'");
+
+/**
+ * @param print      null | "flat" | "solid"  (ver resolveColors)
+ * @param textPaths  { title: "d…", sub: "d…" } para sustituir el texto por trazos (archivos de imprenta)
+ */
+function buildSVG(theme, { id = "logo", transparent = false, width = null, height = null, xml = false,
+                           print = null, textPaths = (USE_OUTLINES ? TEXT_OUTLINES : null) } = {}) {
+  const th = getTheme(theme);
+  const k = resolveColors(th, print);
+  const op = a => (a === 1 ? "" : ` opacity="${a}"`);
+  const lineW = print === "solid" ? SOLID_LINE_W : 0.8;
+  const full = `x="0" y="0" width="520" height="520"`;
+  const out = [];
+  if (xml) out.push(`<?xml version="1.0" encoding="UTF-8"?>`);
+  out.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${ART.x} ${ART.y} ${ART.w} ${ART.h}"` +
+           (width ? ` width="${width}" height="${height}"` : "") + ` role="img" aria-label="MIACD 2025 – 2027">`);
+  out.push(`<title>MIACD · Maestría en Inteligencia Artificial y Ciencia de Datos · 2025 – 2027</title>`);
+  if (!print) {
+    const holes = NODES.map((p, i) =>
+      `<circle id="${id}-hole-${i}" cx="${n2(p.x)}" cy="${n2(p.y)}" r="${NODE_R}" fill="#000"/>`).join("");
+    out.push(`<defs>` +
+      `<mask id="${id}-mc" maskUnits="userSpaceOnUse" ${full}><rect ${full} fill="#fff"/>${holes}` +
+        `<circle id="${id}-hole-c" cx="${CX}" cy="${CY}" r="${CENTER_R}" fill="#000"/></mask>` +
+      `<mask id="${id}-ms" maskUnits="userSpaceOnUse" ${full}><rect ${full} fill="#fff"/>` +
+        `<circle id="${id}-hole-cs" cx="${CX}" cy="${CY}" r="${CENTER_R}" fill="#000"/></mask>` +
+      `</defs>`);
+  }
+  if (!transparent) out.push(`<rect class="bg" x="${ART.x}" y="${ART.y}" width="${ART.w}" height="${ART.h}" fill="${th.bg}"/>`);
+
+  if (!print) {
+    out.push(`<g mask="url(#${id}-mc)" stroke="${k.line}" stroke-width="0.8">` +
+      CONNS.map(([a, b, c, d]) => `<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" opacity="${k.lineA}"/>`).join("") + `</g>`);
+  } else {
+    out.push(`<g stroke="${k.line}" stroke-width="${lineW}">` +
+      TRIM_CONNS.map(([a, b, c, d]) => `<line x1="${a}" y1="${b}" x2="${c}" y2="${d}"/>`).join("") + `</g>`);
+  }
+
+  out.push(NODES.map((p, i) =>
+    `<circle class="node" data-i="${i}" cx="${n2(p.x)}" cy="${n2(p.y)}" r="${NODE_R}" fill="none" ` +
+    `stroke="${p.role === "accent" ? k.accentNode : k.node}" stroke-width="1.5"${op(k.nodeA)}/>`).join(""));
+
+  out.push(print
+    ? `<path class="sig" d="${SIG_SPLIT_D}" fill="none" stroke="${k.curve}" stroke-width="1.2" stroke-linecap="round"/>`
+    : `<path class="sig" mask="url(#${id}-ms)" d="${SIG_D}" fill="none" stroke="${k.curve}" stroke-width="1.2" stroke-linecap="round"/>`);
+  out.push(`<circle cx="${CX}" cy="${CY}" r="15" fill="none" stroke="${k.halo}" stroke-width="${print === "solid" ? SOLID_LINE_W : 0.8}"${op(k.haloA)}/>`);
+  out.push(`<circle class="c-ring" cx="${CX}" cy="${CY}" r="${CENTER_R}" fill="none" stroke="${k.accent}" stroke-width="2"/>`);
+  out.push(`<circle class="c-dot" cx="${CX}" cy="${CY}" r="4.5" fill="${k.accent}"/>`);
+
+  out.push(`<line x1="${CX - 45}" x2="${CX + 45}" y1="${SEP_Y}" y2="${SEP_Y}" stroke="${k.rule}" stroke-width="${print === "solid" ? SOLID_LINE_W : 0.5}"${op(k.ruleA)}/>`);
+  if (textPaths) {
+    out.push(`<path d="${textPaths.title}" fill="${k.title}"/>`);
+    out.push(`<path d="${textPaths.sub}" fill="${k.sub}"${k.subA === 1 ? "" : ` fill-opacity="${k.subA}"`}/>`);
+  } else {
+    // letter-spacing agrega espacio tras la última letra: se compensa con tracking/2
+    out.push(`<text x="${CX + TITLE.tracking / 2}" y="${TITLE.y}" text-anchor="middle" font-family="${attrFont(FONT_TITLE)}" ` +
+             `font-size="${TITLE.size}" font-weight="${TITLE_WEIGHT}" letter-spacing="${TITLE.tracking}" fill="${k.title}">${TITLE.text}</text>`);
+    out.push(`<text x="${CX + SUB.tracking / 2}" y="${SUB.y}" text-anchor="middle" font-family="${attrFont(FONT_SUB)}" ` +
+             `font-size="${SUB.size}" font-weight="${SUB_WEIGHT}" letter-spacing="${SUB.tracking}" fill="${k.sub}"` +
+             `${k.subA === 1 ? "" : ` fill-opacity="${k.subA}"`}>${SUB.text}</text>`);
+  }
+  out.push(`</svg>`);
+  return out.join("\n");
+}
+
+/* ════════════════════════════════════════════════════════════════
+   4. Render Canvas (PNG a cualquier resolución)
+   ════════════════════════════════════════════════════════════════ */
+async function fontsReady() {
+  try {
+    await Promise.all([
+      document.fonts.load(`${TITLE_WEIGHT} ${TITLE.size}px ${FONT_TITLE}`, TITLE.text),
+      document.fonts.load(`${SUB_WEIGHT} ${SUB.size}px ${FONT_SUB}`, SUB.text),
+    ]);
+    await document.fonts.ready;
+  } catch (e) { /* sin red: se usan las fuentes del sistema */ }
+}
+
+// Texto del logo en canvas: curvas incrustadas o, si no, texto vivo con tracking
+function drawLogoText(ctx, which, color, alpha = 1) {
+  ctx.globalAlpha = alpha; ctx.fillStyle = color;
+  if (USE_OUTLINES && TEXT_OUTLINES) {
+    ctx.fill(new Path2D(TEXT_OUTLINES[which]));
+  } else {
+    const T = which === "title" ? TITLE : SUB;
+    ctx.font = `${which === "title" ? TITLE_WEIGHT : SUB_WEIGHT} ${T.size}px ${which === "title" ? FONT_TITLE : FONT_SUB}`;
+    drawTracked(ctx, T.text, CX, T.y, T.tracking);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawTracked(ctx, text, cx, y, tracking) {
+  const chars = [...text];
+  const widths = chars.map(c => ctx.measureText(c).width);
+  const total = widths.reduce((a, b) => a + b, 0) + tracking * (chars.length - 1);
+  let x = cx - total / 2;
+  ctx.textAlign = "left";
+  ctx.textBaseline = "alphabetic";
+  chars.forEach((c, i) => { ctx.fillText(c, x, y); x += widths[i] + tracking; });
+}
+
+// Versión de impresión: todo opaco, sin capas ni perforaciones
+function drawPrintScene(ctx, th, print) {
+  const k = resolveColors(th, print);
+  const thin = print === "solid" ? SOLID_LINE_W : 0.8;
+  const circle = (x, y, r) => { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); };
+  ctx.globalAlpha = 1;
+  ctx.strokeStyle = k.line; ctx.lineWidth = thin; ctx.lineCap = "butt";
+  TRIM_CONNS.forEach(([a, b, x, y]) => { ctx.beginPath(); ctx.moveTo(a, b); ctx.lineTo(x, y); ctx.stroke(); });
+  ctx.lineWidth = 1.5;
+  NODES.forEach(p => { ctx.strokeStyle = p.role === "accent" ? k.accentNode : k.node; circle(p.x, p.y, NODE_R); ctx.stroke(); });
+  ctx.strokeStyle = k.curve; ctx.lineWidth = 1.2; ctx.lineCap = "round"; ctx.lineJoin = "round";
+  ctx.stroke(new Path2D(SIG_SPLIT_D));
+  ctx.lineCap = "butt";
+  ctx.strokeStyle = k.halo; ctx.lineWidth = thin; circle(CX, CY, 15); ctx.stroke();
+  ctx.strokeStyle = k.accent; ctx.lineWidth = 2; circle(CX, CY, CENTER_R); ctx.stroke();
+  ctx.fillStyle = k.accent; circle(CX, CY, 4.5); ctx.fill();
+  ctx.strokeStyle = k.rule; ctx.lineWidth = print === "solid" ? SOLID_LINE_W : 0.5;
+  ctx.beginPath(); ctx.moveTo(CX - 45, SEP_Y); ctx.lineTo(CX + 45, SEP_Y); ctx.stroke();
+  drawLogoText(ctx, "title", k.title);
+  drawLogoText(ctx, "sub", k.sub, k.subA);
+}
+
+function drawScene(ctx, th, print = null) {
+  if (print) return drawPrintScene(ctx, th, print);
+  const la = th.lineAlpha ?? 0.22, ra = th.ruleAlpha ?? 0.25, sa = th.subAlpha ?? 1;
+  const T = ctx.getTransform();
+  const W = ctx.canvas.width, H = ctx.canvas.height;
+  const off = document.createElement("canvas");
+  off.width = W; off.height = H;
+  const o = off.getContext("2d");
+
+  const circle = (c, x, y, r) => { c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); };
+  // Dibuja en una capa aparte, perfora los huecos y la compone sobre el lienzo
+  const layer = (draw, holes) => {
+    o.setTransform(1, 0, 0, 1, 0, 0);
+    o.globalCompositeOperation = "source-over";
+    o.globalAlpha = 1;
+    o.clearRect(0, 0, W, H);
+    o.setTransform(T);
+    draw(o);
+    o.globalCompositeOperation = "destination-out";
+    o.globalAlpha = 1;
+    holes.forEach(([x, y, r]) => { circle(o, x, y, r); o.fill(); });
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.drawImage(off, 0, 0);
+    ctx.restore();
+  };
+
+  const nodeHoles = NODES.map(p => [p.x, p.y, NODE_R]).concat([[CX, CY, CENTER_R]]);
+
+  // Conexiones
+  layer(c => {
+    c.strokeStyle = th.line; c.lineWidth = 0.8; c.lineCap = "butt"; c.globalAlpha = la;
+    CONNS.forEach(([a, b, x, y]) => { c.beginPath(); c.moveTo(a, b); c.lineTo(x, y); c.stroke(); });
+  }, nodeHoles);
+
+  // Nodos
+  ctx.lineWidth = 1.5;
+  ctx.globalAlpha = 0.85;
+  NODES.forEach(p => {
+    ctx.strokeStyle = p.role === "accent" ? th.accent : th.node;
+    circle(ctx, p.x, p.y, NODE_R); ctx.stroke();
+  });
+
+  // Sigmoide
+  layer(c => {
+    c.strokeStyle = th.curve; c.lineWidth = 1.2; c.lineCap = "round"; c.lineJoin = "round"; c.globalAlpha = 1;
+    c.stroke(new Path2D(SIG_D));
+  }, [[CX, CY, CENTER_R]]);
+
+  // Nodo central
+  ctx.strokeStyle = th.accent;
+  ctx.globalAlpha = 0.3; ctx.lineWidth = 0.8; circle(ctx, CX, CY, 15); ctx.stroke();
+  ctx.globalAlpha = 1;   ctx.lineWidth = 2;   circle(ctx, CX, CY, CENTER_R); ctx.stroke();
+  ctx.fillStyle = th.accent; circle(ctx, CX, CY, 4.5); ctx.fill();
+
+  // Separador y texto
+  ctx.globalAlpha = ra; ctx.strokeStyle = th.title; ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.moveTo(CX - 45, SEP_Y); ctx.lineTo(CX + 45, SEP_Y); ctx.stroke();
+
+  drawLogoText(ctx, "title", th.title);
+  drawLogoText(ctx, "sub", th.sub, sa);
+}
+
+/**
+ * Dibuja el logo en un <canvas> del tamaño pedido, centrado.
+ * @param {object}  o
+ * @param {string}  o.theme        id de la versión (ver THEMES)
+ * @param {number}  o.width        ancho en px
+ * @param {number}  o.height       alto en px
+ * @param {boolean} o.transparent  sin fondo
+ * @param {number}  o.fill         fracción del lado menor que ocupa el logo (0.8 en 16:9, 0.9 en cuadrado)
+ * @param {string}  o.print        null (pantalla) | "flat" | "solid" (merch)
+ */
+async function renderLogoCanvas({ theme = state.theme, width = 1920, height = 1080, transparent = false, fill,
+                                  print = state.print } = {}) {
+  await fontsReady();
+  const th = getTheme(theme);
+  const canvas = document.createElement("canvas");
+  canvas.width = width; canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!transparent) { ctx.fillStyle = th.bg; ctx.fillRect(0, 0, width, height); }
+  const f = fill ?? (width === height ? 0.9 : 0.8);
+  const s = Math.min(width, height) * f / ART.w;
+  ctx.setTransform(s, 0, 0, s, width / 2 - (ART.x + ART.w / 2) * s, height / 2 - (ART.y + ART.h / 2) * s);
+  drawScene(ctx, th, print || null);
+  return canvas;
+}
+
+const canvasToBlob = c => new Promise(res => c.toBlob(res, "image/png"));
+
+function saveBlob(blob, name) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+}
+
+const printSuffix = print => (PRINT_MODES[print || ""] || PRINT_MODES[""]).suffix;
+const fileName = (th, w, h, transparent, ext, print = null) =>
+  `MIACD_${th.id}${printSuffix(print)}_${w}x${h}${transparent ? "_transparente" : ""}.${ext}`;
+
+/* ════════════════════════════════════════════════════════════════
+   5. Funciones de descarga
+   ════════════════════════════════════════════════════════════════ */
+
+/** Descarga el logo como PNG (o SVG con format: "svg"). */
+async function downloadLogo({ theme = state.theme, width = 1920, height = 1080, transparent = false,
+                              fill, format = "png", filename, print = state.print } = {}) {
+  const th = getTheme(theme);
+  print = print || null;
+  if (format === "svg") {
+    const svg = buildSVG(th, { id: "miacd", transparent, width: 1080, height: 1080, xml: true, print });
+    saveBlob(new Blob([svg], { type: "image/svg+xml" }),
+             filename || `MIACD_${th.id}${printSuffix(print)}${transparent ? "_transparente" : ""}.svg`);
+    return;
+  }
+  const canvas = await renderLogoCanvas({ theme: th, width, height, transparent, fill, print });
+  saveBlob(await canvasToBlob(canvas), filename || fileName(th, width, height, transparent, "png", print));
+}
+
+/** Atajo: PNG Full HD 1920×1080 de la versión seleccionada. */
+function downloadFullHD(theme = state.theme, transparent = false, print = state.print) {
+  return downloadLogo({ theme, width: 1920, height: 1080, transparent, print });
+}
+
+/* Resolución de impresión: escribe el bloque pHYs (dpi) en el PNG */
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; }
+  return t;
+})();
+const crc32 = bytes => { let c = 0xFFFFFFFF; for (const b of bytes) c = CRC_TABLE[(c ^ b) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+
+async function withDpi(blob, dpi = 300) {
+  let src = new Uint8Array(await blob.arrayBuffer());
+  // quita un pHYs previo, si lo hubiera
+  for (let p = 8; p < src.length;) {
+    const len = new DataView(src.buffer, src.byteOffset).getUint32(p);
+    const type = String.fromCharCode(...src.subarray(p + 4, p + 8));
+    if (type === "IDAT") break;
+    if (type === "pHYs") { src = new Uint8Array([...src.subarray(0, p), ...src.subarray(p + len + 12)]); break; }
+    p += len + 12;
+  }
+  const ppm = Math.round(dpi / 0.0254);
+  const chunk = new Uint8Array(21), dv = new DataView(chunk.buffer);
+  dv.setUint32(0, 9); chunk.set([0x70, 0x48, 0x59, 0x73], 4);           // longitud 9, "pHYs"
+  dv.setUint32(8, ppm); dv.setUint32(12, ppm); chunk[16] = 1;            // píxeles por metro, unidad = metro
+  dv.setUint32(17, crc32(chunk.subarray(4, 17)));
+  const at = 33;                                                          // firma (8) + IHDR (25)
+  const out = new Uint8Array(src.length + 21);
+  out.set(src.subarray(0, at)); out.set(chunk, at); out.set(src.subarray(at), at + 21);
+  return new Blob([out], { type: "image/png" });
+}
+
+const exportThemes = () => THEMES.filter(t => t.grupo !== "ref");
+
+/* Agrega a una carpeta del ZIP todas las versiones en un uso.
+   Pantalla: Full HD (fondo y transparente), 2048 transparente, SVG.
+   Merch: lo mismo + 4096 px transparente; los PNG llevan 300 dpi. */
+async function addVersionsToZip(folder, print, onProgress = () => {}, offset = 0, total = null) {
+  const jobs = exportThemes(), sfx = printSuffix(print);
+  const sizes = [[1920, 1080, false], [1920, 1080, true], [2048, 2048, true]].concat(print ? [[4096, 4096, true]] : []);
+  for (const [i, th] of jobs.entries()) {
+    onProgress(offset + i, total ?? jobs.length, th);
+    const dir = folder.folder(th.id);
+    for (const [w, h, tr] of sizes) {
+      const c = await renderLogoCanvas({ theme: th, width: w, height: h, transparent: tr, print });
+      let blob = await canvasToBlob(c);
+      if (print) blob = await withDpi(blob, 300);
+      dir.file(fileName(th, w, h, tr, "png", print), blob);
+    }
+    dir.file(`MIACD_${th.id}${sfx}.svg`, buildSVG(th, { id: "miacd", width: 1080, height: 1080, xml: true, print }));
+    dir.file(`MIACD_${th.id}${sfx}_transparente.svg`,
+             buildSVG(th, { id: "miacd", transparent: true, width: 1080, height: 1080, xml: true, print }));
+  }
+  return jobs.length;
+}
+
+/** ZIP con todas las versiones en el uso indicado (o el seleccionado en la página). */
+async function downloadAll(onProgress = () => {}, { print = state.print } = {}) {
+  if (typeof JSZip === "undefined") throw new Error("JSZip no cargó (¿sin conexión?)");
+  print = print || null;
+  const zip = new JSZip();
+  const n = await addVersionsToZip(zip, print, onProgress);
+  onProgress(n, n);
+  saveBlob(await zip.generateAsync({ type: "blob" }), `MIACD_logo_versiones_UP${printSuffix(print)}.zip`);
+}
+
+const USAGE_DIRS = [["pantalla", null], ["merch-colores-planos", "flat"], ["merch-tintas-solidas", "solid"]];
+
+function typographyLines() {
+  if (USE_OUTLINES && TEXT_OUTLINES) return [
+    "  Título: Panamericana SemiBold · Año: Panamericana Regular",
+    "  Convertidos a curvas: los PNG y SVG se ven igual en cualquier equipo, sin instalar fuentes.",
+  ];
+  const pana = fontFaceLoaded(600);
+  return [
+    `  Título: ${pana ? "Panamericana SemiBold" : "Source Serif 4 SemiBold (sustituta de Panamericana)"}`,
+    `  Año:    ${fontFaceLoaded(400) ? "Panamericana Regular" : "Source Serif 4 Regular (sustituta de Panamericana)"}`,
+    "  Texto vivo: los SVG dependen de que la fuente esté instalada.",
+  ];
+}
+
+function readmeText() {
+  const L = [
+    "MIACD 2025 – 2027 · Todas las combinaciones de logo",
+    "Generado con logo_miacd_marca_up.html · " + new Date().toLocaleString("es-MX"),
+    "",
+    "Tipografía usada en este ZIP",
+    ...typographyLines(),
+    "",
+    "Carpetas por uso",
+    ...USAGE_DIRS.map(([d, m]) => `  ${d}/\n      ${PRINT_MODES[m || ""].note}`),
+    "",
+    "Archivos por versión",
+    "  _1920x1080.png               Full HD con fondo (en merch: simula la prenda)",
+    "  _1920x1080_transparente.png  Full HD sin fondo",
+    "  _2048x2048_transparente.png  cuadrado sin fondo",
+    "  _4096x4096_transparente.png  solo merch · 300 dpi (logo ≈ 28 cm de ancho)",
+    "  .svg / _transparente.svg     vectorial" + (USE_OUTLINES && TEXT_OUTLINES ? " con texto en curvas (apto para imprenta)" : " (el texto depende de las fuentes instaladas)"),
+    "",
+    "Versiones (fondo = color de prenda para la que se calculan los colores planos)",
+    ...exportThemes().map(t => `  ${t.id.padEnd(17)} ${t.nombre} · ${t.desc} · fondo ${t.bg}` +
+                                (t.otroNivel ? ` · color de ${t.otroNivel}` : "") + (t.recomendada ? " · RECOMENDADA" : "")),
+    "",
+    "Paleta institucional UP",
+    "  Dorado PANTONE 465 CP #B9975B · Verde PANTONE 329 CP #215347 (Posgrados)",
+    "  Vino PANTONE 1955 CP #7A1A37 (Universidad) · Azul PANTONE 288 CP #002D72 (Preparatoria)",
+    "",
+    "Tamaño mínimo de impresión: 10 cm (colores planos) / 14 cm (tintas sólidas) de ancho.",
+  ];
+  return L.join("\n") + "\n";
+}
+
+/** Un solo ZIP con todas las versiones × todos los usos. */
+async function downloadEverything(onProgress = () => {}) {
+  if (typeof JSZip === "undefined") throw new Error("JSZip no cargó (¿sin conexión?)");
+  await fontsReady();
+  const zip = new JSZip(), per = exportThemes().length, total = per * USAGE_DIRS.length;
+  for (const [mi, [dir, mode]] of USAGE_DIRS.entries()) {
+    await addVersionsToZip(zip.folder(dir), mode, onProgress, mi * per, total);
+  }
+  zip.file("LEEME.txt", readmeText());
+  onProgress(total, total);
+  saveBlob(await zip.generateAsync({ type: "blob" }), "MIACD_logo_todas_las_combinaciones.zip");
+}
+
+/* ════════════════════════════════════════════════════════════════
+   6. Interfaz
+   ════════════════════════════════════════════════════════════════ */
+const state = { theme: "posgrados", print: null };
+const $ = s => document.querySelector(s);
+
+function renderPreview() {
+  const th = getTheme(state.theme);
+  const transparent = $("#transparent").checked;
+  $("#logo-container").innerHTML = buildSVG(th, { id: "live", transparent: true, print: state.print });
+  const pv = $("#preview");
+  pv.style.backgroundColor = th.bg;
+  pv.classList.toggle("checker", transparent);
+  bindHover();
+}
+
+function renderThemePicker() {
+  const host = $("#theme-groups");
+  host.innerHTML = GROUPS.map(g => {
+    const items = THEMES.filter(t => t.grupo === g.id);
+    return `<div class="group-label">${g.label}</div>
+      <div class="themes">${items.map(t => `
+        <button class="theme" data-id="${t.id}" aria-pressed="${t.id === state.theme}">
+          ${t.recomendada ? `<span class="badge">Recomendada</span>` : ""}
+          <span class="thumb">${buildSVG(t, { id: "th-" + t.id })}</span>
+          <span class="t-name">${t.nombre}</span>
+          <span class="t-desc">${t.desc}</span>
+        </button>`).join("")}
+      </div>${g.note ? `<p class="note">${g.note}</p>` : ""}`;
+  }).join("");
+  host.querySelectorAll(".theme").forEach(b => b.addEventListener("click", () => {
+    state.theme = b.dataset.id;
+    host.querySelectorAll(".theme").forEach(x => x.setAttribute("aria-pressed", x === b));
+    renderPreview();
+  }));
+}
+
+function bindHover() {
+  const svg = d3.select("#logo-container svg");
+  svg.selectAll(".node")
+    .on("mouseover", function () {
+      d3.select(this).transition().duration(150).attr("r", 8).attr("opacity", 1);
+      svg.select(`#live-hole-${this.dataset.i}`).transition().duration(150).attr("r", 8);
+    })
+    .on("mouseout", function () {
+      d3.select(this).transition().duration(150).attr("r", NODE_R).attr("opacity", 0.85);
+      svg.select(`#live-hole-${this.dataset.i}`).transition().duration(150).attr("r", NODE_R);
+    });
+  const center = r => {
+    svg.select(".c-ring").transition().duration(150).attr("r", r);
+    svg.selectAll("#live-hole-c, #live-hole-cs").transition().duration(150).attr("r", r);
+  };
+  svg.select(".c-dot")
+    .on("mouseover", function () { d3.select(this).transition().duration(150).attr("r", 7); center(14); })
+    .on("mouseout",  function () { d3.select(this).transition().duration(150).attr("r", 4.5); center(CENTER_R); });
+}
+
+// Pulso en cascada de izquierda a derecha
+function animatePulse() {
+  const th = getTheme(state.theme);
+  const svg = d3.select("#logo-container svg");
+  NODES.forEach((p, i) => {
+    svg.append("circle")
+      .attr("cx", p.x).attr("cy", p.y).attr("r", NODE_R)
+      .attr("fill", "none").attr("stroke", p.role === "accent" ? th.accent : th.node).attr("opacity", 0.9)
+      .transition().delay(i * 55).duration(250)
+      .attr("r", 11).attr("opacity", 0)
+      .remove();
+  });
+  const d = NODES.length * 55;
+  svg.select(".c-dot").transition().delay(d).duration(400).attr("r", 8).transition().duration(400).attr("r", 4.5);
+  svg.selectAll(".c-ring, #live-hole-c, #live-hole-cs")
+    .transition().delay(d).duration(400).attr("r", 16).transition().duration(400).attr("r", CENTER_R);
+}
+
+// Dibujo animado de la sigmoide
+function animateSigmoid() {
+  const path = d3.select("#logo-container .sig");
+  const len = path.node().getTotalLength();
+  path.interrupt()
+    .attr("stroke-dasharray", len).attr("stroke-dashoffset", len)
+    .transition().duration(2000).ease(d3.easeLinear)
+    .attr("stroke-dashoffset", 0);
+}
+
+function resetAnim() { renderPreview(); }
+
+// ¿Está instalada una fuente? (compara anchos contra las genéricas)
+function fontAvailable(name) {
+  const c = document.createElement("canvas").getContext("2d");
+  const s = "MIACD 2025 – 2027 abcdefghijklmnñopq";
+  return ["monospace", "serif", "sans-serif"].some(g => {
+    c.font = `40px ${g}`; const a = c.measureText(s).width;
+    c.font = `40px "${name}", ${g}`; return c.measureText(s).width !== a;
+  });
+}
+
+// ¿Cargó la cara local de Panamericana (alias "Panamericana UP") con ese peso?
+function fontFaceLoaded(weight) {
+  return [...document.fonts].some(f => f.family.replace(/["']/g, "") === "Panamericana UP" &&
+                                       String(f.weight) === String(weight) && f.status === "loaded");
+}
+
+async function updateFontStatus() {
+  await fontsReady();
+  try { await Promise.all([600, 400].map(w => document.fonts.load(`${w} 20px "Panamericana UP"`))); } catch (e) {}
+  if (USE_OUTLINES && TEXT_OUTLINES) {
+    $("#font-status").innerHTML = `Texto del logo en curvas: <b>Panamericana SemiBold</b> (MIACD) y ` +
+      `<b>Panamericana Regular</b> (año). Se ve igual en cualquier equipo, sin instalar la fuente.`;
+  } else {
+    const sb = fontFaceLoaded(600), rg = fontFaceLoaded(400);
+    $("#font-status").innerHTML =
+      `Título: ${sb ? "<b>Panamericana SemiBold</b> ✓" : "<b>Source Serif 4</b> (sustituta)"} · ` +
+      `Año: ${rg ? "<b>Panamericana Regular</b> ✓" : "<b>Source Serif 4</b> (sustituta)"}` +
+      (sb && rg ? "" : `<br>Instala Panamericana desde el kit de marca UP y usa Chrome (Safari no expone fuentes instaladas por el usuario).`);
+  }
+  renderPreview();
+  renderThemePicker();
+}
+
+/** Alterna entre texto en curvas (por defecto) y texto vivo con las fuentes instaladas. */
+function setTextOutlines(on = true) {
+  USE_OUTLINES = !!on && !!TEXT_OUTLINES;
+  return updateFontStatus();
+}
+
+function wireExport() {
+  const sizeSel = $("#size"), btnPng = $("#btn-png"), status = $("#export-status");
+  const labelPng = () => {
+    const [name, dims] = sizeSel.selectedOptions[0].textContent.split("·").map(s => s.trim());
+    btnPng.textContent = `Descargar PNG ${name.startsWith("Cuadrado") ? dims : name}`;
+  };
+  sizeSel.addEventListener("change", labelPng);
+  $("#transparent").addEventListener("change", renderPreview);
+
+  const usage = $("#usage");
+  const onUsage = () => {
+    state.print = usage.value || null;
+    $("#usage-note").textContent = PRINT_MODES[usage.value].note;
+    if (state.print) {                       // para merch casi siempre se quiere sin fondo y en alta
+      $("#transparent").checked = true;
+      if (!sizeSel.value.startsWith("4096")) sizeSel.value = "4096x4096";
+      labelPng();
+    }
+    renderPreview();
+  };
+  usage.addEventListener("change", onUsage);
+  onUsage();
+
+  btnPng.addEventListener("click", async () => {
+    const [w, h] = sizeSel.value.split("x").map(Number);
+    btnPng.disabled = true;
+    try { await downloadLogo({ width: w, height: h, transparent: $("#transparent").checked }); }
+    finally { btnPng.disabled = false; }
+  });
+  $("#btn-svg").addEventListener("click", () =>
+    downloadLogo({ format: "svg", transparent: $("#transparent").checked }));
+  $("#btn-zip").addEventListener("click", async e => {
+    const b = e.currentTarget; b.disabled = true;
+    try {
+      await downloadAll((i, n) => { status.textContent = i < n ? `Generando ${i + 1} de ${n}…` : "Listo."; });
+    } catch (err) { status.textContent = err.message; }
+    finally { b.disabled = false; }
+  });
+  $("#btn-all").addEventListener("click", async e => {
+    const b = e.currentTarget; b.disabled = true;
+    try {
+      await downloadEverything((i, n, th) => {
+        status.textContent = i < n ? `Generando ${i + 1} de ${n}… (${th ? th.nombre : ""})` : "Listo.";
+      });
+    } catch (err) { status.textContent = err.message; }
+    finally { b.disabled = false; }
+  });
+  labelPng();
+}
+
+renderThemePicker();
+renderPreview();
+wireExport();
+updateFontStatus();
+
+// API pública (útil desde la consola o desde otro script)
+window.MIACD = { UP, THEMES, PRINT_MODES, ART, TITLE, SUB, CX, resolveColors, buildSVG, renderLogoCanvas,
+                 downloadLogo, downloadFullHD, downloadAll, downloadEverything, fontAvailable,
+                 setTextOutlines, TEXT_OUTLINES };
+</script>
+</body>
+</html>
